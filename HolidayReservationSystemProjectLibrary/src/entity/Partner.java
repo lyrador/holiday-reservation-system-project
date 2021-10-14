@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import util.providedinterface.ICopyable;
 
 @Entity
-public class PartnerEntity implements Serializable, ICopyable {
+public class Partner implements Serializable, ICopyable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -21,10 +21,10 @@ public class PartnerEntity implements Serializable, ICopyable {
     private String username;
     private String password;
 
-    public PartnerEntity() {
+    public Partner() {
     }
 
-    public PartnerEntity(String partnerName) {
+    public Partner(String partnerName) {
         this.partnerName = partnerName;
     }
     
@@ -33,11 +33,11 @@ public class PartnerEntity implements Serializable, ICopyable {
     {
         if(object.getClass().equals(this.getClass()))
         {
-            PartnerEntity partnerEntityToCopy = (PartnerEntity)object;
-            this.setPartnerId(partnerEntityToCopy.getPartnerId());
-            this.setPartnerName(partnerEntityToCopy.getPartnerName());
-            this.setUsername(partnerEntityToCopy.getUsername());
-            this.setPassword(partnerEntityToCopy.getPassword());
+            Partner partnerToCopy = (Partner)object;
+            this.setPartnerId(partnerToCopy.getPartnerId());
+            this.setPartnerName(partnerToCopy.getPartnerName());
+            this.setUsername(partnerToCopy.getUsername());
+            this.setPassword(partnerToCopy.getPassword());
         }
     }
 
@@ -51,10 +51,10 @@ public class PartnerEntity implements Serializable, ICopyable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the partnerId fields are not set
-        if (!(object instanceof PartnerEntity)) {
+        if (!(object instanceof Partner)) {
             return false;
         }
-        PartnerEntity other = (PartnerEntity) object;
+        Partner other = (Partner) object;
         if ((this.partnerId == null && other.partnerId != null) || (this.partnerId != null && !this.partnerId.equals(other.partnerId))) {
             return false;
         }

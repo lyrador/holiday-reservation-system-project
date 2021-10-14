@@ -14,7 +14,7 @@ import util.providedinterface.ICopyable;
 
 
 @Entity
-public class StaffEntity implements Serializable, ICopyable {
+public class Staff implements Serializable, ICopyable {
     
     private static final long serialVersionUID = 1L;
     @Id
@@ -26,13 +26,13 @@ public class StaffEntity implements Serializable, ICopyable {
     private AccessRightEnum accessRightEnum;
     private String username;
     private String password;
-    private List<ReservationEntity> reservationEntities;
+    private List<Reservation> reservations;
 
-    public StaffEntity() {
-        reservationEntities = new ArrayList<>();
+    public Staff() {
+        reservations = new ArrayList<>();
     }
 
-    public StaffEntity(String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password) 
+    public Staff(String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password) 
     {
         this();
         
@@ -43,7 +43,7 @@ public class StaffEntity implements Serializable, ICopyable {
         this.password = password;
     }
 
-    public StaffEntity(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password)
+    public Staff(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password)
     {
         this();
         
@@ -56,7 +56,7 @@ public class StaffEntity implements Serializable, ICopyable {
     }
 
     
-    public StaffEntity(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password, List<ReservationEntity> reservationEntities)
+    public Staff(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password, List<Reservation> reservations)
     {
         this();
         
@@ -66,7 +66,7 @@ public class StaffEntity implements Serializable, ICopyable {
         this.accessRightEnum = accessRightEnum;
         this.username = username;
         this.password = password;
-        this.reservationEntities = reservationEntities;
+        this.reservations = reservations;
     }
 
     @Override
@@ -74,14 +74,14 @@ public class StaffEntity implements Serializable, ICopyable {
     {
         if(object.getClass().equals(this.getClass()))
         {
-            StaffEntity staffEntityToCopy = (StaffEntity)object;
-            this.setStaffId(staffEntityToCopy.getStaffId());
-            this.setFirstName(staffEntityToCopy.getFirstName());
-            this.setLastName(staffEntityToCopy.getLastName());
-            this.setAccessRightEnum(staffEntityToCopy.getAccessRightEnum());
-            this.setUsername(staffEntityToCopy.getUsername());
-            this.setPassword(staffEntityToCopy.getPassword());
-            this.setReservationEntities(staffEntityToCopy.getReservationEntities());
+            Staff staffToCopy = (Staff)object;
+            this.setStaffId(staffToCopy.getStaffId());
+            this.setFirstName(staffToCopy.getFirstName());
+            this.setLastName(staffToCopy.getLastName());
+            this.setAccessRightEnum(staffToCopy.getAccessRightEnum());
+            this.setUsername(staffToCopy.getUsername());
+            this.setPassword(staffToCopy.getPassword());
+            this.setReservations(staffToCopy.getReservations());
         }
     }
 
@@ -97,10 +97,10 @@ public class StaffEntity implements Serializable, ICopyable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the staffId fields are not set
-        if (!(object instanceof StaffEntity)) {
+        if (!(object instanceof Staff)) {
             return false;
         }
-        StaffEntity other = (StaffEntity) object;
+        Staff other = (Staff) object;
         if ((this.staffId == null && other.staffId != null) || (this.staffId != null && !this.staffId.equals(other.staffId))) {
             return false;
         }
@@ -109,7 +109,7 @@ public class StaffEntity implements Serializable, ICopyable {
 
     @Override
     public String toString() {
-        return "entity.StaffEntity[ id=" + staffId + " ]";
+        return "entity.Staff[ id=" + staffId + " ]";
     }
 
     public Long getStaffId() {
@@ -160,11 +160,11 @@ public class StaffEntity implements Serializable, ICopyable {
         this.password = password;
     }
     
-    public List<ReservationEntity> getReservationEntities() {
-        return reservationEntities;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void setReservationEntities(List<ReservationEntity> reservationEntities) {
-        this.reservationEntities = reservationEntities;
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }
