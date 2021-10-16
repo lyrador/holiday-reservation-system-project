@@ -23,6 +23,7 @@ public class RoomType implements Serializable {
     private String roomName;
     private String roomDescription;
     private Integer roomSize;
+    private String roomBed;
     private Integer roomCapacity;
     private String roomAmenities;
     
@@ -38,10 +39,11 @@ public class RoomType implements Serializable {
     public RoomType() {
     }
 
-    public RoomType(String roomName, String roomDescription, Integer roomSize, Integer roomCapacity, String roomAmenities, List<Room> rooms, List<Reservation> reservations, List<RoomRate> roomRates) {
+    public RoomType(String roomName, String roomDescription, Integer roomSize, String roomBed, Integer roomCapacity, String roomAmenities, List<Room> rooms, List<Reservation> reservations, List<RoomRate> roomRates) {
         this.roomName = roomName;
         this.roomDescription = roomDescription;
         this.roomSize = roomSize;
+        this.roomBed = roomBed;
         this.roomCapacity = roomCapacity;
         this.roomAmenities = roomAmenities;
         this.rooms = rooms;
@@ -81,6 +83,14 @@ public class RoomType implements Serializable {
 
     public void setRoomSize(Integer roomSize) {
         this.roomSize = roomSize;
+    }
+
+    public String getRoomBed() {
+        return roomBed;
+    }
+
+    public void setRoomBed(String roomBed) {
+        this.roomBed = roomBed;
     }
 
     public Integer getRoomCapacity() {
