@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import entity.Staff;
+import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import util.exception.StaffNotFoundException;
@@ -20,13 +21,10 @@ public class StaffSessionBean implements StaffSessionBeanRemote, StaffSessionBea
     
     public StaffSessionBean() {
     }
-
     
     @PostConstruct
     public void postConstruct() {
     }
-    
-    
     
     @PreDestroy
     public void preDestroy() {
@@ -37,7 +35,8 @@ public class StaffSessionBean implements StaffSessionBeanRemote, StaffSessionBea
     }
 
     // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    // "Insert Code > Add Business Method") 
+    
     @Override
     public Staff retrieveStaffById(Long staffId) throws StaffNotFoundException {
         Staff staff = em.find(Staff.class, staffId);
@@ -72,5 +71,15 @@ public class StaffSessionBean implements StaffSessionBeanRemote, StaffSessionBea
         em.flush();
         
         return staff.getStaffId();
+    }
+    
+    @Override
+    public List<Staff> viewAllStaffs() throws StaffNotFoundException {
+        try {
+            Query query = em.createQuery("SELECT r FROM Staff r");
+            return query.getResultList();
+        } catch(Exception e) { 
+            throw new StaffNotFoundException("Staff not found");
+        }
     }
 }

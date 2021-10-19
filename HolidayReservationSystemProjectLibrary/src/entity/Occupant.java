@@ -1,11 +1,15 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import util.providedinterface.ICopyable;
 
@@ -19,11 +23,17 @@ public class Occupant implements Serializable, ICopyable {
     private Long occupantId;
     private String firstName;
     private String lastName;
+    private String occupantEmail;
+    
+    @OneToMany(mappedBy = "occupant", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
+    private List<Reservation> reservations;
 
     public Occupant() {
+        reservations = new ArrayList<>();
     }
     
     public Occupant(String firstName, String lastName) {
+        this();
         this.firstName = firstName;
         this.lastName = lastName;
     }
@@ -88,5 +98,20 @@ public class Occupant implements Serializable, ICopyable {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
+    public String getOccupantEmail() {
+        return occupantEmail;
+    }
+
+    public void setOccupantEmail(String occupantEmail) {
+        this.occupantEmail = occupantEmail;
+    }
     
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 }

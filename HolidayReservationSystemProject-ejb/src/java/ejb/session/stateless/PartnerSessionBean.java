@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import entity.Partner;
+import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import util.exception.PartnerNotFoundException;
@@ -20,13 +21,10 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     
     public PartnerSessionBean() {
     }
-
     
     @PostConstruct
     public void postConstruct() {
-    }
-    
-    
+    }  
     
     @PreDestroy
     public void preDestroy() {
@@ -72,5 +70,15 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         em.flush();
         
         return partner.getPartnerId();
+    }
+    
+    @Override
+    public List<Partner> viewAllPartners() throws PartnerNotFoundException {
+        try {
+            Query query = em.createQuery("SELECT r FROM Partner r");
+            return query.getResultList();
+        } catch(Exception e) { 
+            throw new PartnerNotFoundException("Partner not found");
+        }
     }
 }
