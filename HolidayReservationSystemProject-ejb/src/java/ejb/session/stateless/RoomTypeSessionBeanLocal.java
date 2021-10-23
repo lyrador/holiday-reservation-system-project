@@ -17,24 +17,14 @@ import util.exception.RoomTypeNotFoundException;
 @Local
 public interface RoomTypeSessionBeanLocal {
 
-    public Long createRoomType(RoomType roomType);
+    public RoomType createRoomType(RoomType newRoomType);
 
-    public List<String> viewRoomTypeDetails(Long roomTypeId);
+    public RoomType viewRoomTypeDetails(Long roomTypeId) throws RoomTypeNotFoundException;
 
-    public void updateRoomTypeName(Long roomTypeId, String name);
+    public void updateRoomType(RoomType roomType) throws RoomTypeNotFoundException;
 
-    public void updateRoomTypeDescription(Long roomTypeId, String description);
+    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException;
 
-    public void updateRoomTypeSize(Long roomTypeId, Integer size);
-
-    public void updateRoomTypeBed(Long roomTypeId, String bed);
-
-    public void updateRoomTypeCapacity(Long roomTypeId, Integer capacity);
-
-    public void updateRoomTypeAmenities(Long roomTypeId, String amenities);
-
-    public void deleteRoomRate(Long roomTypeId);
-
-    public List<RoomType> viewAllRoomTypes() throws RoomTypeNotFoundException;
+    public List<RoomType> viewAllRoomTypes();
     
 }

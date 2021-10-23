@@ -6,7 +6,6 @@
 package ejb.session.stateless;
 
 import entity.RoomType;
-import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -14,10 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.RoomTypeNotFoundException;
 
-/**
- *
- * @author raihan
- */
+
 @Stateless
 public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeSessionBeanLocal {
 
@@ -25,90 +21,55 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     private EntityManager em;
 
     @Override
-    public Long createRoomType(RoomType roomType) {
-        em.persist(roomType);
+    public RoomType createRoomType(RoomType newRoomType) {
+        em.persist(newRoomType);
         em.flush();
         
-        return roomType.getRoomTypeId();
+        return newRoomType;
     }
     
     @Override
-    public List<String> viewRoomTypeDetails(Long roomTypeId) {
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
-        List<String> roomTypeDetails = new ArrayList<String>();
-        
-        roomTypeDetails.add(roomType.getRoomName());
-        roomTypeDetails.add(roomType.getRoomDescription());
-        roomTypeDetails.add(roomType.getRoomSize().toString());
-        roomTypeDetails.add(roomType.getRoomBed());
-        roomTypeDetails.add(roomType.getRoomAmenities());
-        
-        return roomTypeDetails;
-    }
-    
-    @Override
-    public void updateRoomTypeName(Long roomTypeId, String name) {
+    public RoomType viewRoomTypeDetails(Long roomTypeId) throws RoomTypeNotFoundException {
         RoomType roomType = em.find(RoomType.class, roomTypeId);
         
-        roomType.setRoomName(name);
-        em.merge(roomType);
-    }
-    
-    @Override
-    public void updateRoomTypeDescription(Long roomTypeId, String description) {
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
-        
-        roomType.setRoomDescription(description);
-        em.merge(roomType);
-    }
-    
-    @Override
-    public void updateRoomTypeSize(Long roomTypeId, Integer size) {
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
-        
-        roomType.setRoomSize(size);
-        em.merge(roomType);
-    }
-    
-    @Override
-    public void updateRoomTypeBed(Long roomTypeId, String bed) {
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
-        
-        roomType.setRoomBed(bed);
-        em.merge(roomType);
-    }
-
-    @Override
-    public void updateRoomTypeCapacity(Long roomTypeId, Integer capacity) {
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
-        
-        roomType.setRoomCapacity(capacity);
-        em.merge(roomType);
-    }
-    
-    @Override
-    public void updateRoomTypeAmenities(Long roomTypeId, String amenities) {
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
-        
-        roomType.setRoomAmenities(amenities);
-        em.merge(roomType);
-    }
-    
-    @Override
-    public void deleteRoomRate(Long roomTypeId) {
-        RoomType roomType = em.find(RoomType.class, roomTypeId);
-        
-        em.remove(roomType);
-    }
-
-    @Override
-    public List<RoomType> viewAllRoomTypes() throws RoomTypeNotFoundException {
-        try {
-            Query query = em.createQuery("SELECT r FROM RoomType r");
-            return query.getResultList();
-        } catch(Exception e) { 
-            throw new RoomTypeNotFoundException("Room Type not found");
+        if (roomType != null) {
+            return roomType;
+        } else {
+            throw new RoomTypeNotFoundException("Room Type ID " + roomTypeId + " does not exist!");
         }
+
+    }
+    
+    @Override
+    public void updateRoomType(RoomType roomType) throws RoomTypeNotFoundException {
+        
+        if(roomType != null && roomType.getRoomTypeId()!= null) {
+            RoomType roomTypeToUpdate = viewRoomTypeDetails(roomType.getRoomTypeId());
+            
+            roomTypeToUpdate.setRoomName(roomType.getRoomName());
+            roomTypeToUpdate.setRoomDescription(roomType.getRoomDescription());
+            roomTypeToUpdate.setRoomSize(roomType.getRoomSize());
+            roomTypeToUpdate.setRoomBed(roomType.getRoomBed());
+            roomTypeToUpdate.setRoomCapacity(roomType.getRoomCapacity());
+            roomTypeToUpdate.setRoomAmenities(roomType.getRoomAmenities());
+            
+        } else {
+            throw new RoomTypeNotFoundException("Room Type ID not provided for room type to be updated");
+        }
+    }
+    
+    @Override
+    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException { //not complete
+        RoomType roomTypeToRemove = viewRoomTypeDetails(roomTypeId);
+        
+        em.remove(roomTypeToRemove);
+    }
+
+    @Override
+    public List<RoomType> viewAllRoomTypes() {
+        Query query = em.createQuery("SELECT r FROM RoomType r");
+        
+        return query.getResultList();
     }
     
 }

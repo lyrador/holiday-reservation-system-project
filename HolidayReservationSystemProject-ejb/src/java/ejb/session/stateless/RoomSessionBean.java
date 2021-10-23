@@ -6,7 +6,6 @@
 package ejb.session.stateless;
 
 import entity.Room;
-import entity.RoomType;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -14,10 +13,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.RoomNotFoundException;
 
-/**
- *
- * @author raihan
- */
 @Stateless
 public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLocal {
 
@@ -25,52 +20,47 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     private EntityManager em;
     
     @Override
-    public Long createRoomType(Room room) {
-        em.persist(room);
+    public Room createRoom(Room newRoom) {
+        em.persist(newRoom);
         em.flush();
         
-        return room.getRoomId();
+        return newRoom;
     }
     
     @Override
-    public void updateRoomType(Long roomId, RoomType roomType) {
+    public void updateRoom(Room room) throws RoomNotFoundException {
+        
+        if(room != null && room.getRoomId()!= null) {
+            Room roomToUpdate = em.find(Room.class, room.getRoomId());
+            
+            roomToUpdate.setRoomType(room.getRoomType());
+            roomToUpdate.setRoomNumber(room.getRoomNumber());
+            roomToUpdate.setRoomAvailability(room.getRoomAvailability());
+            
+        } else {
+            throw new RoomNotFoundException("Room ID not provided for room to be updated");
+        }
+    }
+    
+    
+    @Override
+    public void deleteRoom(Long roomId) throws RoomNotFoundException { //not complete
         Room room = em.find(Room.class, roomId);
         
-        room.setRoomType(roomType);
-        em.merge(room);
-    }
-    
-    @Override
-    public void updateRoomNumber(Long roomId, Long roomNumber) {
-        Room room = em.find(Room.class, roomId);
-        
-        room.setRoomNumber(roomNumber);
-        em.merge(room);
-    }
-    
-    @Override
-    public void updateRoomAvailability(Long roomId, Boolean roomStatus) {
-        Room room = em.find(Room.class, roomId);
-        
-        room.setRoomAvailability(roomStatus);
-        em.merge(room);
-    }
-    
-    @Override
-    public void deleteRoom(Long roomId) {
-        Room room = em.find(Room.class, roomId);
+        if (room != null) {
+            em.remove(room);
+        } else {
+            throw new RoomNotFoundException("Room ID " + roomId + " does not exist!");
+        }
         
         em.remove(room);
     }
     
     @Override
-    public List<Room> viewAllRoomTypes() throws RoomNotFoundException {
-        try {
-            Query query = em.createQuery("SELECT r FROM Room r");
-            return query.getResultList();
-        } catch(Exception e) { 
-            throw new RoomNotFoundException("Room not found");
-        }
+    public List<Room> viewAllRooms() {
+        Query query = em.createQuery("SELECT r FROM Room r");
+        
+        return query.getResultList();
     }
     
 

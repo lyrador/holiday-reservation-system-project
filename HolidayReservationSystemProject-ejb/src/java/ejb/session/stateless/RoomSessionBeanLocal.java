@@ -18,16 +18,12 @@ import util.exception.RoomNotFoundException;
 @Local
 public interface RoomSessionBeanLocal {
 
-    public Long createRoomType(Room room);
+    public Room createRoom(Room newRoom);
 
-    public void updateRoomType(Long roomId, RoomType roomType);
+    public void updateRoom(Room room) throws RoomNotFoundException;
 
-    public void updateRoomNumber(Long roomId, Long roomNumber);
+    public void deleteRoom(Long roomId) throws RoomNotFoundException;
 
-    public void updateRoomAvailability(Long roomId, Boolean roomStatus);
-
-    public void deleteRoom(Long roomId);
-
-    public List<Room> viewAllRoomTypes() throws RoomNotFoundException;
+    public List<Room> viewAllRooms();
     
 }
