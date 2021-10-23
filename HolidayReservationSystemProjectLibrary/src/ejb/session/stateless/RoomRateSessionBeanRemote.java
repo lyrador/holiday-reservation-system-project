@@ -19,24 +19,14 @@ import util.exception.RoomRateNotFoundException;
 @Remote
 public interface RoomRateSessionBeanRemote {
     
-    public Long createRoomRate(RoomRate roomRate);
+    public RoomRate createRoomRate(RoomRate newRoomRate);
 
-    public List<String> viewRoomRateDetails(Long roomRateId);
+    public RoomRate viewRoomRateDetails(Long roomRateId) throws RoomRateNotFoundException;
 
-    public void updateRoomRateName(Long roomRateId, String name);
+    public void updateRoomRate(RoomRate roomRate) throws RoomRateNotFoundException;
 
-    public void updateRoomRateRoomType(Long roomRateId, RoomType roomType);
+    public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException;
 
-    public void updateRoomRateRateType(Long roomRateId, String rateType);
-
-    public void updateRoomRateRatePerNight(Long roomRateId, Integer ratePerNight);
-
-    public void updateRoomRateValidityStartDate(Long roomRateId, Date validityStartDate);
-
-    public void updateRoomRateValidityEndDate(Long roomRateId, Date validityEndDate);
-
-    public void deleteRoomRate(Long roomRateId);
-
-    public List<RoomRate> viewAllRoomRates() throws RoomRateNotFoundException;
+    public List<RoomRate> viewAllRoomRates();
     
 }

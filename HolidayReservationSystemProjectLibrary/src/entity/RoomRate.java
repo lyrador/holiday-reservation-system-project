@@ -6,34 +6,63 @@
 package entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import util.enumeration.RateTypeEnum;
 
 
 @Entity
 public class RoomRate implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
+    @Column(nullable = false, unique = true, length = 64)
+    @NotNull
+    @Size(max = 64)
     private String name;
-    private String rateType;
-    private Integer ratePerNight;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @NotNull
+    private RateTypeEnum rateType;
+    @Column(nullable = false, precision = 11, scale = 2)
+    @NotNull
+    @DecimalMin("0.00")
+    @Digits(integer = 9, fraction = 2)
+    private BigDecimal ratePerNight;
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date validityStartDate;
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date validityEndDate;
     
-    @ManyToOne // owning side
+    @ManyToOne(optional = false) // owning side
+    @JoinColumn(nullable = false)
     private RoomType roomType;
 
     public RoomRate() {
     }
 
-    public RoomRate(String name, String rateType, Integer ratePerNight, Date validityStartDate, Date validityEndDate, RoomType roomType) {
+    public RoomRate(String name, RateTypeEnum rateType, BigDecimal ratePerNight, Date validityStartDate, Date validityEndDate, RoomType roomType) {
         this.name = name;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
@@ -60,19 +89,19 @@ public class RoomRate implements Serializable {
         this.name = name;
     }
 
-    public String getRateType() {
+    public RateTypeEnum getRateType() {
         return rateType;
     }
 
-    public void setRateType(String rateType) {
+    public void setRateType(RateTypeEnum rateType) {
         this.rateType = rateType;
     }
 
-    public Integer getRatePerNight() {
+    public BigDecimal getRatePerNight() {
         return ratePerNight;
     }
 
-    public void setRatePerNight(Integer ratePerNight) {
+    public void setRatePerNight(BigDecimal ratePerNight) {
         this.ratePerNight = ratePerNight;
     }
 
