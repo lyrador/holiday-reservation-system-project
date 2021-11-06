@@ -35,22 +35,21 @@ public class RoomRate implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
-    @Column(nullable = false, unique = true, length = 64)
-    @NotNull
-    @Size(max = 64)
+    
+    @Column(nullable = false)
     private String name;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull
     private RateTypeEnum rateType;
-    @Column(nullable = false, precision = 11, scale = 2)
-    @NotNull
-    @DecimalMin("0.00")
-    @Digits(integer = 9, fraction = 2)
+    
+    @Column(nullable = false)
     private BigDecimal ratePerNight;
+    
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date validityStartDate;
+    
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date validityEndDate;

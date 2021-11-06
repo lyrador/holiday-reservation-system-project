@@ -6,20 +6,14 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import util.enumeration.BedTypeEnum;
 
 @Entity
 public class RoomType implements Serializable {
@@ -29,29 +23,23 @@ public class RoomType implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomTypeId;
-    @Column(nullable = false, unique = true, length = 64)
-    @NotNull
-    @Size(max = 64)
+    
+    @Column(nullable = false, unique = true)
     private String roomName;
-    @Column(nullable = false, length = 128)
-    @NotNull
-    @Size(max = 128)
+    
+    @Column(nullable = false)
     private String roomDescription;
+    
     @Column(nullable = false)
-    @NotNull
-    @Min(100)
     private Integer roomSize;
-    @Enumerated(EnumType.STRING)
+    
     @Column(nullable = false)
-    @NotNull
-    private BedTypeEnum roomBed;
+    private String roomBed;
+    
     @Column(nullable = false)
-    @NotNull
-    @Min(1)
-    @Max(4)
     private Integer roomCapacity;
+    
     @Column(nullable = false)
-    @NotNull
     private String roomAmenities;
     
     @OneToMany(mappedBy="roomType") // owned side
@@ -64,9 +52,12 @@ public class RoomType implements Serializable {
     private List<RoomRate> roomRates;
 
     public RoomType() {
+        this.rooms = new ArrayList<>();
+        this.reservations = new ArrayList<>();
+        this.roomRates = new ArrayList<>();
     }
 
-    public RoomType(String roomName, String roomDescription, Integer roomSize, BedTypeEnum roomBed, Integer roomCapacity, String roomAmenities, List<Room> rooms, List<Reservation> reservations, List<RoomRate> roomRates) {
+    public RoomType(String roomName, String roomDescription, Integer roomSize, String roomBed, Integer roomCapacity, String roomAmenities, List<Room> rooms, List<Reservation> reservations, List<RoomRate> roomRates) {
         this.roomName = roomName;
         this.roomDescription = roomDescription;
         this.roomSize = roomSize;
@@ -112,11 +103,11 @@ public class RoomType implements Serializable {
         this.roomSize = roomSize;
     }
 
-    public BedTypeEnum getRoomBed() {
+    public String getRoomBed() {
         return roomBed;
     }
 
-    public void setRoomBed(BedTypeEnum roomBed) {
+    public void setRoomBed(String roomBed) {
         this.roomBed = roomBed;
     }
 

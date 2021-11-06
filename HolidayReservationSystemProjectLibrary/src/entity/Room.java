@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,13 +28,12 @@ public class Room implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
-    @Column(nullable = false, unique = true, length = 4)
-    @NotNull
-    @Size(min = 4, max = 64)
-    private Long roomNumber;
+    
+    @Column(nullable = false)
+    private Integer roomNumber;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotNull
     private RoomStatusEnum roomAvailability;
     
     @ManyToOne(optional = false) // owning side
@@ -43,7 +43,7 @@ public class Room implements Serializable {
     public Room() {
     }
 
-    public Room(Long roomNumber, RoomStatusEnum roomAvailability, RoomType roomType) {
+    public Room(Integer roomNumber, RoomStatusEnum roomAvailability, RoomType roomType) {
         this.roomNumber = roomNumber;
         this.roomAvailability = roomAvailability;
         this.roomType = roomType;
@@ -59,11 +59,11 @@ public class Room implements Serializable {
         this.roomId = roomId;
     }
 
-    public Long getRoomNumber() {
+    public Integer getRoomNumber() {
         return roomNumber;
     }
 
-    public void setRoomNumber(Long roomNumber) {
+    public void setRoomNumber(Integer roomNumber) {
         this.roomNumber = roomNumber;
     }
 
