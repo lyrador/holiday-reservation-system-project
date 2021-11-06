@@ -9,8 +9,12 @@ import entity.Room;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.RoomStatusEnum;
+import util.exception.DeleteRoomException;
 import util.exception.RoomNotFoundException;
 
 @Stateless
@@ -25,6 +29,32 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         em.flush();
         
         return newRoom;
+    }
+    
+    @Override
+    public Room retrieveRoomByRoomId(Long roomId) throws RoomNotFoundException {
+        Room roomType = em.find(Room.class, roomId);
+        
+        if (roomType != null) {
+            return roomType;
+        } else {
+            throw new RoomNotFoundException("Room ID " + roomId + " does not exist!");
+        }
+
+    }
+    
+    @Override
+    public Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomNumber = :inRoomNumber");
+        query.setParameter("inRoomNumber", roomNumber);
+        
+        try {
+            Room room = (Room) query.getSingleResult();
+            return room;
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new RoomNotFoundException("Room: " + roomNumber + " does not exist!");
+        }
+
     }
     
     @Override
@@ -44,16 +74,17 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     
     
     @Override
-    public void deleteRoom(Long roomId) throws RoomNotFoundException { //not complete
-        Room room = em.find(Room.class, roomId);
+    public void deleteRoom(Long roomId) throws RoomNotFoundException, DeleteRoomException { //not complete
+        Room roomToRemove = retrieveRoomByRoomId(roomId);
         
-        if (room != null) {
-            em.remove(room);
+        if (roomToRemove.getRoomAvailability().equals(RoomStatusEnum.AVAILABLE)) {
+            roomToRemove.getRoomType().getRooms().remove(roomToRemove);
+            em.remove(roomToRemove);
         } else {
-            throw new RoomNotFoundException("Room ID " + roomId + " does not exist!");
+            throw new DeleteRoomException("Room ID " + roomId + " is currently in use and cannot be deleted!");
         }
-        
-        em.remove(room);
+
+  
     }
     
     @Override

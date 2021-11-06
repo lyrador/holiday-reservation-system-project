@@ -8,6 +8,7 @@ package ejb.session.stateless;
 import entity.RoomType;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.DeleteRoomTypeException;
 import util.exception.RoomTypeNotFoundException;
 
 /**
@@ -19,12 +20,14 @@ public interface RoomTypeSessionBeanLocal {
 
     public RoomType createRoomType(RoomType newRoomType);
 
-    public RoomType viewRoomTypeDetails(Long roomTypeId) throws RoomTypeNotFoundException;
+    public RoomType retrieveRoomTypeByRoomId(Long roomTypeId) throws RoomTypeNotFoundException;
 
     public void updateRoomType(RoomType roomType) throws RoomTypeNotFoundException;
 
-    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException;
+    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException, DeleteRoomTypeException;
 
     public List<RoomType> viewAllRoomTypes();
+
+    public RoomType retrieveRoomTypeByName(String name) throws RoomTypeNotFoundException;
     
 }

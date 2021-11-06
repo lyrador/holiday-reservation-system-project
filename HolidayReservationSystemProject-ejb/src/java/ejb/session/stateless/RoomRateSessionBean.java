@@ -12,6 +12,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.DeleteRoomRateException;
 
 
 @Stateless
@@ -29,7 +30,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     }
     
     @Override
-    public RoomRate viewRoomRateDetails(Long roomRateId) throws RoomRateNotFoundException {
+    public RoomRate retrieveRoomRateById(Long roomRateId) throws RoomRateNotFoundException {
         RoomRate roomRate = em.find(RoomRate.class, roomRateId);
         
         if (roomRate != null) {
@@ -44,7 +45,7 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     public void updateRoomRate(RoomRate roomRate) throws RoomRateNotFoundException {
 
         if(roomRate != null && roomRate.getRoomRateId()!= null) {
-            RoomRate roomRateToUpdate = viewRoomRateDetails(roomRate.getRoomRateId());
+            RoomRate roomRateToUpdate = retrieveRoomRateById(roomRate.getRoomRateId());
             
             roomRateToUpdate.setName(roomRate.getName());
             roomRateToUpdate.setRoomType(roomRate.getRoomType());
@@ -60,8 +61,9 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     
     @Override
     public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException { //not complete
-        RoomRate roomRateToRemove = viewRoomRateDetails(roomRateId);
+        RoomRate roomRateToRemove = retrieveRoomRateById(roomRateId);
         
+        roomRateToRemove.getRoomType().getRoomRates().remove(roomRateToRemove);
         em.remove(roomRateToRemove);
     }
     

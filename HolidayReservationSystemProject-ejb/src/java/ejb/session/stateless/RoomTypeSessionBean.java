@@ -9,8 +9,11 @@ import entity.RoomType;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.exception.DeleteRoomTypeException;
 import util.exception.RoomTypeNotFoundException;
 
 
@@ -29,7 +32,20 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     }
     
     @Override
-    public RoomType viewRoomTypeDetails(Long roomTypeId) throws RoomTypeNotFoundException {
+    public RoomType retrieveRoomTypeByName(String name) throws RoomTypeNotFoundException {
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomTypeName = :inRoomTypeName");
+        query.setParameter("inRoomTypeName", name);
+        try {
+            RoomType roomType = (RoomType) query.getSingleResult();
+            return roomType;
+        } catch (NoResultException | NonUniqueResultException ex) {
+            throw new RoomTypeNotFoundException("Room Type: " + name + " does not exist!");
+        }
+        
+    }
+    
+    @Override
+    public RoomType retrieveRoomTypeByRoomId(Long roomTypeId) throws RoomTypeNotFoundException {
         RoomType roomType = em.find(RoomType.class, roomTypeId);
         
         if (roomType != null) {
@@ -44,7 +60,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     public void updateRoomType(RoomType roomType) throws RoomTypeNotFoundException {
         
         if(roomType != null && roomType.getRoomTypeId()!= null) {
-            RoomType roomTypeToUpdate = viewRoomTypeDetails(roomType.getRoomTypeId());
+            RoomType roomTypeToUpdate = retrieveRoomTypeByRoomId(roomType.getRoomTypeId());
             
             roomTypeToUpdate.setRoomName(roomType.getRoomName());
             roomTypeToUpdate.setRoomDescription(roomType.getRoomDescription());
@@ -59,10 +75,14 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     }
     
     @Override
-    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException { //not complete
-        RoomType roomTypeToRemove = viewRoomTypeDetails(roomTypeId);
+    public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException, DeleteRoomTypeException { 
+        RoomType roomTypeToRemove = retrieveRoomTypeByRoomId(roomTypeId);
         
-        em.remove(roomTypeToRemove);
+        if (roomTypeToRemove.getRooms().isEmpty() && roomTypeToRemove.getRooms().isEmpty() && roomTypeToRemove.getReservations().isEmpty()) {
+            em.remove(roomTypeToRemove);
+        } else {
+            throw new DeleteRoomTypeException("Room Type ID " + roomTypeId + " is currently in use and cannot be deleted!");
+        }
     }
 
     @Override
