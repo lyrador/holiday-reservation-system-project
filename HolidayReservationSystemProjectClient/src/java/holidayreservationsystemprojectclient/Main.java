@@ -12,8 +12,8 @@ import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
-import ejb.session.stateless.StaffSessionBeanRemote;
 import javax.ejb.EJB;
+import ejb.session.stateless.EmployeeSessionBeanRemote;
 
 /**
  *
@@ -24,7 +24,7 @@ import javax.ejb.EJB;
 public class Main {
 
     @EJB
-    private static StaffSessionBeanRemote staffSessionBeanRemote;
+    private static EmployeeSessionBeanRemote staffSessionBeanRemote;
 
     @EJB
     private static RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;

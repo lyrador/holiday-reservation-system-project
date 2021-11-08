@@ -14,13 +14,13 @@ import util.providedinterface.ICopyable;
 
 
 @Entity
-public class Staff implements Serializable, ICopyable {
+public class Employee implements Serializable, ICopyable {
     
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     
-    private Long staffId;
+    private Long employeeId;
     private String firstName;
     private String lastName;
     private AccessRightEnum accessRightEnum;
@@ -28,11 +28,11 @@ public class Staff implements Serializable, ICopyable {
     private String password;
     private List<Reservation> reservations;
 
-    public Staff() {
+    public Employee() {
         reservations = new ArrayList<>();
     }
 
-    public Staff(String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password) 
+    public Employee(String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password) 
     {
         this();
         
@@ -43,11 +43,11 @@ public class Staff implements Serializable, ICopyable {
         this.password = password;
     }
 
-    public Staff(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password)
+    public Employee(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password)
     {
         this();
         
-        this.staffId = staffId;
+        this.employeeId = staffId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.accessRightEnum = accessRightEnum;
@@ -56,11 +56,11 @@ public class Staff implements Serializable, ICopyable {
     }
 
     
-    public Staff(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password, List<Reservation> reservations)
+    public Employee(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password, List<Reservation> reservations)
     {
         this();
         
-        this.staffId = staffId;
+        this.employeeId = staffId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.accessRightEnum = accessRightEnum;
@@ -74,8 +74,8 @@ public class Staff implements Serializable, ICopyable {
     {
         if(object.getClass().equals(this.getClass()))
         {
-            Staff staffToCopy = (Staff)object;
-            this.setStaffId(staffToCopy.getStaffId());
+            Employee staffToCopy = (Employee)object;
+            this.setEmployeeId(staffToCopy.getEmployeeId());
             this.setFirstName(staffToCopy.getFirstName());
             this.setLastName(staffToCopy.getLastName());
             this.setAccessRightEnum(staffToCopy.getAccessRightEnum());
@@ -89,19 +89,19 @@ public class Staff implements Serializable, ICopyable {
     public int hashCode() 
     {
         int hash = 0;
-        hash += (staffId != null ? staffId.hashCode() : 0);
+        hash += (employeeId != null ? employeeId.hashCode() : 0);
 
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the staffId fields are not set
-        if (!(object instanceof Staff)) {
+        // TODO: Warning - this method won't work in the case the employeeId fields are not set
+        if (!(object instanceof Employee)) {
             return false;
         }
-        Staff other = (Staff) object;
-        if ((this.staffId == null && other.staffId != null) || (this.staffId != null && !this.staffId.equals(other.staffId))) {
+        Employee other = (Employee) object;
+        if ((this.employeeId == null && other.employeeId != null) || (this.employeeId != null && !this.employeeId.equals(other.employeeId))) {
             return false;
         }
         return true;
@@ -109,15 +109,15 @@ public class Staff implements Serializable, ICopyable {
 
     @Override
     public String toString() {
-        return "entity.Staff[ id=" + staffId + " ]";
+        return "entity.Staff[ id=" + employeeId + " ]";
     }
 
-    public Long getStaffId() {
-        return staffId;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setStaffId(Long staffId) {
-        this.staffId = staffId;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getFirstName() {

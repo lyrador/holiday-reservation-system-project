@@ -5,6 +5,8 @@ import java.util.List;
 import javax.ejb.Remote;
 import util.exception.PartnerNotFoundException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.PartnerUsernameExistException;
+import util.exception.UnknownPersistenceException;
 
 /**
  *
@@ -15,10 +17,10 @@ public interface PartnerSessionBeanRemote {
     
     public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException;
     
-    public Partner login(String email, String password) throws InvalidLoginCredentialException;
+    public Partner partnerLogin(String email, String password) throws InvalidLoginCredentialException;
     
-    public Long createNewPartner(Partner partner);
+    public Long createNewPartner(Partner partner)  throws PartnerUsernameExistException, UnknownPersistenceException;
     
-    public List<Partner> viewAllPartners() throws PartnerNotFoundException;
+    public List<Partner> viewAllPartners();
    
 }

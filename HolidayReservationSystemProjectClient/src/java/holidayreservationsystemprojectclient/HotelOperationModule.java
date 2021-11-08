@@ -11,7 +11,7 @@ import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
-import entity.Staff;
+import entity.Employee;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,7 +38,7 @@ public class HotelOperationModule {
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     
-    private Staff currentStaff;
+    private Employee currentStaff;
 
     public HotelOperationModule() {
     }

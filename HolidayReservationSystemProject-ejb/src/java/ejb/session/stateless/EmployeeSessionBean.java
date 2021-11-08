@@ -6,29 +6,28 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import entity.Partner;
+import entity.Employee;
 import java.util.List;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import util.exception.EmployeeUsernameExistException;
-import util.exception.PartnerNotFoundException;
+import util.exception.EmployeeNotFoundException;
 import util.exception.InvalidLoginCredentialException;
-import util.exception.PartnerUsernameExistException;
 import util.exception.UnknownPersistenceException;
 
 @Stateless
-public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSessionBeanLocal {
+public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeSessionBeanLocal {
 
     @PersistenceContext(unitName = "HolidayReservationSystemProject-ejbPU")
     private EntityManager em;
     
-    public PartnerSessionBean() {
+    public EmployeeSessionBean() {
     }
     
     @PostConstruct
     public void postConstruct() {
-    }  
+    }
     
     @PreDestroy
     public void preDestroy() {
@@ -39,26 +38,28 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
 
     // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    // "Insert Code > Add Business Method") 
+    
     @Override
-    public Partner retrievePartnerById(Long partnerId) throws PartnerNotFoundException {
-        Partner partner = em.find(Partner.class, partnerId);
+    public Employee retrieveEmployeeById(Long employeeId) throws EmployeeNotFoundException {
+        Employee employee = em.find(Employee.class, employeeId);
         
-        if(partner != null) {
-            return partner;
+        if(employee != null) {
+            return employee;
         } else {
-            throw new PartnerNotFoundException("Partner does not exist: " + partnerId);
+            throw new EmployeeNotFoundException("Employee does not exist: " + employeeId);
         }
     }
     
-    public Partner partnerLogin(String email, String password) throws InvalidLoginCredentialException {
+    @Override
+    public Employee employeeLogin(String email, String password) throws InvalidLoginCredentialException {
         try {
-            Query query = em.createQuery("SELECT c FROM Partner c WHERE c.email = :inEmail");
+            Query query = em.createQuery("SELECT c FROM Employee c WHERE c.email = :inEmail");
             query.setParameter("inEmail", email);
-            Partner partner = (Partner)query.getSingleResult();
+            Employee employee = (Employee)query.getSingleResult();
             
-            if(partner.getPassword().equals(password)) {
-                return partner;
+            if(employee.getPassword().equals(password)) {
+                return employee;
             } else {
                 throw new InvalidLoginCredentialException("Invalid login credential");
             }
@@ -68,17 +69,18 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
     
     @Override
-    public Long createNewPartner(Partner partner) throws PartnerUsernameExistException, UnknownPersistenceException {      
+    public Long createNewEmployee(Employee newEmployee) throws EmployeeUsernameExistException, UnknownPersistenceException {
         try {
-            em.persist(partner);
+            em.persist(newEmployee);
             em.flush();
-            return partner.getPartnerId();
+
+            return newEmployee.getEmployeeId();
         }
         catch(PersistenceException ex) 
         {
             if(ex.getCause() != null && ex.getCause().getClass().getName().equals("org.eclipse.persistence.exceptions.DatabaseException")) {
                 if(ex.getCause().getCause() != null && ex.getCause().getCause().getClass().getName().equals("java.sql.SQLIntegrityConstraintViolationException")){
-                    throw new PartnerUsernameExistException();
+                    throw new EmployeeUsernameExistException();
                 } else {
                     throw new UnknownPersistenceException(ex.getMessage());
                 }
@@ -89,8 +91,8 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
     }
     
     @Override
-    public List<Partner> viewAllPartners() {
-        Query query = em.createQuery("SELECT p FROM Partner p");
+    public List<Employee> viewAllEmployees() {
+        Query query = em.createQuery("SELECT e FROM Employee e");
         return query.getResultList();
     }
 }
