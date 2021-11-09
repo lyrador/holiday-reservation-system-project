@@ -145,11 +145,9 @@ public class MainApp {
                     Boolean isWalkIn = false;
                     searchHotelRoom(isWalkIn);
                 } else if (response == 2) {
-                    System.out.println("viewMyReservationDetails()");
                     //viewMyReservationDetails();
                 } else if (response == 3) {
-                    System.out.println("viewAllMyReservations()");
-                    //viewAllMyReservations();
+                    viewAllMyReservations();
                 } else if (response == 4) {
                     break;
                 } else {
