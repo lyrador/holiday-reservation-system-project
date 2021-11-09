@@ -1,6 +1,7 @@
 package ejb.session.stateless;
 
 import entity.ExceptionReport;
+import entity.Guest;
 import entity.Occupant;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -90,7 +91,12 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 //        return newReservation;
 //    }
     
-    public Long createReservation(Reservation reservation) {
+    @Override
+    public Long createReservation(Reservation reservation, Long guestId) {
+        
+        Guest guest = em.find(Guest.class, guestId);
+        reservation.setGuest(guest);
+        guest.getReservations().add(reservation);
         
         em.persist(reservation);
         em.flush();
@@ -169,7 +175,35 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         } 
         
         return reservations;
-
+    }
+    
+    @Override
+    public List<Reservation> viewAllMyReservations(Long guestId) {
+        
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :inGuestId");
+        query.setParameter("inGuestId", guestId);
+        
+        List<Reservation> reservations = new ArrayList<>();
+        
+        if (query.getResultList() != null) {
+            reservations = query.getResultList();
+        } 
+        
+        return reservations;
+    }
+    
+    public List<Reservation> viewAllPartnerReservationsFor(Long partnerId) {
+        
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.partner.partnerId = :inPartnerId");
+        query.setParameter("inPartnerId", partnerId);
+        
+        List<Reservation> reservations = new ArrayList<>();
+        
+        if (query.getResultList() != null) {
+            reservations = query.getResultList();
+        } 
+        
+        return reservations;
     }
     
     @Override
