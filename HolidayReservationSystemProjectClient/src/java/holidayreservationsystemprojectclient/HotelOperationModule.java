@@ -5,6 +5,7 @@
  */
 package holidayreservationsystemprojectclient;
 
+import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
@@ -38,13 +39,14 @@ public class HotelOperationModule {
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
     private RoomSessionBeanRemote roomSessionBeanRemote;
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
+    private ReservationSessionBeanRemote reservationSessionBeanRemote;
     
     private Employee currentStaff;
 
     public HotelOperationModule() {
     }
     
-    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentStaff) {
+    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, Employee currentStaff) {
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
@@ -175,6 +177,10 @@ public class HotelOperationModule {
         System.out.print("Enter Amenities> ");
         newRoomType.setRoomAmenities(scanner.nextLine().trim());
         
+        System.out.print("Enter Room Rank> ");
+        newRoomType.setRoomRank(scanner.nextInt());
+        scanner.nextLine();
+        
         newRoomType = roomTypeSessionBeanRemote.createRoomType(newRoomType);
         System.out.println("New room type created successfully!: " + newRoomType.getRoomTypeId()+ "\n");
         System.out.print("Press any key to continue...> ");
@@ -198,6 +204,7 @@ public class HotelOperationModule {
             System.out.println("Room Type bed: " + roomType.getRoomBed());
             System.out.println("Room Type capacity: " + roomType.getRoomCapacity());
             System.out.println("Room Type amenities: " + roomType.getRoomAmenities());
+            System.out.println("Room Type rank: " + roomType.getRoomRank());
             System.out.println("------------------------");
             System.out.println("1: Update Room Type");
             System.out.println("2: Delete Room Type");
@@ -749,6 +756,21 @@ public class HotelOperationModule {
     }
 
     private void allocateRoom() {
+        
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("*** HoRS :: Hotel Operations :: Allocate Room To Current Day Reservations ***\n");
+        
+        List<Room> roomsReserved = reservationSessionBeanRemote.allocateRoomToCurrentDayReservations();
+        if(!roomsReserved.isEmpty()){
+            System.out.println("The following rooms have been allocated: ");
+            for(Room room:roomsReserved){
+                System.out.println("Room Number: " + room.getRoomNumber()); 
+            }
+        }
+        else {
+            System.out.println("No rooms available for allocation, refer to exception reports for more informaiton.");
+        }
+       
         
     }
 
