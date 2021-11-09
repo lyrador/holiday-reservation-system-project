@@ -18,7 +18,7 @@ public interface ReservationSessionBeanLocal {
 
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException;
 
-    //public Long createNewReservation(Reservation reservation);
+    public Long createReservation(Reservation reservation, Long guestId);
 
     public List<Reservation> retrieveReservationsByCheckOutDate(Date checkOutDate);
 
@@ -28,5 +28,6 @@ public interface ReservationSessionBeanLocal {
 
     public ExceptionReport createExceptionReport(ExceptionReport exceptionReport);
    
+    public List<Reservation> viewAllMyReservations(Long guestId);
     
 }

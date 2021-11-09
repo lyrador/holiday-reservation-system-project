@@ -41,21 +41,21 @@ public class HotelOperationModule {
     private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private ReservationSessionBeanRemote reservationSessionBeanRemote;
     
-    private Employee currentStaff;
+    private Employee currentEmployee;
 
     public HotelOperationModule() {
     }
     
-    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, Employee currentStaff) {
+    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, Employee currentEmployee) {
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
-        this.currentStaff = currentStaff;
+        this.currentEmployee = currentEmployee;
     }
     
     public void menuHotelOperation() throws InvalidAccessRightException {
         
-        if (currentStaff.getAccessRightEnum() != AccessRightEnum.OPERATIONS_MANAGER && currentStaff.getAccessRightEnum() != AccessRightEnum.SALES_MANAGER) {
+        if (currentEmployee.getAccessRightEnum() != AccessRightEnum.OPERATIONS_MANAGER && currentEmployee.getAccessRightEnum() != AccessRightEnum.SALES_MANAGER) {
             throw new InvalidAccessRightException("You don't have MANAGER rights to access the hotel operations module.");
         }
         

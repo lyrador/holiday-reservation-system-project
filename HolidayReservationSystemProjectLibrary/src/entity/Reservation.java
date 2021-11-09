@@ -37,6 +37,10 @@ public class Reservation implements Serializable, ICopyable {
     private Occupant occupant;
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     private RoomType roomType;
+    @ManyToOne(optional = true, cascade = {}, fetch = FetchType.LAZY)
+    private Guest guest;
+    @ManyToOne(optional = true, cascade = {}, fetch = FetchType.LAZY)
+    private Partner partner;
     
     @OneToMany(mappedBy = "reservation")
     private List<Room> rooms;
@@ -227,5 +231,21 @@ public class Reservation implements Serializable, ICopyable {
      */
     public void setNumOfRooms(int numOfRooms) {
         this.numOfRooms = numOfRooms;
+    }  
+
+    public Guest getGuest() {
+        return guest;
+    }
+    
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
+    public Partner getPartner() {
+        return partner;
+    }
+
+    public void setPartner(Partner partner) {
+        this.partner = partner;
     }
 }

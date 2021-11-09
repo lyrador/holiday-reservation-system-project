@@ -42,11 +42,11 @@ public class Employee implements Serializable, ICopyable {
         this.password = password;
     }
 
-    public Employee(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password)
+    public Employee(Long employeeId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password)
     {
         this();
         
-        this.employeeId = staffId;
+        this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.accessRightEnum = accessRightEnum;
@@ -55,11 +55,11 @@ public class Employee implements Serializable, ICopyable {
     }
 
     
-    public Employee(Long staffId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password, List<Reservation> reservations)
+    public Employee(Long employeeId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password, List<Reservation> reservations)
     {
         this();
         
-        this.employeeId = staffId;
+        this.employeeId = employeeId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.accessRightEnum = accessRightEnum;
@@ -73,14 +73,14 @@ public class Employee implements Serializable, ICopyable {
     {
         if(object.getClass().equals(this.getClass()))
         {
-            Employee staffToCopy = (Employee)object;
-            this.setEmployeeId(staffToCopy.getEmployeeId());
-            this.setFirstName(staffToCopy.getFirstName());
-            this.setLastName(staffToCopy.getLastName());
-            this.setAccessRightEnum(staffToCopy.getAccessRightEnum());
-            this.setUsername(staffToCopy.getUsername());
-            this.setPassword(staffToCopy.getPassword());
-            this.setReservations(staffToCopy.getReservations());
+            Employee employeeToCopy = (Employee)object;
+            this.setEmployeeId(employeeToCopy.getEmployeeId());
+            this.setFirstName(employeeToCopy.getFirstName());
+            this.setLastName(employeeToCopy.getLastName());
+            this.setAccessRightEnum(employeeToCopy.getAccessRightEnum());
+            this.setUsername(employeeToCopy.getUsername());
+            this.setPassword(employeeToCopy.getPassword());
+            this.setReservations(employeeToCopy.getReservations());
         }
     }
 
@@ -108,7 +108,7 @@ public class Employee implements Serializable, ICopyable {
 
     @Override
     public String toString() {
-        return "entity.Staff[ id=" + employeeId + " ]";
+        return "entity.Employee[ id=" + employeeId + " ]";
     }
 
     public Long getEmployeeId() {

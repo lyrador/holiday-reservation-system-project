@@ -12,11 +12,11 @@ import ejb.session.stateless.ReservationSessionBeanRemote;
 import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
+import ejb.session.stateless.EmployeeSessionBeanRemote;
 import entity.Employee;
 import java.util.Scanner;
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
-import ejb.session.stateless.EmployeeSessionBeanRemote;
 
 
 public class MainApp {
