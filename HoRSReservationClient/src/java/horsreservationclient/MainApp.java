@@ -107,7 +107,7 @@ public class MainApp {
                 } else if (response == 2) {
                     createGuest();
                 } else if (response == 3) {
-                    searchHotelRoom();
+                    //searchHotelRoom();
                 } else if (response == 4) {
                     break;
                 } else {
