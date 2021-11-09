@@ -46,8 +46,7 @@ public class SystemAdministrationModule {
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
         
-        while(true)
-        {
+        while(true) {
             System.out.println("*** HoRS :: System Administration ***\n");
             System.out.println("1: Create New Employee");
             System.out.println("2: View All Employees");
@@ -58,32 +57,35 @@ public class SystemAdministrationModule {
             System.out.println("5: Back\n");
             response = 0;
             
-            while(response < 1 || response > 5) {
+            while (response < 1 || response > 5) {
                 System.out.print("> ");
 
                 response = scanner.nextInt();
 
                 if(response == 1) {
+                    
                     createEmployee();
-                }
-                else if(response == 2) {
+                    
+                } else if(response == 2) {
+                    
                     viewAllEmployees();
-                }
-                else if(response == 3)
-                {
+                    
+                } else if(response == 3) {
+                    
                     createPartner();
-                }
-                else if(response == 4)
-                {
+                    
+                } else if(response == 4) {
+                    
                     viewAllPartners();
-                }
-                else if (response == 5)
-                {
+                    
+                } else if (response == 5) {
+                    
                     break;
-                }
-                else
-                {
-                    System.out.println("Invalid option, please try again!\n");                
+                    
+                } else {
+                    
+                    System.out.println("Invalid option, please try again!\n");  
+                    
                 }
             }
             
@@ -157,8 +159,7 @@ public class SystemAdministrationModule {
         System.out.println("*** POS System :: System Administration :: Create New Partner ***\n");
         System.out.print("Enter Partner Name> ");
         newPartner.setPartnerName(scanner.nextLine().trim());
-        
-        scanner.nextLine();
+       
         System.out.print("Enter Username> ");
         newPartner.setUsername(scanner.nextLine().trim());
         System.out.print("Enter Password> ");

@@ -43,7 +43,7 @@ public class HotelOperationModule {
     public HotelOperationModule() {
     }
     
-    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote) {
+    public HotelOperationModule(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, Employee currentStaff) {
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
@@ -52,7 +52,7 @@ public class HotelOperationModule {
     
     public void menuHotelOperation() throws InvalidAccessRightException {
         
-        if (currentStaff.getAccessRightEnum() != AccessRightEnum.OPERATIONS_MANAGER || currentStaff.getAccessRightEnum() != AccessRightEnum.SALES_MANAGER) {
+        if (currentStaff.getAccessRightEnum() != AccessRightEnum.OPERATIONS_MANAGER && currentStaff.getAccessRightEnum() != AccessRightEnum.SALES_MANAGER) {
             throw new InvalidAccessRightException("You don't have MANAGER rights to access the hotel operations module.");
         }
         

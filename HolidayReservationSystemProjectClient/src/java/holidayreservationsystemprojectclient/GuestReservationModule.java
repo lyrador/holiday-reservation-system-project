@@ -27,11 +27,11 @@ public class GuestReservationModule {
         this.currentGuest = null;
     }
     
-    public GuestReservationModule(holidayReservationXXXSessionBeanRemote, GuestSessionBeanRemote guestSessionBeanRemote) {
-        this();
-        this.holidayReservationXXXSessionBeanRemote = holidayReservationXXXSessionBeanRemote;
-        this.guestSessionBeanRemote = guestSessionBeanRemote;
-    }
+//    public GuestReservationModule(holidayReservationXXXSessionBeanRemote, GuestSessionBeanRemote guestSessionBeanRemote) {
+//        this();
+//        this.holidayReservationXXXSessionBeanRemote = holidayReservationXXXSessionBeanRemote;
+//        this.guestSessionBeanRemote = guestSessionBeanRemote;
+//    }
     
     public void runApp()
     {
@@ -41,7 +41,7 @@ public class GuestReservationModule {
             System.out.println("*** Welcome to Guest Reservation System ***\n");
             
             if(currentGuest != null) {
-                System.out.println("You are login as " + currentGuest.getFullName() + "\n");
+                //System.out.println("You are login as " + currentGuest.getFullName() + "\n");
                 loggedInDisplayMenu();
             } else {
                 notLoggedInDisplayMenu();
@@ -82,7 +82,7 @@ public class GuestReservationModule {
                 }
                 else if(response == 3)
                 {
-                    searchHotelRoom();
+                    //searchHotelRoom();
                 }
                 else if(response == 4)
                 {
@@ -122,14 +122,14 @@ public class GuestReservationModule {
                 response = scanner.nextInt();
 
                 if(response == 1) {
-                    searchHotelRoom();
+                    //searchHotelRoom();
                 }
                 else if(response == 2) {
-                    viewMyReservationDetails();
+                    //viewMyReservationDetails();
                 }
                 else if(response == 3)
                 {
-                    viewAllMyReservations();
+                    //viewAllMyReservations();
                 }
                 else if(response == 4)
                 {
