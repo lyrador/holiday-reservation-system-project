@@ -14,7 +14,6 @@ import javax.persistence.Query;
 import util.exception.GuestEmailExistException;
 import util.exception.GuestNotFoundException;
 import util.exception.InvalidLoginCredentialException;
-import util.exception.GuestUsernameExistException;
 import util.exception.UnknownPersistenceException;
 
 @Stateless
@@ -56,7 +55,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
     
     public Guest login(String email, String password) throws InvalidLoginCredentialException {
         try {
-            Query query = em.createQuery("SELECT c FROM Guest c WHERE c.email = :inEmail");
+            Query query = em.createQuery("SELECT g FROM Guest g WHERE g.guestEmail = :inEmail");
             query.setParameter("inEmail", email);
             Guest guest = (Guest)query.getSingleResult();
             
@@ -65,7 +64,7 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
             } else {
                 throw new InvalidLoginCredentialException("Invalid login credential");
             }
-        } catch (NoResultException ex) {
+        } catch (NoResultException | NullPointerException ex) {
             throw new InvalidLoginCredentialException("Invalid login credential");
         }
     }
