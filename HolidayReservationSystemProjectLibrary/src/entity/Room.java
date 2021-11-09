@@ -7,6 +7,7 @@ package entity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,10 +48,9 @@ public class Room implements Serializable {
     private RoomType roomType;
     
     @ManyToOne
-    private List<Reservation> reservationList;
+    private Reservation reservation;
 
     public Room() {
-        this.reservationList = new ArrayList<>();
     }
 
     public Room(Integer roomNumber, RoomStatusEnum roomAvailability, Date dateOccupiedOn, RoomType roomType) {
@@ -100,12 +100,12 @@ public class Room implements Serializable {
         this.roomType = roomType;
     }
 
-    public List<Reservation> getReservationList() {
-        return reservationList;
+    public Reservation getReservation() {
+        return reservation;
     }
 
-    public void setReservationList(List<Reservation> reservationList) {
-        this.reservationList = reservationList;
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 
     @Override

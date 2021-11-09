@@ -42,6 +42,9 @@ public class RoomType implements Serializable {
     @Column(nullable = false)
     private String roomAmenities;
     
+    @Column(nullable = false)
+    private Integer roomRank;
+    
     @OneToMany(mappedBy="roomType") // owned side
     private List<Room> rooms;
     
@@ -57,16 +60,14 @@ public class RoomType implements Serializable {
         this.roomRates = new ArrayList<>();
     }
 
-    public RoomType(String roomName, String roomDescription, Integer roomSize, String roomBed, Integer roomCapacity, String roomAmenities, List<Room> rooms, List<Reservation> reservations, List<RoomRate> roomRates) {
+    public RoomType(String roomName, String roomDescription, Integer roomSize, String roomBed, Integer roomCapacity, String roomAmenities, Integer roomRank) {
         this.roomName = roomName;
         this.roomDescription = roomDescription;
         this.roomSize = roomSize;
         this.roomBed = roomBed;
         this.roomCapacity = roomCapacity;
         this.roomAmenities = roomAmenities;
-        this.rooms = rooms;
-        this.reservations = reservations;
-        this.roomRates = roomRates;
+        this.roomRank = roomRank;
     }
 
     
@@ -149,6 +150,14 @@ public class RoomType implements Serializable {
 
     public void setRoomRates(List<RoomRate> roomRates) {
         this.roomRates = roomRates;
+    }
+
+    public Integer getRoomRank() {
+        return roomRank;
+    }
+
+    public void setRoomRank(Integer roomRank) {
+        this.roomRank = roomRank;
     }
 
     @Override
