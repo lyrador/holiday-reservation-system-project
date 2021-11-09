@@ -6,6 +6,8 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -39,8 +41,12 @@ public class Room implements Serializable {
     @ManyToOne(optional = false) // owning side
     @JoinColumn(nullable = false)
     private RoomType roomType;
+    
+    @ManyToOne
+    private List<Reservation> reservationList;
 
     public Room() {
+        this.reservationList = new ArrayList<>();
     }
 
     public Room(Integer roomNumber, RoomStatusEnum roomAvailability, RoomType roomType) {
@@ -81,6 +87,14 @@ public class Room implements Serializable {
 
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 
     @Override
