@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.ExceptionReport;
 import entity.Room;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -94,17 +95,20 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         return query.getResultList();
     }
     
-//    @Override
-//    public List<Room> selectRoomsFromRequestedQuantity(int numOfRoomsRequested) {
-//        
-//        List<Room> totalListOfRooms = viewAllRooms();
-//        int count = 0;
-//        
-//        for (Room room: totalListOfRooms) {
-//            if (room.getDateOccupiedOn() == null && room.getRoomAvailability() == RoomStatusEnum.AVAILABLE) {
-//                room.setDateOccupiedOn(dateOccupiedOn);
-//            }
-//        }
-//    }
+    @Override
+    public List<ExceptionReport> generateRoomAllocationExceptionReport(){
+        Query query = em.createQuery("SELECT e FROM ExceptionReport e");
+        return query.getResultList();
+    }
+    
+    @Override
+    public List<Room> retrieveAvailableRooms() {
+        Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomAvailability = :inRoomAvailability");
+        query.setParameter("inRoomAvailability", RoomStatusEnum.AVAILABLE);
+        
+        return query.getResultList();
+    }
+    
+
     
 }

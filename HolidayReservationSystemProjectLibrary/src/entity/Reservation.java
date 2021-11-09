@@ -38,7 +38,11 @@ public class Reservation implements Serializable, ICopyable {
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     private RoomType roomType;
     
-    public Reservation() {
+    @OneToMany(mappedBy = "reservation")
+    private List<Room> rooms;
+    
+    public Reservation()
+    {
         isAllocated = false;
     }
       
@@ -204,6 +208,13 @@ public class Reservation implements Serializable, ICopyable {
         this.roomType = roomType;
     }
 
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
     /**
      * @return the numOfRooms
      */

@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.ExceptionReport;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
@@ -31,5 +32,9 @@ public interface RoomSessionBeanRemote {
     public Room retrieveRoomByRoomId(Long roomId) throws RoomNotFoundException;
     
     public Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException;
+    
+    public List<ExceptionReport> generateRoomAllocationExceptionReport();
+    
+    public List<Room> retrieveAvailableRooms();
     
 }
