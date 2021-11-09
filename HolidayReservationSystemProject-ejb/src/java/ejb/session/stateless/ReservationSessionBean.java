@@ -92,11 +92,14 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 //    }
     
     @Override
-    public Long createReservation(Reservation reservation, Long guestId) {
+    public Long createReservation(Reservation reservation, Long guestId, Long roomTypeId) {
         
         Guest guest = em.find(Guest.class, guestId);
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
         reservation.setGuest(guest);
+        reservation.setRoomType(roomType);
         guest.getReservations().add(reservation);
+        roomType.getReservations().add(reservation);
         
         em.persist(reservation);
         em.flush();
@@ -188,6 +191,10 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         if (query.getResultList() != null) {
             reservations = query.getResultList();
         } 
+        
+        for (Reservation reservation: reservations) {
+            reservation.getRoomType();
+        }
         
         return reservations;
     }

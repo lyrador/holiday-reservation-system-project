@@ -50,8 +50,8 @@ public class Main {
     
     
     public static void main(String[] args) {
-//        MainApp mainApp = new MainApp(employeeSessionBeanRemote, roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, reservationSessionBeanRemote, partnerSessionBeanRemote, guestSessionBeanRemote, bookingSessionBeanRemote);
-//        mainApp.run();
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, reservationSessionBeanRemote, partnerSessionBeanRemote, guestSessionBeanRemote, bookingSessionBeanRemote);
+        mainApp.run();
     }
     
 }

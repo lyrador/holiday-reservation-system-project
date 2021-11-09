@@ -574,7 +574,7 @@ public class HotelOperationModule {
                 }
                 
             }
-            
+            roomType.getRoomRates().add(newRoomRate);
             System.out.println("Room rate + " + newRoomRate.getName() + " for Room Type: " + roomType.getRoomName() + "created! \n");
 
             newRoomRate = roomRateSessionBeanRemote.createRoomRate(newRoomRate);
