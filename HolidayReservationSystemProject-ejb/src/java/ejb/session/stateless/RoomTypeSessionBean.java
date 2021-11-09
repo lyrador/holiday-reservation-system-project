@@ -33,8 +33,8 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     
     @Override
     public RoomType retrieveRoomTypeByName(String name) throws RoomTypeNotFoundException {
-        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomTypeName = :inRoomTypeName");
-        query.setParameter("inRoomTypeName", name);
+        Query query = em.createQuery("SELECT r FROM RoomType r WHERE r.roomName = :inRoomName");
+        query.setParameter("inRoomName", name);
         try {
             RoomType roomType = (RoomType) query.getSingleResult();
             return roomType;

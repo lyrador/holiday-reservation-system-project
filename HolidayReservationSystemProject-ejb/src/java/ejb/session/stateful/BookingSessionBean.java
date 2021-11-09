@@ -27,7 +27,7 @@ public class BookingSessionBean implements BookingSessionBeanRemote, BookingSess
     // "Insert Code > Add Business Method")
     
     @Remove
-    @Override
+   // @Override
     public void remove() {
         // Do nothing
     }
@@ -42,7 +42,7 @@ public class BookingSessionBean implements BookingSessionBeanRemote, BookingSess
         }
     }
     
-    public List<Reservation> searchRoom(Date checkInDate, Date checkOutDate) {
-        
-    }
+//    public List<Reservation> searchRoom(Date checkInDate, Date checkOutDate) {
+//        
+//    }
 }

@@ -14,7 +14,6 @@ import javax.persistence.Query;
 import util.exception.GuestEmailExistException;
 import util.exception.GuestNotFoundException;
 import util.exception.InvalidLoginCredentialException;
-import util.exception.GuestUsernameExistException;
 import util.exception.UnknownPersistenceException;
 
 @Stateless

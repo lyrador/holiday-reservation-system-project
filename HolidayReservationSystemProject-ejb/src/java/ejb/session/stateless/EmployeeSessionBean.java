@@ -52,10 +52,10 @@ public class EmployeeSessionBean implements EmployeeSessionBeanRemote, EmployeeS
     }
     
     @Override
-    public Employee employeeLogin(String email, String password) throws InvalidLoginCredentialException {
+    public Employee employeeLogin(String username, String password) throws InvalidLoginCredentialException {
         try {
-            Query query = em.createQuery("SELECT c FROM Employee c WHERE c.email = :inEmail");
-            query.setParameter("inEmail", email);
+            Query query = em.createQuery("SELECT c FROM Employee c WHERE c.username = :inUsername");
+            query.setParameter("inUsername", username);
             Employee employee = (Employee)query.getSingleResult();
             
             if(employee.getPassword().equals(password)) {
