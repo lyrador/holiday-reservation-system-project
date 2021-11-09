@@ -6,7 +6,6 @@
 package entity;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,7 +43,7 @@ public class RoomRate implements Serializable {
     private RateTypeEnum rateType;
     
     @Column(nullable = false)
-    private BigDecimal ratePerNight;
+    private Integer ratePerNight;
     
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
@@ -61,7 +60,7 @@ public class RoomRate implements Serializable {
     public RoomRate() {
     }
 
-    public RoomRate(String name, RateTypeEnum rateType, BigDecimal ratePerNight, Date validityStartDate, Date validityEndDate, RoomType roomType) {
+    public RoomRate(String name, RateTypeEnum rateType, Integer ratePerNight, Date validityStartDate, Date validityEndDate, RoomType roomType) {
         this.name = name;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
@@ -96,11 +95,11 @@ public class RoomRate implements Serializable {
         this.rateType = rateType;
     }
 
-    public BigDecimal getRatePerNight() {
+    public Integer getRatePerNight() {
         return ratePerNight;
     }
 
-    public void setRatePerNight(BigDecimal ratePerNight) {
+    public void setRatePerNight(Integer ratePerNight) {
         this.ratePerNight = ratePerNight;
     }
 
