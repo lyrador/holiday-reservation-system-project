@@ -206,6 +206,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 
             }
             
+            int roomsToAllocate = reservationToday.getNumOfRooms();
+
             for (Room room : roomsAvailable) {
                 if (room.getRoomAvailability().equals(RoomStatusEnum.NOT_AVAILABLE)) {
                     room.setRoomAvailability(RoomStatusEnum.OCCUPIED_RESERVED);
@@ -213,7 +215,13 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                     room.setRoomAvailability(RoomStatusEnum.RESERVED);
                 }
                 
+                reservationToday.getRooms().add(room);
+                room.ge
+                roomsToAllocate--;
                 
+                if(roomsToAllocate == 0) {
+                    break;
+                }
             }
         }
         
