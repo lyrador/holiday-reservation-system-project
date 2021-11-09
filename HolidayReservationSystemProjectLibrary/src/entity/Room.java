@@ -18,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import util.enumeration.RoomStatusEnum;
@@ -38,6 +39,9 @@ public class Room implements Serializable {
     @Column(nullable = false)
     private RoomStatusEnum roomAvailability;
     
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date dateOccupiedOn;
+    
     @ManyToOne(optional = false) // owning side
     @JoinColumn(nullable = false)
     private RoomType roomType;
@@ -49,13 +53,12 @@ public class Room implements Serializable {
         this.reservationList = new ArrayList<>();
     }
 
-    public Room(Integer roomNumber, RoomStatusEnum roomAvailability, RoomType roomType) {
+    public Room(Integer roomNumber, RoomStatusEnum roomAvailability, Date dateOccupiedOn, RoomType roomType) {
         this.roomNumber = roomNumber;
         this.roomAvailability = roomAvailability;
+        this.dateOccupiedOn = dateOccupiedOn;
         this.roomType = roomType;
     }
-    
-    
 
     public Long getRoomId() {
         return roomId;
@@ -79,6 +82,14 @@ public class Room implements Serializable {
 
     public void setRoomAvailability(RoomStatusEnum roomAvailability) {
         this.roomAvailability = roomAvailability;
+    }
+
+    public Date getDateOccupiedOn() {
+        return dateOccupiedOn;
+    }
+
+    public void setDateOccupiedOn(Date dateOccupiedOn) {
+        this.dateOccupiedOn = dateOccupiedOn;
     }
 
     public RoomType getRoomType() {
@@ -120,6 +131,5 @@ public class Room implements Serializable {
     @Override
     public String toString() {
         return "entity.Room[ id=" + roomId + " ]";
-    }
-    
+    }  
 }
