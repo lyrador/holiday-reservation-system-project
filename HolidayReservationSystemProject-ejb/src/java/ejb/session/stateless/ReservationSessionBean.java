@@ -1,5 +1,6 @@
 package ejb.session.stateless;
 
+import entity.ExceptionReport;
 import entity.Occupant;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -8,17 +9,33 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import entity.Reservation;
+import entity.Room;
 import entity.RoomType;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.ejb.EJB;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
+import util.enumeration.RoomStatusEnum;
 import util.exception.ReservationNotFoundException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.RoomTypeNotFoundException;
 
 @Stateless
 public class ReservationSessionBean implements ReservationSessionBeanRemote, ReservationSessionBeanLocal {
 
+    @EJB
+    private RoomSessionBeanLocal roomSessionBeanLocal;
+
+    @EJB
+    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
+
     @PersistenceContext(unitName = "HolidayReservationSystemProject-ejbPU")
     private EntityManager em;
+    
+    
     
     public ReservationSessionBean() {
     }
@@ -73,6 +90,14 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 //        return newReservation;
 //    }
     
+    public Long createReservation(Reservation reservation) {
+        
+        em.persist(reservation);
+        em.flush();
+        
+        return reservation.getReservationId();
+    }
+    
     public Reservation createNewReservationWithExistingRoomType(Reservation newReservation, Long roomTypeId) {
         em.persist(newReservation);
         RoomType roomType = em.find(RoomType.class, roomTypeId);
@@ -113,6 +138,86 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         } else {
             throw new ReservationNotFoundException("Reservation does not exist: " + reservationId);
         }
+    }
+    
+    public List<Reservation> retrieveReservationsByCheckOutDate(Date checkOutDate) {
+        
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.checkOutDateTime = :inCheckOutDate");
+        query.setParameter("inCheckOutDate", checkOutDate);
+        
+        List<Reservation> reservations = new ArrayList<>();
+        
+        if (query.getResultList() != null) {
+            reservations = query.getResultList();
+        } 
+        
+        return reservations;
+
+    }
+    
+    public List<Reservation> retrieveReservationsByCheckInDate(Date checkInDate) {
+        
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.checkInDateTime = :inCheckInDate");
+        query.setParameter("inCheckInDate", checkInDate);
+        
+        List<Reservation> reservations = new ArrayList<>();
+        
+        if (query.getResultList() != null) {
+            reservations = query.getResultList();
+        } 
+        
+        return reservations;
+
+    }
+    
+    public List<Room> allocateRoomToCurentDayReservations() {
+        
+        Date today = new Date();
+        List<Reservation> reservationsOnCheckInDate = retrieveReservationsByCheckInDate(today);
+        List<Reservation> reservationsOnCheckOutDate = retrieveReservationsByCheckOutDate(today);
+        List<Room> roomsAvailable = new ArrayList<Room>();
+        
+        ExceptionReport report = new ExceptionReport();
+        
+        for (Reservation reservationToday : reservationsOnCheckInDate) {
+            
+            List<Room> allAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
+            RoomType reservationRoomType = reservationToday.getRoomType();
+            
+            for (Room availableRoom : allAvailableRooms) {
+                if (availableRoom.getRoomType().equals(reservationRoomType)) {
+                    roomsAvailable.add(availableRoom);
+                }
+            }
+            
+            if (!reservationsOnCheckOutDate.isEmpty()) {
+                
+                for (Reservation endedReservation : reservationsOnCheckOutDate) {
+                    
+                    if (endedReservation.getRoomType().equals(reservationRoomType)) {
+                        
+                        for (Room room : endedReservation.getRooms()) {
+                            roomsAvailable.add(room);
+                        }
+                        
+                    }
+                    
+                }
+                
+            }
+            
+            for (Room room : roomsAvailable) {
+                if (room.getRoomAvailability().equals(RoomStatusEnum.NOT_AVAILABLE)) {
+                    room.setRoomAvailability(RoomStatusEnum.OCCUPIED_RESERVED);
+                } else if (room.getRoomAvailability().equals(RoomStatusEnum.AVAILABLE)) {
+                    room.setRoomAvailability(RoomStatusEnum.RESERVED);
+                }
+                
+                
+            }
+        }
+        
+        
     }
     
 //    @Override
