@@ -44,7 +44,7 @@ public class RoomRate implements Serializable {
     private RateTypeEnum rateType;
     
     @Column(nullable = false)
-    private BigDecimal ratePerNight;
+    private int ratePerNight;
     
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
@@ -61,7 +61,7 @@ public class RoomRate implements Serializable {
     public RoomRate() {
     }
 
-    public RoomRate(String name, RateTypeEnum rateType, BigDecimal ratePerNight, Date validityStartDate, Date validityEndDate, RoomType roomType) {
+    public RoomRate(String name, RateTypeEnum rateType, int ratePerNight, Date validityStartDate, Date validityEndDate, RoomType roomType) {
         this.name = name;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
@@ -96,11 +96,11 @@ public class RoomRate implements Serializable {
         this.rateType = rateType;
     }
 
-    public BigDecimal getRatePerNight() {
+    public int getRatePerNight() {
         return ratePerNight;
     }
 
-    public void setRatePerNight(BigDecimal ratePerNight) {
+    public void setRatePerNight(int ratePerNight) {
         this.ratePerNight = ratePerNight;
     }
 
