@@ -27,59 +27,42 @@ public class Reservation implements Serializable, ICopyable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private Long reservationId;   
-    private BigDecimal totalAmount;
+    private int totalAmount;
     private Date checkInDateTime;
-    private Date checkOutDateTime;    
-    private Boolean reservationStatus;
-    private Boolean voidRefundStatus;
+    private Date checkOutDateTime;
+    private int numOfRooms;
+    private Boolean isAllocated;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     private Occupant occupant;
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
     private RoomType roomType;
     
-    public Reservation()
-    {
-        reservationStatus = false;
-        voidRefundStatus = false;
+    public Reservation() {
+        isAllocated = false;
     }
       
     
-    public Reservation(Long reservationId, BigDecimal totalAmount, Date checkInDateTime, Date checkOutDateTime, Boolean reservationStatus, Boolean voidRefundStatus)
+    public Reservation(Long reservationId, int totalAmount, Date checkInDateTime, Date checkOutDateTime, Boolean isAllocated, Boolean voidRefundStatus)
     {
         this.reservationId = reservationId;
         this.totalAmount = totalAmount;
         this.checkInDateTime = checkInDateTime;
         this.checkOutDateTime = checkOutDateTime;
         this.checkInDateTime = checkInDateTime;
-        this.reservationStatus = reservationStatus;
-        this.voidRefundStatus = voidRefundStatus;       
+        this.numOfRooms = numOfRooms;
+        this.isAllocated = isAllocated;     
     }
     
-    
-    
-    public Reservation(Long reservationId, BigDecimal totalAmount, Date checkInDateTime, Date checkOutDateTime, Boolean reservationStatus, Boolean voidRefundStatus, Room room)
-    {
-        this.reservationId = reservationId;
-        this.totalAmount = totalAmount;
-        this.checkInDateTime = checkInDateTime;
-        this.checkOutDateTime = checkOutDateTime;
-        this.checkInDateTime = checkInDateTime;
-        this.reservationStatus = reservationStatus;
-        this.voidRefundStatus = voidRefundStatus;       
-    }
-
-    
-    
-    public Reservation(BigDecimal totalAmount, Date checkInDateTime, Date checkOutDateTime, Boolean reservationStatus, Boolean voidRefundStatus, Room room)
+    public Reservation(int totalAmount, Date checkInDateTime, Date checkOutDateTime, int numOfRooms, Boolean isAllocated)
     {
         this.totalAmount = totalAmount;
         this.checkInDateTime = checkInDateTime;
         this.checkOutDateTime = checkOutDateTime;
         this.checkInDateTime = checkInDateTime;
-        this.reservationStatus = reservationStatus;
-        this.voidRefundStatus = voidRefundStatus;       
-    }   
+        this.numOfRooms = numOfRooms;
+        this.isAllocated = isAllocated;     
+    }
     
     @Override
     public void copy(Object object) 
@@ -91,8 +74,8 @@ public class Reservation implements Serializable, ICopyable {
             this.setTotalAmount(reservationToCopy.getTotalAmount());
             this.setCheckInDateTime(reservationToCopy.getCheckInDateTime());
             this.setCheckOutDateTime(reservationToCopy.getCheckOutDateTime());
-            this.setReservationStatus(reservationToCopy.getReservationStatus());
-            this.setVoidRefundStatus(reservationToCopy.getVoidRefundStatus());
+            this.setNumOfRooms(reservationToCopy.getNumOfRooms());
+            this.setIsAllocated(reservationToCopy.getIsAllocated());
             
         }
     }
@@ -173,11 +156,11 @@ public class Reservation implements Serializable, ICopyable {
         this.reservationId = reservationId;
     }
 
-    public BigDecimal getTotalAmount() {
+    public int getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(BigDecimal totalAmount) {
+    public void setTotalAmount(int totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -193,20 +176,12 @@ public class Reservation implements Serializable, ICopyable {
         return checkOutDateTime;
     }
     
-    public Boolean getReservationStatus() {
-        return reservationStatus;
+    public Boolean getIsAllocated() {
+        return isAllocated;
     }
 
-    public void setReservationStatus(Boolean reservationStatus) {
-        this.reservationStatus = reservationStatus;
-    }
-    
-    public Boolean getVoidRefundStatus() {
-        return voidRefundStatus;
-    }
-
-    public void setVoidRefundStatus(Boolean voidRefundStatus) {
-        this.voidRefundStatus = voidRefundStatus;
+    public void setIsAllocated(Boolean isAllocated) {
+        this.isAllocated = isAllocated;
     }
 
     public void setCheckOutDateTime(Date checkOutDateTime) {
@@ -227,5 +202,19 @@ public class Reservation implements Serializable, ICopyable {
 
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
+    }
+
+    /**
+     * @return the numOfRooms
+     */
+    public int getNumOfRooms() {
+        return numOfRooms;
+    }
+
+    /**
+     * @param numOfRooms the numOfRooms to set
+     */
+    public void setNumOfRooms(int numOfRooms) {
+        this.numOfRooms = numOfRooms;
     }
 }
