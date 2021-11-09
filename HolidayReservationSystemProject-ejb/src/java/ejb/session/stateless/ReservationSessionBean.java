@@ -62,16 +62,16 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 //       
 //    }
     
-    @Override
-    public Reservation createNewReservationWithExistingOccupant(Reservation newReservation, Long occupantId) {
-        em.persist(newReservation);
-        Occupant occupant = em.find(Occupant.class, occupantId);
-        newReservation.setOccupant(occupant);
-        occupant.getReservations().add(newReservation);
-        em.flush();
-        
-        return newReservation;
-    }
+//    @Override
+//    public Reservation createNewReservationWithExistingOccupant(Reservation newReservation, Long occupantId) {
+//        em.persist(newReservation);
+//        Occupant occupant = em.find(Occupant.class, occupantId);
+//        newReservation.setOccupant(occupant);
+//        occupant.getReservations().add(newReservation);
+//        em.flush();
+//        
+//        return newReservation;
+//    }
     
     public Reservation createNewReservationWithExistingRoomType(Reservation newReservation, Long roomTypeId) {
         em.persist(newReservation);
@@ -115,18 +115,18 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
-    @Override
-    public Reservation retrieveReservationById(Long reservationId, Boolean loadRoomType, Boolean loadOccupant) throws ReservationNotFoundException {
-        Reservation reservation = retrieveReservationById(reservationId);
-        
-        if(reservation != null) {
-            if (loadRoomType) {
-                reservation.getRoomType();
-            } if (loadOccupant) {
-                reservation.getOccupant();
-            }
-        }
-        
-        return reservation;
-    }
+//    @Override
+//    public Reservation retrieveReservationById(Long reservationId, Boolean loadRoomType, Boolean loadOccupant) throws ReservationNotFoundException {
+//        Reservation reservation = retrieveReservationById(reservationId);
+//        
+//        if(reservation != null) {
+//            if (loadRoomType) {
+//                reservation.getRoomType();
+//            } if (loadOccupant) {
+//                reservation.getOccupant();
+//            }
+//        }
+//        
+//        return reservation;
+//    }
 }
