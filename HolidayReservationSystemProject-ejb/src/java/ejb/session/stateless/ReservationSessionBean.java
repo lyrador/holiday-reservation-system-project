@@ -140,6 +140,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         }
     }
     
+    @Override
     public List<Reservation> retrieveReservationsByCheckOutDate(Date checkOutDate) {
         
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.checkOutDateTime = :inCheckOutDate");
@@ -155,6 +156,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
     }
     
+    @Override
     public List<Reservation> retrieveReservationsByCheckInDate(Date checkInDate) {
         
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.checkInDateTime = :inCheckInDate");
@@ -170,12 +172,14 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
     }
     
-    public List<Room> allocateRoomToCurentDayReservations() {
+    @Override
+    public List<Room> allocateRoomToCurrentDayReservations() {
         
         Date today = new Date();
         List<Reservation> reservationsOnCheckInDate = retrieveReservationsByCheckInDate(today);
         List<Reservation> reservationsOnCheckOutDate = retrieveReservationsByCheckOutDate(today);
         List<Room> roomsAvailable = new ArrayList<Room>();
+        List<Room> roomsReserved = new ArrayList<Room>();
         
         ExceptionReport report = new ExceptionReport();
         
@@ -206,7 +210,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 
             }
             
-            int roomsToAllocate = reservationToday.getNumOfRooms();
+            Integer roomsToAllocate = reservationToday.getNumOfRooms();
 
             for (Room room : roomsAvailable) {
                 if (room.getRoomAvailability().equals(RoomStatusEnum.NOT_AVAILABLE)) {
@@ -215,17 +219,61 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                     room.setRoomAvailability(RoomStatusEnum.RESERVED);
                 }
                 
+                roomsReserved.add(room);
                 reservationToday.getRooms().add(room);
-                room.ge
+                room.setReservation(reservationToday);
                 roomsToAllocate--;
                 
                 if(roomsToAllocate == 0) {
                     break;
                 }
             }
+            
+            //did not allocate everything
+            if (roomsToAllocate > 0) {
+                
+                List<Room> allUpdatedAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
+                
+                for (Room updatedAvailableRoom : allUpdatedAvailableRooms) {
+                    
+                    if (updatedAvailableRoom.getRoomType().getRoomRank() > reservationRoomType.getRoomRank()) {
+                        updatedAvailableRoom.setRoomAvailability(RoomStatusEnum.RESERVED);
+                        roomsReserved.add(updatedAvailableRoom);
+                        reservationToday.getRooms().add(updatedAvailableRoom);
+                        updatedAvailableRoom.setReservation(reservationToday);
+                        roomsToAllocate--;
+                        
+                        report.setDescription("No available room for reserved room type, upgrade to next higher room type available. Room " + updatedAvailableRoom.getRoomNumber() + " allocated.");
+                        createExceptionReport(report);
+                        
+                    }
+                    
+                    if(roomsToAllocate == 0) {
+                        break;
+                    }
+                    
+                }
+                
+            }
+            
+            //no more rooms to upgrade to
+            if (roomsToAllocate > 0) {
+                report.setDescription("No available room for reserved room type, no upgrade to next higher room type available. No room allocated.");
+                createExceptionReport(report);
+            }
         }
         
+        return roomsReserved;
         
+        
+    }
+    
+    @Override
+     public ExceptionReport createExceptionReport(ExceptionReport exceptionReport){
+        em.persist(exceptionReport);
+        em.flush();
+        
+        return exceptionReport;
     }
     
 //    @Override
