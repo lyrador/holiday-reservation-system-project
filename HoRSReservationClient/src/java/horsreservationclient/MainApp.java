@@ -107,7 +107,8 @@ public class MainApp {
                 } else if (response == 2) {
                     createGuest();
                 } else if (response == 3) {
-                    //searchHotelRoom();
+                    Boolean isWalkIn = false;
+                    searchHotelRoom(isWalkIn);
                 } else if (response == 4) {
                     break;
                 } else {
@@ -266,7 +267,7 @@ public class MainApp {
 
             if (confirmCheckout.equals("Y")) {
                 Reservation newReservation = new Reservation(totalAmount, checkInDate, checkOutDate, numOfRoomsRequested, false);
-                Long reservationId = reservationSessionBeanRemote.createReservation(roomNames[response - 1], checkInDate, checkOutDate);
+                Long reservationId = reservationSessionBeanRemote.createReservation(newReservation, currentGuest.getGuestId());
                 System.out.println("Reservation successful!\n");
             } else {
                 System.out.println("Reservation cancelled!\n");
@@ -314,12 +315,8 @@ public class MainApp {
             return;
         } else {
             System.out.println("Displaying Rooms for Reservation: ");
-            for (Room room : reservations.get(response-1).get) {
-                reservationList.add(reservation);
-                int seq = 1;
-                System.out.print(seq++ + ": ");
-                System.out.printf("%8s%20s%20d%20s%20s%20d%s\n", reservation.getReservationId().toString(), reservation.getRoomType().toString(), reservation.getNumOfRooms(),
-                        reservation.getCheckInDateTime().toString(), reservation.getCheckOutDateTime().toString(), reservation.getTotalAmount(), reservation.getIsAllocated().toString());
+            for (Room room : reservations.get(response-1).getRooms()) {
+                System.out.printf("%8s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber().toString());
             }
         }
 
