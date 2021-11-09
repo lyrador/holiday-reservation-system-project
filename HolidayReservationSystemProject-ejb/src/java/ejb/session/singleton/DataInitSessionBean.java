@@ -82,11 +82,11 @@ public class DataInitSessionBean {
         }
         
         if (em.find(RoomRate.class, 1l) == null) {
-            RoomType deluxe = em.find(RoomType.class, 1);
-            RoomType premier = em.find(RoomType.class, 2);
-            RoomType family = em.find(RoomType.class, 3);
-            RoomType junior = em.find(RoomType.class, 4);
-            RoomType grand = em.find(RoomType.class, 5);
+            RoomType deluxe = em.find(RoomType.class, 1l);
+            RoomType premier = em.find(RoomType.class, 2l);
+            RoomType family = em.find(RoomType.class, 3l);
+            RoomType junior = em.find(RoomType.class, 4l);
+            RoomType grand = em.find(RoomType.class, 5l);
             
             RoomRate deluxeRoomPublished = new RoomRate("Deluxe Room Published", RateTypeEnum.PUBLISHED, 100, deluxe);
             em.persist(deluxeRoomPublished);
@@ -130,11 +130,11 @@ public class DataInitSessionBean {
         }
         
         if (em.find(Room.class, 1l) == null) {
-            RoomType deluxe = em.find(RoomType.class, 1);
-            RoomType premier = em.find(RoomType.class, 2);
-            RoomType family = em.find(RoomType.class, 3);
-            RoomType junior = em.find(RoomType.class, 4);
-            RoomType grand = em.find(RoomType.class, 5);
+            RoomType deluxe = em.find(RoomType.class, 1l);
+            RoomType premier = em.find(RoomType.class, 2l);
+            RoomType family = em.find(RoomType.class, 3l);
+            RoomType junior = em.find(RoomType.class, 4l);
+            RoomType grand = em.find(RoomType.class, 5l);
             
             Room room0101 = new Room(0101, RoomStatusEnum.AVAILABLE, null, deluxe);
             em.persist(room0101);

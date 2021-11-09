@@ -89,7 +89,6 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 //        
 //        return newReservation;
 //    }
-    
     public Long createReservation(Reservation reservation) {
         
         em.persist(reservation);
