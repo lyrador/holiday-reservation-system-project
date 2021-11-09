@@ -19,7 +19,6 @@ public class Employee implements Serializable, ICopyable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long employeeId;
     private String firstName;
     private String lastName;

@@ -31,6 +31,8 @@ public class MainApp {
     private BookingSessionBeanRemote bookingSessionBeanRemote;
     
     private SystemAdministrationModule systemAdminModule;
+    private HotelOperationModule hotelOperationModule;
+    private FrontOfficeModule frontOfficeModule;
     
     private Employee currentEmployee;
     
@@ -70,8 +72,8 @@ public class MainApp {
                         System.out.println("Login successful!\n");
                         
                         systemAdminModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
-                        //hotelOpModule = new HotelOperationModule(employeeControllerRemote, partnerControllerRemote, roomControllerRemote, roomTypeControllerRemote, roomRateControllerRemote, reservationControllerRemote, currentEmployee);
-                        //frontOfficeModule = new FrontOfficeModule(employeeControllerRemote, guestControllerRemote, partnerControllerRemote, roomControllerRemote, roomTypeControllerRemote, roomRateControllerRemote, walkInReservationSessionBeanRemote, reservationControllerRemote, currentEmployee);
+                        hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, currentEmployee);
+                       // frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote, guestControllerRemote, partnerControllerRemote, roomControllerRemote, roomTypeControllerRemote, roomRateControllerRemote, walkInReservationSessionBeanRemote, reservationControllerRemote, currentEmployee);
                         
                         menuMain();
                     } catch(InvalidLoginCredentialException ex) {
@@ -135,9 +137,12 @@ public class MainApp {
                         System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
                     }
                 }
-                else if(response == 2)
-                {
-                    //hotelOpModule.menuHotelOperation();
+                else if(response == 2) {
+                    try {
+                        hotelOperationModule.menuHotelOperation();
+                    } catch (InvalidAccessRightException ex) {
+                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
+                    }
                 }
                 else if(response == 3)
                 {
