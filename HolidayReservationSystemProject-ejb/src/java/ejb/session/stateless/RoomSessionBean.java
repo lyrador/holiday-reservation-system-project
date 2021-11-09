@@ -94,6 +94,17 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
         return query.getResultList();
     }
     
-
+//    @Override
+//    public List<Room> selectRoomsFromRequestedQuantity(int numOfRoomsRequested) {
+//        
+//        List<Room> totalListOfRooms = viewAllRooms();
+//        int count = 0;
+//        
+//        for (Room room: totalListOfRooms) {
+//            if (room.getDateOccupiedOn() == null && room.getRoomAvailability() == RoomStatusEnum.AVAILABLE) {
+//                room.setDateOccupiedOn(dateOccupiedOn);
+//            }
+//        }
+//    }
     
 }
