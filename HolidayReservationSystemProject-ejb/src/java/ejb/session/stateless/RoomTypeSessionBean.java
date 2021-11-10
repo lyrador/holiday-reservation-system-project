@@ -83,10 +83,17 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
     public void deleteRoomType(Long roomTypeId) throws RoomTypeNotFoundException, DeleteRoomTypeException {
         RoomType roomTypeToRemove = retrieveRoomTypeByRoomId(roomTypeId);
 
-        if (roomTypeToRemove.getRooms().isEmpty() && roomTypeToRemove.getRooms().isEmpty() && roomTypeToRemove.getReservations().isEmpty()) {
+        boolean canDelete = true;
+        for (Room room : roomTypeToRemove.getRooms()) {
+            if (!room.getRoomAvailability().equals(RoomStatusEnum.AVAILABLE)) {
+                canDelete = false;
+            }
+        }
+        
+        if (canDelete) {
             em.remove(roomTypeToRemove);
         } else {
-            throw new DeleteRoomTypeException("Room Type ID " + roomTypeId + " is currently in use and cannot be deleted!");
+            throw new DeleteRoomTypeException("Room Type ID " + roomTypeId + " is currently in use and cannot be deleted. Try again next time!");
         }
     }
 
