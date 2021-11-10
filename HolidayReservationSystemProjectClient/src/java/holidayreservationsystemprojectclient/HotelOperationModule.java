@@ -50,6 +50,7 @@ public class HotelOperationModule {
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
         this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
+        this.reservationSessionBeanRemote = reservationSessionBeanRemote;
         this.currentEmployee = currentEmployee;
     }
     
@@ -348,8 +349,7 @@ public class HotelOperationModule {
             newRoom.setRoomType(roomType);
             
             System.out.print("Enter Room Number (Eg.2015)> ");
-            newRoom.setRoomNumber(scanner.nextInt());
-            scanner.nextLine();
+            newRoom.setRoomNumber(scanner.nextLine().trim());
             
             newRoom.setRoomAvailability(RoomStatusEnum.AVAILABLE);
             
@@ -370,8 +370,7 @@ public class HotelOperationModule {
             
             System.out.println("*** HoRS :: Hotel Operations :: Update Room ***\n");
             System.out.print("Enter Room Number> ");
-            Integer roomNumber = scanner.nextInt();
-            scanner.nextLine();
+            String roomNumber = scanner.nextLine().trim();
             
             Room room = roomSessionBeanRemote.retrieveRoomByRoomNumber(roomNumber);
             System.out.println("Select room type (blank if no change)>");
@@ -419,8 +418,7 @@ public class HotelOperationModule {
             
             System.out.println("*** HoRS :: Hotel Operations :: Delete Room ***\n");
             System.out.print("Enter Room Number> ");
-            Integer roomNumber = scanner.nextInt();
-            scanner.nextLine();
+            String roomNumber = scanner.nextLine().trim();
             
             Room room = roomSessionBeanRemote.retrieveRoomByRoomNumber(roomNumber);
             
@@ -574,10 +572,10 @@ public class HotelOperationModule {
                 }
                 
             }
-            
+
             System.out.println("Room rate + " + newRoomRate.getName() + " for Room Type: " + roomType.getRoomName() + "created! \n");
 
-            newRoomRate = roomRateSessionBeanRemote.createRoomRate(newRoomRate);
+            newRoomRate = roomRateSessionBeanRemote.createRoomRate(newRoomRate,roomType);
             System.out.println("New room rate created successfully!: " + newRoomRate.getRoomRateId()+ "\n");
         } catch (RoomTypeNotFoundException ex) {
             System.out.println(ex.getMessage() + "!\n");
@@ -763,12 +761,12 @@ public class HotelOperationModule {
         List<Room> roomsReserved = reservationSessionBeanRemote.allocateRoomToCurrentDayReservations();
         if(!roomsReserved.isEmpty()){
             System.out.println("The following rooms have been allocated: ");
-            for(Room room:roomsReserved){
+            for(Room room : roomsReserved){
                 System.out.println("Room Number: " + room.getRoomNumber()); 
             }
         }
         else {
-            System.out.println("No rooms available for allocation, refer to exception reports for more informaiton.");
+            System.out.println("No rooms available for allocation, refer to exception reports for more information.");
         }
        
         

@@ -34,7 +34,7 @@ public class Room implements Serializable {
     private Long roomId;
     
     @Column(nullable = false)
-    private Integer roomNumber;
+    private String roomNumber;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -53,7 +53,7 @@ public class Room implements Serializable {
     public Room() {
     }
 
-    public Room(Integer roomNumber, RoomStatusEnum roomAvailability, Date dateOccupiedOn, RoomType roomType) {
+    public Room(String roomNumber, RoomStatusEnum roomAvailability, Date dateOccupiedOn, RoomType roomType) {
         this.roomNumber = roomNumber;
         this.roomAvailability = roomAvailability;
         this.dateOccupiedOn = dateOccupiedOn;
@@ -68,11 +68,11 @@ public class Room implements Serializable {
         this.roomId = roomId;
     }
 
-    public Integer getRoomNumber() {
+    public String getRoomNumber() {
         return roomNumber;
     }
 
-    public void setRoomNumber(Integer roomNumber) {
+    public void setRoomNumber(String roomNumber) {
         this.roomNumber = roomNumber;
     }
 

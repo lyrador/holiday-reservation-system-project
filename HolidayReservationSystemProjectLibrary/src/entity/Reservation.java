@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import util.providedinterface.ICopyable;
 
@@ -28,9 +30,11 @@ public class Reservation implements Serializable, ICopyable {
     
     private Long reservationId;   
     private int totalAmount;
+    @Temporal(TemporalType.DATE)
     private Date checkInDateTime;
+    @Temporal(TemporalType.DATE)
     private Date checkOutDateTime;
-    private int numOfRooms;
+    private Integer numOfRooms;
     private Boolean isAllocated;
     
     @ManyToOne(optional = false, cascade = {}, fetch = FetchType.LAZY)
@@ -51,7 +55,7 @@ public class Reservation implements Serializable, ICopyable {
     }
       
     
-    public Reservation(Long reservationId, int totalAmount, Date checkInDateTime, Date checkOutDateTime, Boolean isAllocated, Boolean voidRefundStatus)
+    public Reservation(Long reservationId, int totalAmount, Date checkInDateTime, Date checkOutDateTime, Integer numOfRooms, Boolean isAllocated)
     {
         this.reservationId = reservationId;
         this.totalAmount = totalAmount;

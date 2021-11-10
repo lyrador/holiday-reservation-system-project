@@ -6,6 +6,7 @@
 package ejb.session.stateless;
 
 import entity.RoomRate;
+import entity.RoomType;
 import java.util.List;
 import util.exception.RoomRateNotFoundException;
 import javax.ejb.Stateless;
@@ -22,7 +23,11 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     private EntityManager em;
 
     @Override
-    public RoomRate createRoomRate(RoomRate newRoomRate) {
+    public RoomRate createRoomRate(RoomRate newRoomRate, RoomType roomType) {
+        
+        newRoomRate.setRoomType(roomType);
+        roomType.getRoomRates().add(newRoomRate);
+        
         em.persist(newRoomRate);
         em.flush();
         

@@ -60,20 +60,18 @@ public class RoomRate implements Serializable {
     public RoomRate() {
     }
     
-    public RoomRate(String name, RateTypeEnum rateType, Integer ratePerNight, RoomType roomType) {
+    public RoomRate(String name, RateTypeEnum rateType, Integer ratePerNight) {
         this.name = name;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
-        this.roomType = roomType;
     }
 
-    public RoomRate(String name, RateTypeEnum rateType, Integer ratePerNight, Date validityStartDate, Date validityEndDate, RoomType roomType) {
+    public RoomRate(String name, RateTypeEnum rateType, Integer ratePerNight, Date validityStartDate, Date validityEndDate) {
         this.name = name;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
         this.validityStartDate = validityStartDate;
         this.validityEndDate = validityEndDate;
-        this.roomType = roomType;
     }
     
     

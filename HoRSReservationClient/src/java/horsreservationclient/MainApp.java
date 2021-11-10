@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.NoResultException;
 import util.exception.GuestEmailExistException;
+import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 public class MainApp {
@@ -147,6 +148,7 @@ public class MainApp {
                 } else if (response == 2) {
                     //viewMyReservationDetails();
                 } else if (response == 3) {
+                    System.out.println("viewAllMyReservations()");
                     viewAllMyReservations();
                 } else if (response == 4) {
                     break;
@@ -234,15 +236,20 @@ public class MainApp {
             int[] roomTypePricesForDuration = new int[roomTypes.size()];
             int[] numOfRoomsAvailable = new int[roomTypes.size()];
 
+            int seq = 1;
             for (RoomType roomType : roomTypes) {
-                int seq = 1;
-                System.out.print(seq++ + ": ");
+                System.out.print(seq + ": ");
 
                 roomNames[seq - 1] = roomType.getRoomName();
-                roomTypePricesForDuration[seq - 1] = roomTypeSessionBeanRemote.calculatePrice(roomType, checkInDate, checkOutDate, isWalkIn);
-                numOfRoomsAvailable[seq - 1] = roomTypeSessionBeanRemote.calculateNumOfRoomsAvailable(roomType, checkInDate, checkOutDate);
-
+                try {
+                    roomTypePricesForDuration[seq - 1] = roomTypeSessionBeanRemote.calculatePrice(roomType.getRoomTypeId(), checkInDate, checkOutDate, isWalkIn);
+                    numOfRoomsAvailable[seq - 1] = roomTypeSessionBeanRemote.calculateNumOfRoomsAvailable(roomType.getRoomTypeId(), checkInDate, checkOutDate);
+                } catch (RoomTypeNotFoundException ex) {
+                    System.out.println(ex.getMessage());
+                }
+                
                 System.out.printf("%20s%22s%10d\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                seq++;
             }
 
             System.out.println((roomTypes.size() + 1) + ": Back\n");
@@ -265,7 +272,7 @@ public class MainApp {
 
             if (confirmCheckout.equals("Y")) {
                 Reservation newReservation = new Reservation(totalAmount, checkInDate, checkOutDate, numOfRoomsRequested, false);
-                Long reservationId = reservationSessionBeanRemote.createReservation(newReservation, currentGuest.getGuestId());
+                Long reservationId = reservationSessionBeanRemote.createReservation(newReservation, currentGuest.getGuestId(), roomTypes.get(response - 1).getRoomTypeId());
                 System.out.println("Reservation successful!\n");
             } else {
                 System.out.println("Reservation cancelled!\n");
@@ -292,7 +299,7 @@ public class MainApp {
 
         System.out.println("Enter the respective number from 1 to " + reservations.size() + " to view rooms of that reservation");
 
-        System.out.printf("%20s%20s%8d%20s%20s%20s%20s\n", "   Reservation ID", "Type of Room", "Quantity", "Check-In Date", "Check-Out Date", "Total Amount($)", "Allocated Status");
+        System.out.printf("%20s%20s%8s%20s%20s%20s%20s\n", "   Reservation ID", "Type of Room", "Quantity", "Check-In Date", "Check-Out Date", "Total Amount($)", "Allocated Status");
 
         List<Reservation> reservationList = new ArrayList<Reservation>();
 
@@ -300,8 +307,13 @@ public class MainApp {
             reservationList.add(reservation);
             int seq = 1;
             System.out.print(seq++ + ": ");
-            System.out.printf("%8s%20s%20d%20s%20s%20d%s\n", reservation.getReservationId().toString(), reservation.getRoomType().toString(), reservation.getNumOfRooms(),
-                    reservation.getCheckInDateTime().toString(), reservation.getCheckOutDateTime().toString(), reservation.getTotalAmount(), reservation.getIsAllocated().toString());
+            System.out.printf("%8s%20s%20d%20s%20s%20d%s\n", reservation.getReservationId().toString(), 
+                    reservation.getRoomType().getRoomName(), 
+                    reservation.getNumOfRooms(),
+                    reservation.getCheckInDateTime().toString(), 
+                    reservation.getCheckOutDateTime().toString(), 
+                    reservation.getTotalAmount(), 
+                    reservation.getIsAllocated().toString());
         }
 
         System.out.println((reservations.size() + 1) + ": Back\n");

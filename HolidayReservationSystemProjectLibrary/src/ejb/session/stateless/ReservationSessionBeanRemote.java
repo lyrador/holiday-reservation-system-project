@@ -18,7 +18,7 @@ public interface ReservationSessionBeanRemote {
     
     public Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException;
     
-    public Long createReservation(Reservation reservation, Long guestId);
+    public Long createReservation(Reservation reservation, Long guestId, Long roomTypeId);
     
     public List<Reservation> viewAllMyReservations(Long guestId);
     
@@ -29,5 +29,11 @@ public interface ReservationSessionBeanRemote {
     public List<Room> allocateRoomToCurrentDayReservations();
 
     public ExceptionReport createExceptionReport(ExceptionReport exceptionReport);
+    
+    public List<Reservation> retrieveReservationByOccupantId(Long occupantId) throws ReservationNotFoundException;
+
+    public List<Reservation> retrieveReservationByGuestId(Long guestId) throws ReservationNotFoundException;
+    
+    public Long createReservationForOccupant(Reservation reservation, Long occupantId, Long roomTypeId);
    
 }

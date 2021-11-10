@@ -30,7 +30,7 @@ public interface RoomSessionBeanLocal {
 
     public Room retrieveRoomByRoomId(Long roomId) throws RoomNotFoundException;
 
-    public Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException;
+    public Room retrieveRoomByRoomNumber(String roomNumber) throws RoomNotFoundException;
 
     public List<ExceptionReport> generateRoomAllocationExceptionReport();
 

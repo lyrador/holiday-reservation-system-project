@@ -73,7 +73,7 @@ public class MainApp {
                         
                         systemAdminModule = new SystemAdministrationModule(employeeSessionBeanRemote, partnerSessionBeanRemote, currentEmployee);
                         hotelOperationModule = new HotelOperationModule(roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, reservationSessionBeanRemote, currentEmployee);
-                       // frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote, guestControllerRemote, partnerControllerRemote, roomControllerRemote, roomTypeControllerRemote, roomRateControllerRemote, walkInReservationSessionBeanRemote, reservationControllerRemote, currentEmployee);
+                        frontOfficeModule = new FrontOfficeModule(reservationSessionBeanRemote, guestSessionBeanRemoteRemote, roomTypeSessionBeanRemote, roomSessionBeanRemote, currentEmployee);
                         
                         menuMain();
                     } catch(InvalidLoginCredentialException ex) {
@@ -146,7 +146,11 @@ public class MainApp {
                 }
                 else if(response == 3)
                 {
-                    //frontOfficeModule.menuFrontOffice();
+                    try {
+                        frontOfficeModule.menuFrontOffice();
+                    } catch (InvalidAccessRightException ex) {
+                        System.out.println("Invalid option, please try again!: " + ex.getMessage() + "\n");
+                    }
                 }
                 else if (response == 4)
                 {

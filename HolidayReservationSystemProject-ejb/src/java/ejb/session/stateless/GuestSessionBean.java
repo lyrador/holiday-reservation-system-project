@@ -8,12 +8,14 @@ import javax.persistence.PersistenceContext;
 
 import entity.Guest;
 import entity.Guest;
+import entity.Occupant;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import util.exception.GuestEmailExistException;
 import util.exception.GuestNotFoundException;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.OccupantNotFoundException;
 import util.exception.UnknownPersistenceException;
 
 @Stateless
@@ -87,6 +89,26 @@ public class GuestSessionBean implements GuestSessionBeanRemote, GuestSessionBea
             } else {
                 throw new UnknownPersistenceException(ex.getMessage());
             }
+        }
+    }
+    
+    @Override
+    public Long createNewOccupant(Occupant occupant) {
+        
+        em.persist(occupant);
+        em.flush();
+        
+        return occupant.getOccupantId();
+    }
+    
+    @Override
+    public Occupant retrieveOccupantById(Long occupantId) throws OccupantNotFoundException {
+        Occupant occupant = em.find(Occupant.class, occupantId);
+        
+        if(occupant != null) {
+            return occupant;
+        } else {
+            throw new OccupantNotFoundException("Guest does not exist: " + occupantId);
         }
     }
 }

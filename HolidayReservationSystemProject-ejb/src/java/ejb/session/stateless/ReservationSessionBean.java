@@ -92,17 +92,37 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 //    }
     
     @Override
-    public Long createReservation(Reservation reservation, Long guestId) {
+    public Long createReservation(Reservation reservation, Long guestId, Long roomTypeId) {
         
         Guest guest = em.find(Guest.class, guestId);
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
         reservation.setGuest(guest);
+        reservation.setRoomType(roomType);
         guest.getReservations().add(reservation);
+        roomType.getReservations().add(reservation);
         
         em.persist(reservation);
         em.flush();
         
         return reservation.getReservationId();
     }
+    
+    @Override
+    public Long createReservationForOccupant(Reservation reservation, Long occupantId, Long roomTypeId) {
+        
+        Occupant occupant = em.find(Occupant.class, occupantId);
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
+        reservation.setOccupant(occupant);
+        reservation.setRoomType(roomType);
+        occupant.getReservations().add(reservation);
+        roomType.getReservations().add(reservation);
+        
+        em.persist(reservation);
+        em.flush();
+        
+        return reservation.getReservationId();
+    }
+    
     
     public Reservation createNewReservationWithExistingRoomType(Reservation newReservation, Long roomTypeId) {
         em.persist(newReservation);
@@ -189,6 +209,10 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             reservations = query.getResultList();
         } 
         
+        for (Reservation reservation: reservations) {
+            reservation.getRoomType();
+        }
+        
         return reservations;
     }
     
@@ -212,8 +236,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         Date today = new Date();
         List<Reservation> reservationsOnCheckInDate = retrieveReservationsByCheckInDate(today);
         List<Reservation> reservationsOnCheckOutDate = retrieveReservationsByCheckOutDate(today);
-        List<Room> roomsAvailable = new ArrayList<Room>();
-        List<Room> roomsReserved = new ArrayList<Room>();
+        
+        List<Room> roomsAvailable = new ArrayList<>();
+        List<Room> roomsReserved = new ArrayList<>();
         
         ExceptionReport report = new ExceptionReport();
         
@@ -221,30 +246,28 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             
             List<Room> allAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
             RoomType reservationRoomType = reservationToday.getRoomType();
+            System.out.println("Reservation room type: " + reservationToday.getRoomType());
             
             for (Room availableRoom : allAvailableRooms) {
                 if (availableRoom.getRoomType().equals(reservationRoomType)) {
+                    System.out.println("Room type of available room: " + availableRoom.getRoomType());
                     roomsAvailable.add(availableRoom);
                 }
             }
             
+            // check if there are any rooms about to be available
             if (!reservationsOnCheckOutDate.isEmpty()) {
-                
                 for (Reservation endedReservation : reservationsOnCheckOutDate) {
-                    
                     if (endedReservation.getRoomType().equals(reservationRoomType)) {
-                        
                         for (Room room : endedReservation.getRooms()) {
                             roomsAvailable.add(room);
                         }
-                        
                     }
-                    
                 }
-                
             }
             
             Integer roomsToAllocate = reservationToday.getNumOfRooms();
+            System.out.println("Rooms to allocate this round: " + roomsToAllocate);
 
             for (Room room : roomsAvailable) {
                 if (room.getRoomAvailability().equals(RoomStatusEnum.NOT_AVAILABLE)) {
@@ -256,11 +279,20 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                 roomsReserved.add(room);
                 reservationToday.getRooms().add(room);
                 room.setReservation(reservationToday);
+                room.setDateOccupiedOn(reservationToday.getCheckOutDateTime());
+                
                 roomsToAllocate--;
                 
                 if(roomsToAllocate == 0) {
                     break;
                 }
+            }
+            
+            roomsAvailable.clear();
+            
+            boolean allocationStatus = false;
+            if (roomsToAllocate == 0) {
+                allocationStatus = true;
             }
             
             //did not allocate everything
@@ -283,6 +315,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                     }
                     
                     if(roomsToAllocate == 0) {
+                        allocationStatus = true;
                         break;
                     }
                     
@@ -294,6 +327,20 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
             if (roomsToAllocate > 0) {
                 report.setDescription("No available room for reserved room type, no upgrade to next higher room type available. No room allocated.");
                 createExceptionReport(report);
+            }
+            
+            if (allocationStatus == true) {
+                reservationToday.setIsAllocated(true);
+            }
+        }
+        
+        //change status of rooms whose reservation ended today
+        for (Reservation reservationEndedToday : reservationsOnCheckOutDate) {
+            
+            for (Room reservationEndedRoom : reservationEndedToday.getRooms()) {
+                if (reservationEndedRoom.getRoomAvailability().equals(RoomStatusEnum.NOT_AVAILABLE)) {
+                    reservationEndedRoom.setRoomAvailability(RoomStatusEnum.AVAILABLE);
+                }
             }
         }
         
@@ -308,6 +355,45 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         em.flush();
         
         return exceptionReport;
+    }
+     
+    @Override
+    public List<Reservation> retrieveReservationByGuestId(Long guestId) throws ReservationNotFoundException {
+        Date today = new Date();
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.guestId = :inGuestId AND r.checkInDateTime = :today");
+        query.setParameter("inGuestId", guestId);
+        query.setParameter("today", today);
+        
+        List<Reservation> reservations = new ArrayList<>();
+        
+        if (query.getResultList() != null) {
+            reservations = query.getResultList();
+        } 
+        
+        for (Reservation reservation : reservations) {
+            reservation.getRooms().size();
+        }
+        
+        return reservations;
+    }
+    
+    @Override
+    public List<Reservation> retrieveReservationByOccupantId(Long occupantId) throws ReservationNotFoundException {
+        Date today = new Date();
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.occupant.occupantId = :inOccupantId AND r.checkInDateTime = :today");
+        query.setParameter("inOccupantId", occupantId);
+        query.setParameter("today", today);
+        List<Reservation> reservations = new ArrayList<>();
+        
+        if (query.getResultList() != null) {
+            reservations = query.getResultList();
+        } 
+        
+        for (Reservation reservation : reservations) {
+            reservation.getRooms().size();
+        }
+        
+        return reservations;
     }
     
 //    @Override

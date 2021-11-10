@@ -19,7 +19,7 @@ import util.exception.RoomRateNotFoundException;
 @Local
 public interface RoomRateSessionBeanLocal {
 
-    public RoomRate createRoomRate(RoomRate newRoomRate);
+    public RoomRate createRoomRate(RoomRate newRoomRate, RoomType roomType);
 
     public RoomRate retrieveRoomRateById(Long roomRateId) throws RoomRateNotFoundException;
 
