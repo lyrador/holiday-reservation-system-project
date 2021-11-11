@@ -12,6 +12,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import java.util.GregorianCalendar;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
 /**
  *
  * @author yeeda
@@ -165,6 +169,28 @@ public class MainApp {
             checkInDate = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter Check Out Date (dd/mm/yyyy)> ");
             checkOutDate = inputDateFormat.parse(scanner.nextLine().trim());
+            
+            XMLGregorianCalendar xmlCheckInDate = null;
+            GregorianCalendar gcIn = new GregorianCalendar();
+            gcIn.setTime(checkInDate);
+            
+            try {
+                xmlCheckInDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcIn);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            XMLGregorianCalendar xmlCheckOutDate = null;
+            GregorianCalendar gcOut = new GregorianCalendar();
+            gcOut.setTime(checkOutDate);
+            
+            try {
+                xmlCheckOutDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(gcOut);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
 
             List<RoomType> roomTypes = service.getHolidayReservationWebServicePort().viewAllRoomTypes();
 
@@ -182,9 +208,9 @@ public class MainApp {
 
                 roomNames[seq - 1] = roomType.getRoomName();
                 try {
-                    roomTypePricesForDuration[seq - 1] = service.getHolidayReservationWebServicePort().calculatePrice(roomType.getRoomTypeId(), checkInDate, checkOutDate);
-                    numOfRoomsAvailable[seq - 1] = service.getHolidayReservationWebServicePort().calculateNumOfRoomsAvailable(roomType.getRoomTypeId(), checkInDate, checkOutDate);
-                } catch (RoomTypeNotFoundException ex) {
+                    roomTypePricesForDuration[seq - 1] = service.getHolidayReservationWebServicePort().calculatePrice(roomType.getRoomTypeId(), xmlCheckInDate, xmlCheckOutDate);
+                    numOfRoomsAvailable[seq - 1] = service.getHolidayReservationWebServicePort().calculateNumOfRoomsAvailable(roomType.getRoomTypeId(), xmlCheckInDate, xmlCheckOutDate);
+                } catch (RoomTypeNotFoundException_Exception ex) {
                     System.out.println(ex.getMessage());
                 }
                 
