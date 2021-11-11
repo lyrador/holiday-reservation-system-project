@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.Schedule;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
@@ -230,6 +231,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         return reservations;
     }
     
+    @Schedule(hour="2")
     @Override
     public List<Room> allocateRoomToCurrentDayReservations() {
         
@@ -240,98 +242,101 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         List<Room> roomsAvailable = new ArrayList<>();
         List<Room> roomsReserved = new ArrayList<>();
         
-        ExceptionReport report = new ExceptionReport();
         
         for (Reservation reservationToday : reservationsOnCheckInDate) {
-            
-            List<Room> allAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
-            RoomType reservationRoomType = reservationToday.getRoomType();
-            System.out.println("Reservation room type: " + reservationToday.getRoomType());
-            
-            for (Room availableRoom : allAvailableRooms) {
-                if (availableRoom.getRoomType().equals(reservationRoomType)) {
-                    System.out.println("Room type of available room: " + availableRoom.getRoomType());
-                    roomsAvailable.add(availableRoom);
+            ExceptionReport report = new ExceptionReport();
+            if (!reservationToday.getIsAllocated()) {
+                List<Room> allAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
+                RoomType reservationRoomType = reservationToday.getRoomType();
+                System.out.println("Reservation room type: " + reservationToday.getRoomType());
+
+                for (Room availableRoom : allAvailableRooms) {
+                    if (availableRoom.getRoomType().equals(reservationRoomType)) {
+                        System.out.println("Room type of available room: " + availableRoom.getRoomType());
+                        roomsAvailable.add(availableRoom);
+                    }
                 }
-            }
-            
-            // check if there are any rooms about to be available
-            if (!reservationsOnCheckOutDate.isEmpty()) {
-                for (Reservation endedReservation : reservationsOnCheckOutDate) {
-                    if (endedReservation.getRoomType().equals(reservationRoomType)) {
-                        for (Room room : endedReservation.getRooms()) {
-                            roomsAvailable.add(room);
+
+                // check if there are any rooms about to be available
+                if (!reservationsOnCheckOutDate.isEmpty()) {
+                    for (Reservation endedReservation : reservationsOnCheckOutDate) {
+                        if (endedReservation.getRoomType().equals(reservationRoomType)) {
+                            for (Room room : endedReservation.getRooms()) {
+                                roomsAvailable.add(room);
+                            }
                         }
                     }
                 }
-            }
-            
-            Integer roomsToAllocate = reservationToday.getNumOfRooms();
-            System.out.println("Rooms to allocate this round: " + roomsToAllocate);
 
-            for (Room room : roomsAvailable) {
-                if (room.getRoomAvailability().equals(RoomStatusEnum.NOT_AVAILABLE)) {
-                    room.setRoomAvailability(RoomStatusEnum.OCCUPIED_RESERVED);
-                } else if (room.getRoomAvailability().equals(RoomStatusEnum.AVAILABLE)) {
-                    room.setRoomAvailability(RoomStatusEnum.RESERVED);
-                }
-                
-                roomsReserved.add(room);
-                reservationToday.getRooms().add(room);
-                room.setReservation(reservationToday);
-                room.setDateOccupiedOn(reservationToday.getCheckOutDateTime());
-                
-                roomsToAllocate--;
-                
-                if(roomsToAllocate == 0) {
-                    break;
-                }
-            }
-            
-            roomsAvailable.clear();
-            
-            boolean allocationStatus = false;
-            if (roomsToAllocate == 0) {
-                allocationStatus = true;
-            }
-            
-            //did not allocate everything
-            if (roomsToAllocate > 0) {
-                
-                List<Room> allUpdatedAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
-                
-                for (Room updatedAvailableRoom : allUpdatedAvailableRooms) {
-                    
-                    if (updatedAvailableRoom.getRoomType().getRoomRank() > reservationRoomType.getRoomRank()) {
-                        updatedAvailableRoom.setRoomAvailability(RoomStatusEnum.RESERVED);
-                        roomsReserved.add(updatedAvailableRoom);
-                        reservationToday.getRooms().add(updatedAvailableRoom);
-                        updatedAvailableRoom.setReservation(reservationToday);
-                        roomsToAllocate--;
-                        
-                        report.setDescription("No available room for reserved room type, upgrade to next higher room type available. Room " + updatedAvailableRoom.getRoomNumber() + " allocated.");
-                        createExceptionReport(report);
-                        
+                Integer roomsToAllocate = reservationToday.getNumOfRooms();
+                System.out.println("Rooms to allocate this round: " + roomsToAllocate);
+
+                for (Room room : roomsAvailable) {
+                    if (room.getRoomAvailability().equals(RoomStatusEnum.NOT_AVAILABLE)) {
+                        room.setRoomAvailability(RoomStatusEnum.OCCUPIED_RESERVED);
+                    } else if (room.getRoomAvailability().equals(RoomStatusEnum.AVAILABLE)) {
+                        room.setRoomAvailability(RoomStatusEnum.RESERVED);
                     }
-                    
+
+                    roomsReserved.add(room);
+                    reservationToday.getRooms().add(room);
+                    room.setReservation(reservationToday);
+                    room.setDateOccupiedOn(reservationToday.getCheckOutDateTime());
+
+                    roomsToAllocate--;
+
                     if(roomsToAllocate == 0) {
-                        allocationStatus = true;
                         break;
                     }
-                    
                 }
-                
+
+                roomsAvailable.clear();
+
+                boolean allocationStatus = false;
+                if (roomsToAllocate == 0) {
+                    allocationStatus = true;
+                }
+
+                //did not allocate everything
+                if (roomsToAllocate > 0) {
+
+                    List<Room> allUpdatedAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
+
+                    for (Room updatedAvailableRoom : allUpdatedAvailableRooms) {
+
+                        if (updatedAvailableRoom.getRoomType().getRoomRank() > reservationRoomType.getRoomRank()) {
+                            updatedAvailableRoom.setRoomAvailability(RoomStatusEnum.RESERVED);
+                            roomsReserved.add(updatedAvailableRoom);
+                            reservationToday.getRooms().add(updatedAvailableRoom);
+                            updatedAvailableRoom.setReservation(reservationToday);
+                            roomsToAllocate--;
+
+                            report.setDescription("No available room for reserved room type, upgrade to next higher room type available. Room " + updatedAvailableRoom.getRoomNumber() + " allocated.");
+                            allocationStatus = true;
+                            createExceptionReport(report);
+
+                        }
+
+                        if(roomsToAllocate == 0) {
+                            allocationStatus = true;
+                            break;
+                        }
+
+                    }
+
+                }
+
+                //no more rooms to upgrade to
+                if (roomsToAllocate > 0) {
+                    report.setDescription("No available room for reserved room type, no upgrade to next higher room type available. No room allocated.");
+                    createExceptionReport(report);
+                }
+
+                if (allocationStatus == true) {
+                    reservationToday.setIsAllocated(true);
+                }
             }
             
-            //no more rooms to upgrade to
-            if (roomsToAllocate > 0) {
-                report.setDescription("No available room for reserved room type, no upgrade to next higher room type available. No room allocated.");
-                createExceptionReport(report);
-            }
-            
-            if (allocationStatus == true) {
-                reservationToday.setIsAllocated(true);
-            }
         }
         
         //change status of rooms whose reservation ended today
