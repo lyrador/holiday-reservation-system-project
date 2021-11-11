@@ -1,11 +1,13 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import util.providedinterface.ICopyable;
 
@@ -20,6 +22,9 @@ public class Partner implements Serializable, ICopyable {
     private String partnerName;
     private String username;
     private String password;
+    
+    @OneToMany(mappedBy = "partner")
+    private List<Reservation> reservations;
 
     public Partner() {
     }
@@ -97,5 +102,12 @@ public class Partner implements Serializable, ICopyable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 }
