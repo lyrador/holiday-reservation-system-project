@@ -3,6 +3,7 @@ package ejb.session.stateless;
 import entity.ExceptionReport;
 import entity.Guest;
 import entity.Occupant;
+import entity.Partner;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.ejb.Stateless;
@@ -99,6 +100,22 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         reservation.setGuest(guest);
         reservation.setRoomType(roomType);
         guest.getReservations().add(reservation);
+        roomType.getReservations().add(reservation);
+        
+        em.persist(reservation);
+        em.flush();
+        
+        return reservation.getReservationId();
+    }
+    
+    @Override
+    public Long createPartnerReservation(Reservation reservation, Long partnerId, Long roomTypeId) {
+        
+        Partner partner = em.find(Partner.class, partnerId);
+        RoomType roomType = em.find(RoomType.class, roomTypeId);
+        reservation.setPartner(partner);
+        reservation.setRoomType(roomType);
+        partner.getReservations().add(reservation);
         roomType.getReservations().add(reservation);
         
         em.persist(reservation);
@@ -226,6 +243,10 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         if (query.getResultList() != null) {
             reservations = query.getResultList();
         } 
+        
+        for (Reservation reservation: reservations) {
+            reservation.getRoomType();
+        }
         
         return reservations;
     }

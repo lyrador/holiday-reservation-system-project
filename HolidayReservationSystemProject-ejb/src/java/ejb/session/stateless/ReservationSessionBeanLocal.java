@@ -35,5 +35,9 @@ public interface ReservationSessionBeanLocal {
     public List<Reservation> retrieveReservationByGuestId(Long guestId) throws ReservationNotFoundException;
 
     public Long createReservationForOccupant(Reservation reservation, Long occupantId, Long roomTypeId);
+
+    public Long createPartnerReservation(Reservation reservation, Long partnerId, Long roomTypeId);
+
+    public List<Reservation> viewAllPartnerReservationsFor(Long partnerId);
     
 }
