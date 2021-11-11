@@ -55,16 +55,16 @@ public class Reservation implements Serializable, ICopyable {
     }
       
     
-    public Reservation(Long reservationId, int totalAmount, Date checkInDateTime, Date checkOutDateTime, Integer numOfRooms, Boolean isAllocated)
-    {
-        this.reservationId = reservationId;
-        this.totalAmount = totalAmount;
-        this.checkInDateTime = checkInDateTime;
-        this.checkOutDateTime = checkOutDateTime;
-        this.checkInDateTime = checkInDateTime;
-        this.numOfRooms = numOfRooms;
-        this.isAllocated = isAllocated;     
-    }
+//    public Reservation(Long reservationId, int totalAmount, Date checkInDateTime, Date checkOutDateTime, Integer numOfRooms, Boolean isAllocated)
+//    {
+//        this.reservationId = reservationId;
+//        this.totalAmount = totalAmount;
+//        this.checkInDateTime = checkInDateTime;
+//        this.checkOutDateTime = checkOutDateTime;
+//        this.checkInDateTime = checkInDateTime;
+//        this.numOfRooms = numOfRooms;
+//        this.isAllocated = isAllocated;     
+//    }
     
     public Reservation(int totalAmount, Date checkInDateTime, Date checkOutDateTime, int numOfRooms, Boolean isAllocated)
     {
