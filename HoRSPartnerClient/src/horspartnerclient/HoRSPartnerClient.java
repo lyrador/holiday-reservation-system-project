@@ -14,7 +14,7 @@ public class HoRSPartnerClient {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InvalidLoginCredentialException_Exception {
         // TODO code application logic here
         HolidayReservationWebService_Service service = new HolidayReservationWebService_Service();
         

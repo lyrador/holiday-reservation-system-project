@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import java.util.GregorianCalendar;
+import javax.persistence.NoResultException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -30,7 +31,7 @@ public class MainApp {
         this.service = service;
     }
     
-    public void run() {
+    public void run() throws InvalidLoginCredentialException_Exception {
         while (true) {
             System.out.println("*** HoRS :: Holiday Reservation System For Partner***");
             System.out.println("*** Welcome to Holiday Reservation System For Partner ***\n");
@@ -51,7 +52,7 @@ public class MainApp {
         System.out.println("You have succesfully exited the system!***\n");
     }
     
-    public int notLoggedInDisplayMenu() {
+    public int notLoggedInDisplayMenu() throws InvalidLoginCredentialException_Exception {
 
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
@@ -69,12 +70,8 @@ public class MainApp {
                 response = scanner.nextInt();
 
                 if (response == 1) {
-                    try {
-                        doLogin();
-                        System.out.println("Login successful as " + currentPartner.getPartnerName() + "!\n");
-                    } catch (InvalidLoginCredentialException ex) {
-                        System.out.println("Invalid login credential: " + ex.getMessage() + "\n");
-                    }
+                    doLogin();
+                    System.out.println("Login successful as " + currentPartner.getPartnerName() + "!\n");
                     break;
                 } else if (response == 2) {
                     Boolean isWalkIn = false;
@@ -132,25 +129,21 @@ public class MainApp {
         return response;
     }
     
-    private void doLogin() throws InvalidLoginCredentialException {
+    private void doLogin() throws InvalidLoginCredentialException_Exception {
         Scanner scanner = new Scanner(System.in);
         String email = "";
         String password = "";
 
         System.out.println("*** Partner Reservation System :: Login ***\n");
-        System.out.print("Enter email> ");
+        System.out.print("Enter username> ");
         email = scanner.nextLine().trim();
         System.out.print("Enter password> ");
         password = scanner.nextLine().trim();
 
-        if (email.length() > 0 && password.length() > 0) {
-            try {
+        try {
                 currentPartner = service.getHolidayReservationWebServicePort().partnerLogin(email, password);
             } catch (NoResultException ex) {
                 System.out.println("Invalid login credential");
-            }
-        } else {
-            throw new InvalidLoginCredentialException("Missing login credential!");
         }
     }
     
@@ -192,6 +185,7 @@ public class MainApp {
                 e.printStackTrace();
             }
 
+            service = new HolidayReservationWebService_Service();
             List<RoomType> roomTypes = service.getHolidayReservationWebServicePort().viewAllRoomTypes();
 
             System.out.println("Enter the respective number from 1 to " + roomTypes.size() + " to reserve that room");
@@ -237,7 +231,13 @@ public class MainApp {
             String confirmCheckout = scanner.nextLine().trim();
 
             if (confirmCheckout.equals("Y")) {
-                Reservation newReservation = new Reservation(totalAmount, checkInDate, checkOutDate, numOfRoomsRequested, false);
+                Reservation newReservation = new Reservation();
+                newReservation.setTotalAmount(totalAmount);
+                newReservation.setCheckInDateTime(xmlCheckInDate);
+                newReservation.setCheckOutDateTime(xmlCheckOutDate);
+                newReservation.setNumOfRooms(numOfRoomsRequested);
+                newReservation.setIsAllocated(false);
+                
                 Long reservationId = service.getHolidayReservationWebServicePort().createPartnerReservation(newReservation, currentPartner.getPartnerId(), roomTypes.get(response - 1).getRoomTypeId());
                 System.out.println("Reservation successful!\n");
             } else {
@@ -256,6 +256,7 @@ public class MainApp {
 
         System.out.println("*** POS System :: System Administration :: View All My Reservations ***\n");
 
+        service = new HolidayReservationWebService_Service();
         List<Reservation> reservations = service.getHolidayReservationWebServicePort().viewAllPartnerReservationsFor(currentPartner.getPartnerId());
 
         System.out.println("Enter the respective number from 1 to " + reservations.size() + " to view rooms of that reservation");
@@ -268,13 +269,13 @@ public class MainApp {
             reservationList.add(reservation);
             int seq = 1;
             System.out.print(seq++ + ": ");
-            System.out.printf("%8s%20s%20d%20s%20s%20d%s\n", reservation.getReservationId().toString(), 
+            System.out.printf("%8s%20s%20d%20s%20s%20d\n", reservation.getReservationId().toString(), 
                     reservation.getRoomType().getRoomName(), 
                     reservation.getNumOfRooms(),
                     reservation.getCheckInDateTime().toString(), 
                     reservation.getCheckOutDateTime().toString(), 
-                    reservation.getTotalAmount(), 
-                    reservation.getIsAllocated().toString());
+                    reservation.getTotalAmount()
+                    );
         }
 
         System.out.println((reservations.size() + 1) + ": Back\n");

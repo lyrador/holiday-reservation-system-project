@@ -4,15 +4,6 @@
 <xsd:import namespace="http://ws.session.ejb/" schemaLocation="http://localhost:8080/holidayReservationWebService/HolidayReservationWebService?xsd=1"/>
 </xsd:schema>
 </types>
-<message name="partnerLogin">
-<part name="parameters" element="tns:partnerLogin"/>
-</message>
-<message name="partnerLoginResponse">
-<part name="parameters" element="tns:partnerLoginResponse"/>
-</message>
-<message name="InvalidLoginCredentialException">
-<part name="fault" element="tns:InvalidLoginCredentialException"/>
-</message>
 <message name="viewAllRoomTypes">
 <part name="parameters" element="tns:viewAllRoomTypes"/>
 </message>
@@ -28,17 +19,20 @@
 <message name="RoomTypeNotFoundException">
 <part name="fault" element="tns:RoomTypeNotFoundException"/>
 </message>
-<message name="createPartnerReservation">
-<part name="parameters" element="tns:createPartnerReservation"/>
-</message>
-<message name="createPartnerReservationResponse">
-<part name="parameters" element="tns:createPartnerReservationResponse"/>
-</message>
 <message name="calculateNumOfRoomsAvailable">
 <part name="parameters" element="tns:calculateNumOfRoomsAvailable"/>
 </message>
 <message name="calculateNumOfRoomsAvailableResponse">
 <part name="parameters" element="tns:calculateNumOfRoomsAvailableResponse"/>
+</message>
+<message name="partnerLogin">
+<part name="parameters" element="tns:partnerLogin"/>
+</message>
+<message name="partnerLoginResponse">
+<part name="parameters" element="tns:partnerLoginResponse"/>
+</message>
+<message name="InvalidLoginCredentialException">
+<part name="fault" element="tns:InvalidLoginCredentialException"/>
 </message>
 <message name="viewAllPartnerReservationsFor">
 <part name="parameters" element="tns:viewAllPartnerReservationsFor"/>
@@ -46,12 +40,13 @@
 <message name="viewAllPartnerReservationsForResponse">
 <part name="parameters" element="tns:viewAllPartnerReservationsForResponse"/>
 </message>
+<message name="createPartnerReservation">
+<part name="parameters" element="tns:createPartnerReservation"/>
+</message>
+<message name="createPartnerReservationResponse">
+<part name="parameters" element="tns:createPartnerReservationResponse"/>
+</message>
 <portType name="HolidayReservationWebService">
-<operation name="partnerLogin">
-<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/partnerLoginRequest" message="tns:partnerLogin"/>
-<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/partnerLoginResponse" message="tns:partnerLoginResponse"/>
-<fault message="tns:InvalidLoginCredentialException" name="InvalidLoginCredentialException" wsam:Action="http://ws.session.ejb/HolidayReservationWebService/partnerLogin/Fault/InvalidLoginCredentialException"/>
-</operation>
 <operation name="viewAllRoomTypes">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllRoomTypesRequest" message="tns:viewAllRoomTypes"/>
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllRoomTypesResponse" message="tns:viewAllRoomTypesResponse"/>
@@ -61,22 +56,60 @@
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculatePriceResponse" message="tns:calculatePriceResponse"/>
 <fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculatePrice/Fault/RoomTypeNotFoundException"/>
 </operation>
-<operation name="createPartnerReservation">
-<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationRequest" message="tns:createPartnerReservation"/>
-<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationResponse" message="tns:createPartnerReservationResponse"/>
-</operation>
 <operation name="calculateNumOfRoomsAvailable">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailableRequest" message="tns:calculateNumOfRoomsAvailable"/>
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailableResponse" message="tns:calculateNumOfRoomsAvailableResponse"/>
 <fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailable/Fault/RoomTypeNotFoundException"/>
 </operation>
+<operation name="partnerLogin">
+<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/partnerLoginRequest" message="tns:partnerLogin"/>
+<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/partnerLoginResponse" message="tns:partnerLoginResponse"/>
+<fault message="tns:InvalidLoginCredentialException" name="InvalidLoginCredentialException" wsam:Action="http://ws.session.ejb/HolidayReservationWebService/partnerLogin/Fault/InvalidLoginCredentialException"/>
+</operation>
 <operation name="viewAllPartnerReservationsFor">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllPartnerReservationsForRequest" message="tns:viewAllPartnerReservationsFor"/>
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllPartnerReservationsForResponse" message="tns:viewAllPartnerReservationsForResponse"/>
 </operation>
+<operation name="createPartnerReservation">
+<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationRequest" message="tns:createPartnerReservation"/>
+<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationResponse" message="tns:createPartnerReservationResponse"/>
+</operation>
 </portType>
 <binding name="HolidayReservationWebServicePortBinding" type="tns:HolidayReservationWebService">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<operation name="viewAllRoomTypes">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
+<operation name="calculatePrice">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="RoomTypeNotFoundException">
+<soap:fault name="RoomTypeNotFoundException" use="literal"/>
+</fault>
+</operation>
+<operation name="calculateNumOfRoomsAvailable">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="RoomTypeNotFoundException">
+<soap:fault name="RoomTypeNotFoundException" use="literal"/>
+</fault>
+</operation>
 <operation name="partnerLogin">
 <soap:operation soapAction=""/>
 <input>
@@ -89,7 +122,7 @@
 <soap:fault name="InvalidLoginCredentialException" use="literal"/>
 </fault>
 </operation>
-<operation name="viewAllRoomTypes">
+<operation name="viewAllPartnerReservationsFor">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -97,41 +130,8 @@
 <output>
 <soap:body use="literal"/>
 </output>
-</operation>
-<operation name="calculatePrice">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-<fault name="RoomTypeNotFoundException">
-<soap:fault name="RoomTypeNotFoundException" use="literal"/>
-</fault>
 </operation>
 <operation name="createPartnerReservation">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="calculateNumOfRoomsAvailable">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-<fault name="RoomTypeNotFoundException">
-<soap:fault name="RoomTypeNotFoundException" use="literal"/>
-</fault>
-</operation>
-<operation name="viewAllPartnerReservationsFor">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
