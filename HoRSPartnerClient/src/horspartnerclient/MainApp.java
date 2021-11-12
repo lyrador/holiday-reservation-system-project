@@ -141,8 +141,9 @@ public class MainApp {
         password = scanner.nextLine().trim();
 
         try {
-                currentPartner = service.getHolidayReservationWebServicePort().partnerLogin(email, password);
-            } catch (NoResultException ex) {
+            service = new HolidayReservationWebService_Service();    
+            currentPartner = service.getHolidayReservationWebServicePort().partnerLogin(email, password);
+        } catch (NoResultException ex) {
                 System.out.println("Invalid login credential");
         }
     }
