@@ -4,6 +4,12 @@
 <xsd:import namespace="http://ws.session.ejb/" schemaLocation="http://localhost:8080/holidayReservationWebService/HolidayReservationWebService?xsd=1"/>
 </xsd:schema>
 </types>
+<message name="createPartnerReservation">
+<part name="parameters" element="tns:createPartnerReservation"/>
+</message>
+<message name="createPartnerReservationResponse">
+<part name="parameters" element="tns:createPartnerReservationResponse"/>
+</message>
 <message name="calculateNumOfRoomsAvailable">
 <part name="parameters" element="tns:calculateNumOfRoomsAvailable"/>
 </message>
@@ -18,12 +24,6 @@
 </message>
 <message name="viewAllPartnerReservationsForResponse">
 <part name="parameters" element="tns:viewAllPartnerReservationsForResponse"/>
-</message>
-<message name="createPartnerReservation">
-<part name="parameters" element="tns:createPartnerReservation"/>
-</message>
-<message name="createPartnerReservationResponse">
-<part name="parameters" element="tns:createPartnerReservationResponse"/>
 </message>
 <message name="calculatePrice">
 <part name="parameters" element="tns:calculatePrice"/>
@@ -47,6 +47,10 @@
 <part name="parameters" element="tns:viewAllRoomTypesResponse"/>
 </message>
 <portType name="HolidayReservationWebService">
+<operation name="createPartnerReservation">
+<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationRequest" message="tns:createPartnerReservation"/>
+<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationResponse" message="tns:createPartnerReservationResponse"/>
+</operation>
 <operation name="calculateNumOfRoomsAvailable">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailableRequest" message="tns:calculateNumOfRoomsAvailable"/>
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailableResponse" message="tns:calculateNumOfRoomsAvailableResponse"/>
@@ -55,10 +59,6 @@
 <operation name="viewAllPartnerReservationsFor">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllPartnerReservationsForRequest" message="tns:viewAllPartnerReservationsFor"/>
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllPartnerReservationsForResponse" message="tns:viewAllPartnerReservationsForResponse"/>
-</operation>
-<operation name="createPartnerReservation">
-<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationRequest" message="tns:createPartnerReservation"/>
-<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationResponse" message="tns:createPartnerReservationResponse"/>
 </operation>
 <operation name="calculatePrice">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculatePriceRequest" message="tns:calculatePrice"/>
@@ -77,6 +77,15 @@
 </portType>
 <binding name="HolidayReservationWebServicePortBinding" type="tns:HolidayReservationWebService">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<operation name="createPartnerReservation">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+</operation>
 <operation name="calculateNumOfRoomsAvailable">
 <soap:operation soapAction=""/>
 <input>
@@ -90,15 +99,6 @@
 </fault>
 </operation>
 <operation name="viewAllPartnerReservationsFor">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-</operation>
-<operation name="createPartnerReservation">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

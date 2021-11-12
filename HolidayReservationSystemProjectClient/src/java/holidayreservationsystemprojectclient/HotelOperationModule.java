@@ -802,7 +802,7 @@ public class HotelOperationModule {
             } else if (input.equals("N")) {
                 
                 try {
-                    System.out.print("Enter a specific future date (DD/MM/YYY)> \n");
+                    System.out.print("Enter a specific future date (dd/MM/yyyy)> \n");
 
                     String dateInput = scanner.nextLine().trim();
                     Date futureDate = new SimpleDateFormat("dd/MM/yyyy").parse(dateInput); 
