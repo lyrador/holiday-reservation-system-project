@@ -23,6 +23,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 import util.enumeration.RateTypeEnum;
 
 
@@ -124,6 +125,7 @@ public class RoomRate implements Serializable {
         this.validityEndDate = validityEndDate;
     }
 
+    @XmlTransient
     public RoomType getRoomType() {
         return roomType;
     }

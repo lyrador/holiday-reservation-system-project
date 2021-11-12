@@ -22,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 import util.enumeration.RoomStatusEnum;
 
 @Entity
@@ -92,6 +93,7 @@ public class Room implements Serializable {
         this.dateOccupiedOn = dateOccupiedOn;
     }
 
+    @XmlTransient
     public RoomType getRoomType() {
         return roomType;
     }
@@ -100,6 +102,7 @@ public class Room implements Serializable {
         this.roomType = roomType;
     }
 
+    @XmlTransient
     public Reservation getReservation() {
         return reservation;
     }

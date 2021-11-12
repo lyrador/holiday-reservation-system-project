@@ -13,12 +13,6 @@
 <message name="RoomTypeNotFoundException">
 <part name="fault" element="tns:RoomTypeNotFoundException"/>
 </message>
-<message name="calculateNumOfRoomsAvailable">
-<part name="parameters" element="tns:calculateNumOfRoomsAvailable"/>
-</message>
-<message name="calculateNumOfRoomsAvailableResponse">
-<part name="parameters" element="tns:calculateNumOfRoomsAvailableResponse"/>
-</message>
 <message name="partnerLogin">
 <part name="parameters" element="tns:partnerLogin"/>
 </message>
@@ -34,11 +28,11 @@
 <message name="viewAllRoomTypesResponse">
 <part name="parameters" element="tns:viewAllRoomTypesResponse"/>
 </message>
-<message name="createPartnerReservation">
-<part name="parameters" element="tns:createPartnerReservation"/>
+<message name="calculateNumOfRoomsAvailable">
+<part name="parameters" element="tns:calculateNumOfRoomsAvailable"/>
 </message>
-<message name="createPartnerReservationResponse">
-<part name="parameters" element="tns:createPartnerReservationResponse"/>
+<message name="calculateNumOfRoomsAvailableResponse">
+<part name="parameters" element="tns:calculateNumOfRoomsAvailableResponse"/>
 </message>
 <message name="viewAllPartnerReservationsFor">
 <part name="parameters" element="tns:viewAllPartnerReservationsFor"/>
@@ -46,16 +40,17 @@
 <message name="viewAllPartnerReservationsForResponse">
 <part name="parameters" element="tns:viewAllPartnerReservationsForResponse"/>
 </message>
+<message name="createPartnerReservation">
+<part name="parameters" element="tns:createPartnerReservation"/>
+</message>
+<message name="createPartnerReservationResponse">
+<part name="parameters" element="tns:createPartnerReservationResponse"/>
+</message>
 <portType name="HolidayReservationWebService">
 <operation name="calculatePrice">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculatePriceRequest" message="tns:calculatePrice"/>
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculatePriceResponse" message="tns:calculatePriceResponse"/>
 <fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculatePrice/Fault/RoomTypeNotFoundException"/>
-</operation>
-<operation name="calculateNumOfRoomsAvailable">
-<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailableRequest" message="tns:calculateNumOfRoomsAvailable"/>
-<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailableResponse" message="tns:calculateNumOfRoomsAvailableResponse"/>
-<fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailable/Fault/RoomTypeNotFoundException"/>
 </operation>
 <operation name="partnerLogin">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/partnerLoginRequest" message="tns:partnerLogin"/>
@@ -66,30 +61,23 @@
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllRoomTypesRequest" message="tns:viewAllRoomTypes"/>
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllRoomTypesResponse" message="tns:viewAllRoomTypesResponse"/>
 </operation>
-<operation name="createPartnerReservation">
-<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationRequest" message="tns:createPartnerReservation"/>
-<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationResponse" message="tns:createPartnerReservationResponse"/>
+<operation name="calculateNumOfRoomsAvailable">
+<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailableRequest" message="tns:calculateNumOfRoomsAvailable"/>
+<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailableResponse" message="tns:calculateNumOfRoomsAvailableResponse"/>
+<fault message="tns:RoomTypeNotFoundException" name="RoomTypeNotFoundException" wsam:Action="http://ws.session.ejb/HolidayReservationWebService/calculateNumOfRoomsAvailable/Fault/RoomTypeNotFoundException"/>
 </operation>
 <operation name="viewAllPartnerReservationsFor">
 <input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllPartnerReservationsForRequest" message="tns:viewAllPartnerReservationsFor"/>
 <output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/viewAllPartnerReservationsForResponse" message="tns:viewAllPartnerReservationsForResponse"/>
 </operation>
+<operation name="createPartnerReservation">
+<input wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationRequest" message="tns:createPartnerReservation"/>
+<output wsam:Action="http://ws.session.ejb/HolidayReservationWebService/createPartnerReservationResponse" message="tns:createPartnerReservationResponse"/>
+</operation>
 </portType>
 <binding name="HolidayReservationWebServicePortBinding" type="tns:HolidayReservationWebService">
 <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
 <operation name="calculatePrice">
-<soap:operation soapAction=""/>
-<input>
-<soap:body use="literal"/>
-</input>
-<output>
-<soap:body use="literal"/>
-</output>
-<fault name="RoomTypeNotFoundException">
-<soap:fault name="RoomTypeNotFoundException" use="literal"/>
-</fault>
-</operation>
-<operation name="calculateNumOfRoomsAvailable">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -122,7 +110,19 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="createPartnerReservation">
+<operation name="calculateNumOfRoomsAvailable">
+<soap:operation soapAction=""/>
+<input>
+<soap:body use="literal"/>
+</input>
+<output>
+<soap:body use="literal"/>
+</output>
+<fault name="RoomTypeNotFoundException">
+<soap:fault name="RoomTypeNotFoundException" use="literal"/>
+</fault>
+</operation>
+<operation name="viewAllPartnerReservationsFor">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>
@@ -131,7 +131,7 @@
 <soap:body use="literal"/>
 </output>
 </operation>
-<operation name="viewAllPartnerReservationsFor">
+<operation name="createPartnerReservation">
 <soap:operation soapAction=""/>
 <input>
 <soap:body use="literal"/>

@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 public class RoomType implements Serializable {
@@ -136,6 +137,7 @@ public class RoomType implements Serializable {
         this.rooms = rooms;
     }
 
+    @XmlTransient
     public List<Reservation> getReservations() {
         return reservations;
     }

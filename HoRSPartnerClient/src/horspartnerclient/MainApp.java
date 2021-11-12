@@ -5,6 +5,8 @@
  */
 package horspartnerclient;
 
+import entity.Reservation;
+import entity.Room;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,8 +35,7 @@ public class MainApp {
     
     public void run() throws InvalidLoginCredentialException_Exception {
         while (true) {
-            System.out.println("*** HoRS :: Holiday Reservation System For Partner***");
-            System.out.println("*** Welcome to Holiday Reservation System For Partner ***\n");
+            System.out.println("*** HoRS :: Welcome to Holiday Reservation System For Partner! ***");
             int response;
 
             if (currentPartner != null) {
@@ -44,7 +45,7 @@ public class MainApp {
                 response = notLoggedInDisplayMenu();
             }
 
-            if (response == 4) {
+            if (response == 3) {
                 break;
             }
 
@@ -58,10 +59,10 @@ public class MainApp {
         Integer response = 0;
 
         while (true) {
-            System.out.println("*** HoRS :: Hotel Reservation System ***\n");
+            System.out.println("*** HoRS For Partner :: Login Page ***\n");
             System.out.println("1: Partner Login");
             System.out.println("2: Search Hotel Room");
-            System.out.println("3: Back\n");
+            System.out.println("3: Exit\n");
             response = 0;
 
             while (response < 1 || response > 3) {
@@ -75,7 +76,8 @@ public class MainApp {
                     break;
                 } else if (response == 2) {
                     Boolean isWalkIn = false;
-                    searchHotelRoom(isWalkIn);
+                    Boolean isLoggedIn = false;
+                    searchHotelRoom(isWalkIn, isLoggedIn);
                 } else if (response == 3) {
                     break;
                 } else {
@@ -96,33 +98,30 @@ public class MainApp {
         Integer response = 0;
 
         while (true) {
-            System.out.println("*** HoRS :: Hotel Reservation System ***\n");
+            System.out.println("*** HoRS For Partner :: Homepage ***\n");
             System.out.println("1: Search Hotel Room");
-            System.out.println("2: View My Reservation Details");
-            System.out.println("3: View All My Reservations");
-            System.out.println("4: Back\n");
+            System.out.println("2: View All My Reservations With Details");
+            System.out.println("3: Exit\n");
             response = 0;
 
-            while (response < 1 || response > 4) {
+            while (response < 1 || response > 3) {
                 System.out.print("> ");
 
                 response = scanner.nextInt();
 
                 if (response == 1) {
                     Boolean isWalkIn = false;
-                    searchHotelRoom(isWalkIn);
-                } else if (response == 2) {
-                    //viewMyReservationDetails();
-                } else if (response == 3) {
+                    Boolean isLoggedIn = true;
+                    searchHotelRoom(isWalkIn, isLoggedIn);
+                } else if (response == 2) { 
                     viewAllMyReservations();
-                } else if (response == 4) {
+                } else if (response == 3) {
                     break;
                 } else {
                     System.out.println("Invalid option, please try again!\n");
                 }
             }
-
-            if (response == 4) {
+            if (response == 3) {
                 break;
             }
         }
@@ -134,7 +133,7 @@ public class MainApp {
         String email = "";
         String password = "";
 
-        System.out.println("*** Partner Reservation System :: Login ***\n");
+        System.out.println("*** HoRS For Partner :: Login ***\n");
         System.out.print("Enter username> ");
         email = scanner.nextLine().trim();
         System.out.print("Enter password> ");
@@ -148,7 +147,7 @@ public class MainApp {
         }
     }
     
-    public void searchHotelRoom(Boolean isWalkIn) {
+    public void searchHotelRoom(Boolean isWalkIn, Boolean isLoggedIn) {
         Integer response = 0;
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
         Scanner scanner = new Scanner(System.in);
@@ -156,7 +155,7 @@ public class MainApp {
         Date checkInDate;
         Date checkOutDate;
 
-        System.out.println("*** Holiday Reservation System :: Search Hotel Room ***\n");
+        System.out.println("*** HoRS For Partner :: Search Hotel Room ***\n");
 
         try {
             System.out.print("Enter Check In Date (dd/mm/yyyy)> ");
@@ -188,65 +187,94 @@ public class MainApp {
 
             service = new HolidayReservationWebService_Service();
             List<RoomType> roomTypes = service.getHolidayReservationWebServicePort().viewAllRoomTypes();
+            
+            if(isLoggedIn == false) {
+                System.out.printf("\n%18s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+                System.out.println("----------------------------------------------------------------------------");
 
-            System.out.println("Enter the respective number from 1 to " + roomTypes.size() + " to reserve that room");
+                String[] roomNames = new String[roomTypes.size()];
+                int[] roomTypePricesForDuration = new int[roomTypes.size()];
+                int[] numOfRoomsAvailable = new int[roomTypes.size()];
 
-            System.out.printf("%8s%22s%30s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+                int seq = 1;
+                for (RoomType roomType : roomTypes) {
+                    roomNames[seq - 1] = roomType.getRoomName();
+                    try {
+                        roomTypePricesForDuration[seq - 1] = service.getHolidayReservationWebServicePort().calculatePrice(roomType.getRoomTypeId(), xmlCheckInDate, xmlCheckOutDate);
+                        numOfRoomsAvailable[seq - 1] = service.getHolidayReservationWebServicePort().calculateNumOfRoomsAvailable(roomType.getRoomTypeId(), xmlCheckInDate, xmlCheckOutDate);
+                    } catch (RoomTypeNotFoundException_Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
 
-            String[] roomNames = new String[roomTypes.size()];
-            int[] roomTypePricesForDuration = new int[roomTypes.size()];
-            int[] numOfRoomsAvailable = new int[roomTypes.size()];
-
-            int seq = 1;
-            for (RoomType roomType : roomTypes) {
-                System.out.print(seq + ": ");
-
-                roomNames[seq - 1] = roomType.getRoomName();
-                try {
-                    roomTypePricesForDuration[seq - 1] = service.getHolidayReservationWebServicePort().calculatePrice(roomType.getRoomTypeId(), xmlCheckInDate, xmlCheckOutDate);
-                    numOfRoomsAvailable[seq - 1] = service.getHolidayReservationWebServicePort().calculateNumOfRoomsAvailable(roomType.getRoomTypeId(), xmlCheckInDate, xmlCheckOutDate);
-                } catch (RoomTypeNotFoundException_Exception ex) {
-                    System.out.println(ex.getMessage());
+                    System.out.printf("%18s%12s%29d\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                    seq++;
                 }
-                
-                System.out.printf("%20s%22s%10d\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
-                seq++;
-            }
-
-            System.out.println((roomTypes.size() + 1) + ": Back\n");
-
-            response = scanner.nextInt();
-            scanner.nextLine();
-
-            if (response == roomTypes.size() + 1) {
-                return;
-            } else {
-                System.out.print("Enter number of rooms> ");
-                numOfRoomsRequested = scanner.nextInt();
+                System.out.println("------------------------------------------------------------------------");
+                System.out.println("Enter any key to return> ");
                 scanner.nextLine();
+                return;
             }
-
-            int totalAmount = roomTypePricesForDuration[response - 1] * numOfRoomsRequested;
-            System.out.printf("Confirm Reservation for %d of %s at $%d? (Enter 'Y' to complete checkout)> ", numOfRoomsRequested, roomNames[response - 1], totalAmount);
-
-            String confirmCheckout = scanner.nextLine().trim();
-
-            if (confirmCheckout.equals("Y")) {
-                Reservation newReservation = new Reservation();
-                newReservation.setTotalAmount(totalAmount);
-                newReservation.setCheckInDateTime(xmlCheckInDate);
-                newReservation.setCheckOutDateTime(xmlCheckOutDate);
-                newReservation.setNumOfRooms(numOfRoomsRequested);
-                newReservation.setIsAllocated(false);
+            else {
+                System.out.println("Enter the respective number from 1 to " + roomTypes.size() + " to reserve that room");
+                System.out.printf("\n%19s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+                System.out.println("------------------------------------------------------------------------");
                 
-                Long reservationId = service.getHolidayReservationWebServicePort().createPartnerReservation(newReservation, currentPartner.getPartnerId(), roomTypes.get(response - 1).getRoomTypeId());
-                System.out.println("Reservation successful!\n");
-            } else {
-                System.out.println("Reservation cancelled!\n");
-            }
+                String[] roomNames = new String[roomTypes.size()];
+                int[] roomTypePricesForDuration = new int[roomTypes.size()];
+                int[] numOfRoomsAvailable = new int[roomTypes.size()];
 
-            return;
-        } catch (ParseException ex) {
+                int seq = 1;
+                for (RoomType roomType : roomTypes) {
+                    System.out.print(seq + ": ");
+
+                    roomNames[seq - 1] = roomType.getRoomName();
+                    try {
+                        roomTypePricesForDuration[seq - 1] = service.getHolidayReservationWebServicePort().calculatePrice(roomType.getRoomTypeId(), xmlCheckInDate, xmlCheckOutDate);
+                        numOfRoomsAvailable[seq - 1] = service.getHolidayReservationWebServicePort().calculateNumOfRoomsAvailable(roomType.getRoomTypeId(), xmlCheckInDate, xmlCheckOutDate);
+                    } catch (RoomTypeNotFoundException_Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+
+                    System.out.printf("%16s%12s%29s\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                    seq++;
+                }
+            
+                System.out.println("------------------------------------------------------------------------");
+                System.out.println((roomTypes.size() + 1) + ": Back\n");
+
+                response = scanner.nextInt();
+                scanner.nextLine();
+
+                if (response == roomTypes.size() + 1) {
+                    return;
+                } else {
+                    System.out.print("Enter number of rooms> ");
+                    numOfRoomsRequested = scanner.nextInt();
+                    scanner.nextLine();
+                }
+
+                int totalAmount = roomTypePricesForDuration[response - 1] * numOfRoomsRequested;
+                System.out.printf("Confirm Reservation for %d of %s at $%d? (Enter 'Y' to complete checkout)> ", numOfRoomsRequested, roomNames[response - 1], totalAmount);
+
+                String confirmCheckout = scanner.nextLine().trim();
+
+                if (confirmCheckout.equals("Y")) {
+                    horspartnerclient.Reservation newReservation = new horspartnerclient.Reservation();
+                    newReservation.setTotalAmount(totalAmount);
+                    newReservation.setCheckInDateTime(xmlCheckInDate);
+                    newReservation.setCheckOutDateTime(xmlCheckOutDate);
+                    newReservation.setNumOfRooms(numOfRoomsRequested);
+                    newReservation.setIsAllocated(false);
+
+                    Long reservationId = service.getHolidayReservationWebServicePort().createPartnerReservation(newReservation, currentPartner.getPartnerId(), roomTypes.get(response - 1).getRoomTypeId());
+                    System.out.println("Reservation successful!\n");
+                } else {
+                    System.out.println("Reservation cancelled!\n");
+                }
+                return;
+            }
+        } 
+        catch (ParseException ex) {
             System.out.println("Invalid date input!\n");
         }
     }
@@ -255,45 +283,33 @@ public class MainApp {
         Scanner scanner = new Scanner(System.in);
         int response;
 
-        System.out.println("*** POS System :: System Administration :: View All My Reservations ***\n");
+        System.out.println("HoRS For Partner :: View All My Reservations with Details ***\n");
 
         service = new HolidayReservationWebService_Service();
-        List<Reservation> reservations = service.getHolidayReservationWebServicePort().viewAllPartnerReservationsFor(currentPartner.getPartnerId());
+        List<horspartnerclient.Reservation> reservations = service.getHolidayReservationWebServicePort().viewAllPartnerReservationsFor(currentPartner.getPartnerId());
 
-        System.out.println("Enter the respective number from 1 to " + reservations.size() + " to view rooms of that reservation");
+        System.out.printf("%18s%20s%14s%20s%20s%20s\n", "Reservation ID", "Type of Room", "Quantity", "Check-In Date", "Check-Out Date", "Total Amount($)");
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------");
 
-        System.out.printf("%20s%20s%8s%20s%20s%20s%20s\n", "   Reservation ID", "Type of Room", "Quantity", "Check-In Date", "Check-Out Date", "Total Amount($)", "Allocated Status");
+        List<horspartnerclient.Reservation> reservationList = new ArrayList<horspartnerclient.Reservation>();
 
-        List<Reservation> reservationList = new ArrayList<Reservation>();
-
-        for (Reservation reservation : reservations) {
-            reservationList.add(reservation);
-            int seq = 1;
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                
+        int seq = 1;
+        for (horspartnerclient.Reservation reservation : reservations) {
+            reservationList.add(reservation);  
             System.out.print(seq++ + ": ");
-            System.out.printf("%8s%20s%20d%20s%20s%20d\n", reservation.getReservationId().toString(), 
+            System.out.printf("%15s%20s%14s%20s%20s%20s\n", reservation.getReservationId().toString(), 
                     reservation.getRoomType().getRoomName(), 
                     reservation.getNumOfRooms(),
-                    reservation.getCheckInDateTime().toString(), 
-                    reservation.getCheckOutDateTime().toString(), 
+                    formatter.format(reservation.getCheckInDateTime().toGregorianCalendar().getTime()), 
+                    formatter.format(reservation.getCheckOutDateTime().toGregorianCalendar().getTime()), 
                     reservation.getTotalAmount()
                     );
         }
-
-        System.out.println((reservations.size() + 1) + ": Back\n");
-
-        response = scanner.nextInt();
-        scanner.nextLine();
-
-        if (response == reservations.size() + 1) {
-            return;
-        } else {
-            System.out.println("Displaying Rooms for Reservation: ");
-            for (Room room : reservations.get(response-1).getRooms()) {
-                System.out.printf("%8s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber().toString());
-            }
-        }
-
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------");
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();
+        System.out.println();
     }
 }

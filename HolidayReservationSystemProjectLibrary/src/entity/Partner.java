@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlTransient;
 
 import util.providedinterface.ICopyable;
 
@@ -105,6 +106,7 @@ public class Partner implements Serializable, ICopyable {
         this.password = password;
     }
 
+    @XmlTransient
     public List<Reservation> getReservations() {
         return reservations;
     }

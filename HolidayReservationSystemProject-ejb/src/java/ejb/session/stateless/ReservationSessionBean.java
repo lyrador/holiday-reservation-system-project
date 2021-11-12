@@ -234,6 +234,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         return reservations;
     }
     
+    @Override
     public List<Reservation> viewAllPartnerReservationsFor(Long partnerId) {
         
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.partner.partnerId = :inPartnerId");
