@@ -8,24 +8,33 @@ package ejb.session.stateless;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
+import javax.ejb.EJB;
 import util.exception.RoomRateNotFoundException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.exception.DeleteRoomRateException;
-
+import util.exception.RoomTypeNotFoundException;
 
 @Stateless
 public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateSessionBeanLocal {
 
+    @EJB
+    private RoomTypeSessionBeanLocal roomTypeSessionBeanLocal;
+
     @PersistenceContext(unitName = "HolidayReservationSystemProject-ejbPU")
     private EntityManager em;
+    
+    
 
     @Override
-    public RoomRate createRoomRate(RoomRate newRoomRate, RoomType roomType) {
+    public RoomRate createRoomRate(RoomRate newRoomRate, Long roomTypeId) throws RoomTypeNotFoundException {
+        
+        RoomType roomType = roomTypeSessionBeanLocal.retrieveRoomTypeByRoomId(roomTypeId);
         
         newRoomRate.setRoomType(roomType);
+        roomType.getRoomRates().size();
         roomType.getRoomRates().add(newRoomRate);
         
         em.persist(newRoomRate);

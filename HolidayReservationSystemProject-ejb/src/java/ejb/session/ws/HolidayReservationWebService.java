@@ -118,12 +118,15 @@ public class HolidayReservationWebService {
             
             p = partnerReservation.getPartner();
             em.detach(p);
-            partnerReservation.setPartner(null);
-            p.setReservations(null);
+            if (p.getReservations() != null) {
+                p.setReservations(null);
+            }
             
             RoomType rt = partnerReservation.getRoomType();
             em.detach(rt);
-            partnerReservation.getRoomType().setReservations(null);
+            if (rt.getReservations() != null) {
+                rt.setReservations(null);
+            }
            
 
             for (Room room : partnerReservation.getRooms()) {

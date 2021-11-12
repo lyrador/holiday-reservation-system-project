@@ -22,6 +22,7 @@ import javax.persistence.PersistenceContext;
 import util.enumeration.AccessRightEnum;
 import util.enumeration.RateTypeEnum;
 import util.enumeration.RoomStatusEnum;
+import util.exception.RoomTypeNotFoundException;
 
 /**
  *
@@ -88,52 +89,57 @@ public class DataInitSessionBean {
             em.flush();
         }
         
-        if (em.find(RoomRate.class, 1l) == null) {
+        if (em.find(RoomRate.class, 1l) == null){
             RoomType deluxe = em.find(RoomType.class, 1l);
             RoomType premier = em.find(RoomType.class, 2l);
             RoomType family = em.find(RoomType.class, 3l);
             RoomType junior = em.find(RoomType.class, 4l);
             RoomType grand = em.find(RoomType.class, 5l);
             
-            RoomRate deluxeRoomPublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Deluxe Room Published", RateTypeEnum.PUBLISHED, 100), deluxe);
-            em.persist(deluxeRoomPublished);
-            em.flush();
+            try {
+                RoomRate deluxeRoomPublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Deluxe Room Published", RateTypeEnum.PUBLISHED, 100), deluxe.getRoomTypeId());
+                em.persist(deluxeRoomPublished);
+                em.flush();
 
-            RoomRate deluxeRoomNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Deluxe Room Normal", RateTypeEnum.NORMAL, 50), deluxe);
-            em.persist(deluxeRoomNormal);
-            em.flush();
+                RoomRate deluxeRoomNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Deluxe Room Normal", RateTypeEnum.NORMAL, 50), deluxe.getRoomTypeId());
+                em.persist(deluxeRoomNormal);
+                em.flush();
+
+                RoomRate premierRoomPublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Premier Room Published", RateTypeEnum.PUBLISHED, 200), premier.getRoomTypeId());
+                em.persist(premierRoomPublished);
+                em.flush();
+
+                RoomRate premierRoomNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Premier Room Normal", RateTypeEnum.NORMAL, 100), premier.getRoomTypeId());
+                em.persist(premierRoomNormal);
+                em.flush();
+
+                RoomRate familyRoomPublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Family Room Published", RateTypeEnum.PUBLISHED, 300), family.getRoomTypeId());
+                em.persist(familyRoomPublished);
+                em.flush();
+
+                RoomRate familyRoomNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Family Room Normal", RateTypeEnum.NORMAL, 150), family.getRoomTypeId());
+                em.persist(familyRoomNormal);
+                em.flush();
+
+                RoomRate juniorSuitePublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Junior Suite Published", RateTypeEnum.PUBLISHED, 400), junior.getRoomTypeId());
+                em.persist(juniorSuitePublished);
+                em.flush();
+
+                RoomRate juniorSuiteNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Junior Suite Normal", RateTypeEnum.NORMAL, 200), junior.getRoomTypeId());
+                em.persist(juniorSuiteNormal);
+                em.flush();
+
+                RoomRate grandSuitePublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Grand Suite Published", RateTypeEnum.PUBLISHED, 500), grand.getRoomTypeId());
+                em.persist(grandSuitePublished);
+                em.flush();
+
+                RoomRate grandSuiteNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Grand Suite Normal", RateTypeEnum.NORMAL, 250), grand.getRoomTypeId());
+                em.persist(grandSuiteNormal);
+                em.flush();
+            } catch(RoomTypeNotFoundException ex) {
+                ex.printStackTrace();
+            } 
             
-            RoomRate premierRoomPublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Premier Room Published", RateTypeEnum.PUBLISHED, 200), premier);
-            em.persist(premierRoomPublished);
-            em.flush();
-
-            RoomRate premierRoomNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Premier Room Normal", RateTypeEnum.NORMAL, 100), premier);
-            em.persist(premierRoomNormal);
-            em.flush();
-            
-            RoomRate familyRoomPublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Family Room Published", RateTypeEnum.PUBLISHED, 300), family);
-            em.persist(familyRoomPublished);
-            em.flush();
-
-            RoomRate familyRoomNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Family Room Normal", RateTypeEnum.NORMAL, 150), family);
-            em.persist(familyRoomNormal);
-            em.flush();
-            
-            RoomRate juniorSuitePublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Junior Suite Published", RateTypeEnum.PUBLISHED, 400), junior);
-            em.persist(juniorSuitePublished);
-            em.flush();
-
-            RoomRate juniorSuiteNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Junior Suite Normal", RateTypeEnum.NORMAL, 200), junior);
-            em.persist(juniorSuiteNormal);
-            em.flush();
-            
-            RoomRate grandSuitePublished = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Grand Suite Published", RateTypeEnum.PUBLISHED, 500), grand);
-            em.persist(grandSuitePublished);
-            em.flush();
-
-            RoomRate grandSuiteNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Grand Suite Normal", RateTypeEnum.NORMAL, 250), grand);
-            em.persist(grandSuiteNormal);
-            em.flush();
         }
         
         if (em.find(Room.class, 1l) == null) {
@@ -246,19 +252,19 @@ public class DataInitSessionBean {
         }
         
         //Delete this before the demo cos its our own data
-        if (em.find(Guest.class, 1l) == null) {
-            Guest guest1 = new Guest("guest", "one", "guest1@gmail.com", "password");
-            em.persist(guest1);
-            em.flush();
-            
-        }
-        
-        if (em.find(Partner.class, 1l) == null) {
-            Partner partner1 = new Partner("partner1", "partner1", "password");
-            em.persist(partner1);
-            em.flush();
-            
-        }
+//        if (em.find(Guest.class, 1l) == null) {
+//            Guest guest1 = new Guest("guest", "one", "guest1@gmail.com", "password");
+//            em.persist(guest1);
+//            em.flush();
+//            
+//        }
+//        
+//        if (em.find(Partner.class, 1l) == null) {
+//            Partner partner1 = new Partner("partner1", "partner1", "password");
+//            em.persist(partner1);
+//            em.flush();
+//            
+//        }
     
     }
     

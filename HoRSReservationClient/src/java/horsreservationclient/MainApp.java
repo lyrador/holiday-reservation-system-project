@@ -277,11 +277,6 @@ public class MainApp {
             } else {
                 System.out.println("Reservation cancelled!\n");
             }
-//            int i;
-//            for(i = 0; i < 5; i++) {
-//                System.out.println(i + ": hello");
-//            }
-//            System.out.println(i + ": Back\n");
 
             return;
         } catch (ParseException ex) {
