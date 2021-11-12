@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,39 +21,31 @@ import javax.xml.bind.annotation.XmlTransient;
 public class RoomType implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomTypeId;
-    
+    private Long roomTypeId;  
     @Column(nullable = false, unique = true)
     private String roomName;
-    
     @Column(nullable = false)
-    private String roomDescription;
-    
+    private String roomDescription; 
     @Column(nullable = false)
     private Integer roomSize;
-    
     @Column(nullable = false)
-    private String roomBed;
-    
+    private String roomBed; 
     @Column(nullable = false)
     private Integer roomCapacity;
-    
     @Column(nullable = false)
     private String roomAmenities;
-    
     @Column(nullable = false)
     private Integer roomRank;
     
-    @OneToMany(mappedBy="roomType") // owned side
+    @OneToMany(mappedBy = "roomType", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY) // owned side
     private List<Room> rooms;
     
-    @OneToMany(mappedBy="roomType") // owned side
+    @OneToMany(mappedBy = "roomType", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY) // owned side
     private List<Reservation> reservations;
     
-    @OneToMany(mappedBy="roomType") // owned side
+    @OneToMany(mappedBy = "roomType", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY) // owned side
     private List<RoomRate> roomRates;
 
     public RoomType() {
@@ -69,9 +62,7 @@ public class RoomType implements Serializable {
         this.roomCapacity = roomCapacity;
         this.roomAmenities = roomAmenities;
         this.roomRank = roomRank;
-    }
-
-    
+    } 
     
     public Long getRoomTypeId() {
         return roomTypeId;

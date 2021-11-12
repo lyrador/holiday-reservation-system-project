@@ -149,7 +149,7 @@ public class MainApp {
     
     public void searchHotelRoom(Boolean isWalkIn, Boolean isLoggedIn) {
         Integer response = 0;
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Scanner scanner = new Scanner(System.in);
         int numOfRoomsRequested = 0;
         Date checkInDate;
@@ -246,6 +246,9 @@ public class MainApp {
                 scanner.nextLine();
 
                 if (response == roomTypes.size() + 1) {
+                    return;
+                } else if (response < 1 || response > roomTypes.size() + 1) {
+                    System.out.println("Invalid option! Returning...\n");
                     return;
                 } else {
                     System.out.print("Enter number of rooms> ");

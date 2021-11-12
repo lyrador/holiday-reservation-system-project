@@ -1,10 +1,10 @@
 package entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,33 +20,22 @@ public class Employee implements Serializable, ICopyable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long employeeId;
+    @Column(length = 32, nullable = false)
     private String firstName;
+    @Column(length = 32, nullable = false)
     private String lastName;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private AccessRightEnum accessRightEnum;
+    @Column(nullable = false, unique = true, length = 32)
     private String username;
+    @Column(nullable = false, length = 32)
     private String password;
-    private List<Reservation> reservations;
 
     public Employee() {
-        reservations = new ArrayList<>();
     }
 
-    public Employee(String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password) 
-    {
-        this();
-        
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.accessRightEnum = accessRightEnum;
-        this.username = username;
-        this.password = password;
-    }
-
-    public Employee(Long employeeId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password)
-    {
-        this();
-        
-        this.employeeId = employeeId;
+    public Employee(String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.accessRightEnum = accessRightEnum;
@@ -54,25 +43,9 @@ public class Employee implements Serializable, ICopyable {
         this.password = password;     
     }
 
-    
-    public Employee(Long employeeId, String firstName, String lastName, AccessRightEnum accessRightEnum, String username, String password, List<Reservation> reservations)
-    {
-        this();
-        
-        this.employeeId = employeeId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.accessRightEnum = accessRightEnum;
-        this.username = username;
-        this.password = password;
-        this.reservations = reservations;
-    }
-
     @Override
-    public void copy(Object object) 
-    {
-        if(object.getClass().equals(this.getClass()))
-        {
+    public void copy(Object object) {
+        if(object.getClass().equals(this.getClass())) {
             Employee employeeToCopy = (Employee)object;
             this.setEmployeeId(employeeToCopy.getEmployeeId());
             this.setFirstName(employeeToCopy.getFirstName());
@@ -80,16 +53,13 @@ public class Employee implements Serializable, ICopyable {
             this.setAccessRightEnum(employeeToCopy.getAccessRightEnum());
             this.setUsername(employeeToCopy.getUsername());
             this.setPassword(employeeToCopy.getPassword());
-            this.setReservations(employeeToCopy.getReservations());
         }
     }
 
     @Override
-    public int hashCode() 
-    {
+    public int hashCode() {
         int hash = 0;
         hash += (employeeId != null ? employeeId.hashCode() : 0);
-
         return hash;
     }
 
@@ -157,13 +127,5 @@ public class Employee implements Serializable, ICopyable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-    
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
     }
 }

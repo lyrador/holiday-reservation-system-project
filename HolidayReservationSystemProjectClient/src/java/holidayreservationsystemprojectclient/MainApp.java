@@ -5,7 +5,6 @@
  */
 package holidayreservationsystemprojectclient;
 
-import ejb.session.stateful.BookingSessionBeanRemote;
 import ejb.session.stateless.GuestSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
@@ -13,8 +12,11 @@ import ejb.session.stateless.RoomRateSessionBeanRemote;
 import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
 import ejb.session.stateless.EmployeeSessionBeanRemote;
+
 import entity.Employee;
+
 import java.util.Scanner;
+
 import util.exception.InvalidAccessRightException;
 import util.exception.InvalidLoginCredentialException;
 
@@ -28,7 +30,6 @@ public class MainApp {
     private ReservationSessionBeanRemote reservationSessionBeanRemote;
     private PartnerSessionBeanRemote partnerSessionBeanRemote;
     private GuestSessionBeanRemote guestSessionBeanRemoteRemote;
-    private BookingSessionBeanRemote bookingSessionBeanRemote;
     
     private SystemAdministrationModule systemAdminModule;
     private HotelOperationModule hotelOperationModule;
@@ -36,11 +37,10 @@ public class MainApp {
     
     private Employee currentEmployee;
     
-    public MainApp() {
-        
+    public MainApp() {    
     }
     
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, GuestSessionBeanRemote guestSessionBeanRemoteRemote, BookingSessionBeanRemote bookingSessionBeanRemote) {
+    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, GuestSessionBeanRemote guestSessionBeanRemoteRemote) {
         this.employeeSessionBeanRemote = employeeSessionBeanRemote;
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
         this.roomSessionBeanRemote = roomSessionBeanRemote;
@@ -48,7 +48,6 @@ public class MainApp {
         this.reservationSessionBeanRemote = reservationSessionBeanRemote;
         this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.guestSessionBeanRemoteRemote = guestSessionBeanRemoteRemote;
-        this.bookingSessionBeanRemote = bookingSessionBeanRemote;
     }
     
     public void run() {

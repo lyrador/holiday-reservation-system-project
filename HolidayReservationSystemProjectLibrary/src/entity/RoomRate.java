@@ -31,28 +31,22 @@ import util.enumeration.RateTypeEnum;
 public class RoomRate implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomRateId;
-    
-    @Column(nullable = false)
-    private String name;
-    
+    @Column(nullable = false, unique = true)
+    private String name; 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RateTypeEnum rateType;
-    
+    private RateTypeEnum rateType;  
     @Column(nullable = false)
-    private Integer ratePerNight;
-    
+    private Integer ratePerNight; 
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date validityStartDate;
-    
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date validityEndDate;
+    private Date validityEndDate; 
     
     @ManyToOne(optional = false) // owning side
     @JoinColumn(nullable = false)
@@ -74,8 +68,6 @@ public class RoomRate implements Serializable {
         this.validityStartDate = validityStartDate;
         this.validityEndDate = validityEndDate;
     }
-    
-    
 
     public Long getRoomRateId() {
         return roomRateId;

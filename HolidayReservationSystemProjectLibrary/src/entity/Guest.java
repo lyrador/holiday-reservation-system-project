@@ -2,8 +2,9 @@ package entity;
 
 import java.io.Serializable;
 import java.util.List;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,14 +18,17 @@ public class Guest implements Serializable, ICopyable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long guestId;
+    @Column(length = 32, nullable = false)
     private String firstName;
+    @Column(length = 32, nullable = false)
     private String lastName;
+    @Column(nullable = false, unique = true, length = 64)
     private String guestEmail;
+    @Column(nullable = false, length = 32)
     private String password;
     
-    @OneToMany(mappedBy = "guest")
+    @OneToMany(mappedBy = "guest", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
     private List<Reservation> reservations;
 
     public Guest() {
@@ -46,10 +50,8 @@ public class Guest implements Serializable, ICopyable {
     }
     
     @Override
-    public void copy(Object object) 
-    {
-        if(object.getClass().equals(this.getClass()))
-        {
+    public void copy(Object object) {
+        if(object.getClass().equals(this.getClass())) {
             Guest guestToCopy = (Guest)object;
             this.setGuestId(guestToCopy.getGuestId());
             this.setFirstName(guestToCopy.getFirstName());

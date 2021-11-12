@@ -28,27 +28,24 @@ import util.enumeration.RoomStatusEnum;
 @Entity
 public class Room implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = 1L;   
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;
-    
-    @Column(nullable = false)
+    private Long roomId;  
+    @Column(nullable = false, unique = true, length = 4)
     private String roomNumber;
-    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoomStatusEnum roomAvailability;
-    
+    private RoomStatusEnum roomAvailability;   
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date dateOccupiedOn;
+    @Column(nullable = true)
+    private Date dateOccupiedOn;  
     
     @ManyToOne(optional = false) // owning side
     @JoinColumn(nullable = false)
-    private RoomType roomType;
-    
-    @ManyToOne
+    private RoomType roomType;   
+    @ManyToOne(optional = true)
+    @JoinColumn(nullable = true)
     private Reservation reservation;
 
     public Room() {

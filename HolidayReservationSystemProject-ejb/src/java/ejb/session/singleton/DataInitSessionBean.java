@@ -38,8 +38,6 @@ public class DataInitSessionBean {
 
     @PersistenceContext(unitName = "HolidayReservationSystemProject-ejbPU")
     private EntityManager em;
-    
-    
 
     @PostConstruct
     public void postConstruct() {
@@ -136,10 +134,10 @@ public class DataInitSessionBean {
                 RoomRate grandSuiteNormal = roomRateSessionBeanLocal.createRoomRate(new RoomRate("Grand Suite Normal", RateTypeEnum.NORMAL, 250), grand.getRoomTypeId());
                 em.persist(grandSuiteNormal);
                 em.flush();
-            } catch(RoomTypeNotFoundException ex) {
-                ex.printStackTrace();
             } 
-            
+            catch(RoomTypeNotFoundException ex) {
+                ex.printStackTrace();
+            }       
         }
         
         if (em.find(Room.class, 1l) == null) {
@@ -247,25 +245,7 @@ public class DataInitSessionBean {
             
             Room room0505 = new Room("0505", RoomStatusEnum.AVAILABLE, null, grand);
             em.persist(room0505);
-            em.flush();
-            
-        }
-        
-        //Delete this before the demo cos its our own data
-//        if (em.find(Guest.class, 1l) == null) {
-//            Guest guest1 = new Guest("guest", "one", "guest1@gmail.com", "password");
-//            em.persist(guest1);
-//            em.flush();
-//            
-//        }
-//        
-//        if (em.find(Partner.class, 1l) == null) {
-//            Partner partner1 = new Partner("partner1", "partner1", "password");
-//            em.persist(partner1);
-//            em.flush();
-//            
-//        }
-    
-    }
-    
+            em.flush();        
+        }    
+    }  
 }

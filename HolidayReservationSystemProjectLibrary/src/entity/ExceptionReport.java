@@ -6,6 +6,7 @@
 package entity;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,19 +23,15 @@ public class ExceptionReport implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long exceptionReportId;
-    
+    @Column(nullable = false)
     private String description;
-    //1st case: no available room + upgrade to higher room
-    //2nd case: no available room + no upgrade to higher room 
 
     public ExceptionReport() {
     }
 
     public ExceptionReport(String description) {
         this.description = description;
-    }
-    
-    
+    }  
 
     public Long getExceptionReportId() {
         return exceptionReportId;

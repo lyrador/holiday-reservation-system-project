@@ -5,26 +5,22 @@
  */
 package horsreservationclient;
 
-import ejb.session.stateful.BookingSessionBeanRemote;
 import ejb.session.stateless.GuestSessionBeanRemote;
-import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
-import ejb.session.stateless.RoomRateSessionBeanRemote;
-import ejb.session.stateless.RoomSessionBeanRemote;
 import ejb.session.stateless.RoomTypeSessionBeanRemote;
-import java.util.Scanner;
-import util.exception.InvalidAccessRightException;
-import util.exception.InvalidLoginCredentialException;
-import ejb.session.stateless.EmployeeSessionBeanRemote;
+
 import entity.Guest;
 import entity.Reservation;
-import entity.Room;
 import entity.RoomType;
+
+import java.util.Scanner;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import util.exception.InvalidLoginCredentialException;
 import javax.persistence.NoResultException;
 import util.exception.GuestEmailExistException;
 import util.exception.RoomTypeNotFoundException;
@@ -32,14 +28,9 @@ import util.exception.UnknownPersistenceException;
 
 public class MainApp {
 
-    private EmployeeSessionBeanRemote employeeSessionBeanRemote;
     private RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
-    private RoomSessionBeanRemote roomSessionBeanRemote;
-    private RoomRateSessionBeanRemote roomRateSessionBeanRemote;
     private ReservationSessionBeanRemote reservationSessionBeanRemote;
-    private PartnerSessionBeanRemote partnerSessionBeanRemote;
     private GuestSessionBeanRemote guestSessionBeanRemote;
-    private BookingSessionBeanRemote bookingSessionBeanRemote;
 
     private Guest currentGuest;
 
@@ -47,15 +38,10 @@ public class MainApp {
         this.currentGuest = null;
     }
 
-    public MainApp(EmployeeSessionBeanRemote employeeSessionBeanRemote, RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, RoomSessionBeanRemote roomSessionBeanRemote, RoomRateSessionBeanRemote roomRateSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, PartnerSessionBeanRemote partnerSessionBeanRemote, GuestSessionBeanRemote guestSessionBeanRemote, BookingSessionBeanRemote bookingSessionBeanRemote) {
-        this.employeeSessionBeanRemote = employeeSessionBeanRemote;
+    public MainApp(RoomTypeSessionBeanRemote roomTypeSessionBeanRemote, ReservationSessionBeanRemote reservationSessionBeanRemote, GuestSessionBeanRemote guestSessionBeanRemote) {
         this.roomTypeSessionBeanRemote = roomTypeSessionBeanRemote;
-        this.roomSessionBeanRemote = roomSessionBeanRemote;
-        this.roomRateSessionBeanRemote = roomRateSessionBeanRemote;
         this.reservationSessionBeanRemote = reservationSessionBeanRemote;
-        this.partnerSessionBeanRemote = partnerSessionBeanRemote;
         this.guestSessionBeanRemote = guestSessionBeanRemote;
-        this.bookingSessionBeanRemote = bookingSessionBeanRemote;
     }
 
     public void run() {
@@ -211,7 +197,7 @@ public class MainApp {
 
     public void searchHotelRoom(Boolean isWalkIn, Boolean isLoggedIn) {
         Integer response = 0;
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat("d/M/y");
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Scanner scanner = new Scanner(System.in);
         int numOfRoomsRequested = 0;
         Date checkInDate;
@@ -284,6 +270,9 @@ public class MainApp {
                 scanner.nextLine();
 
                 if (response == roomTypes.size() + 1) {
+                    return; 
+                } else if (response < 1 || response > roomTypes.size() + 1) {
+                    System.out.println("Invalid option! Returning...\n");
                     return;
                 } else {
                     System.out.print("Enter number of rooms> ");

@@ -3,6 +3,7 @@ package entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,10 +20,12 @@ public class Occupant implements Serializable, ICopyable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long occupantId;
+    @Column(length = 32, nullable = false)
     private String firstName;
+    @Column(length = 32, nullable = false)
     private String lastName;
+    @Column(nullable = false, unique = true, length = 64)
     private String occupantEmail;
     
     @OneToMany(mappedBy = "occupant", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY)
@@ -47,10 +50,8 @@ public class Occupant implements Serializable, ICopyable {
     }
     
     @Override
-    public void copy(Object object) 
-    {
-        if(object.getClass().equals(this.getClass()))
-        {
+    public void copy(Object object) {
+        if(object.getClass().equals(this.getClass())) {
             Occupant occupantToCopy = (Occupant)object;
             this.setOccupantId(occupantToCopy.getOccupantId());
             this.setFirstName(occupantToCopy.getFirstName());

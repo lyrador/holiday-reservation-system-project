@@ -5,7 +5,6 @@
  */
 package holidayreservationsystemprojectclient;
 
-import ejb.session.stateful.BookingSessionBeanRemote;
 import ejb.session.stateless.GuestSessionBeanRemote;
 import ejb.session.stateless.PartnerSessionBeanRemote;
 import ejb.session.stateless.ReservationSessionBeanRemote;
@@ -25,32 +24,22 @@ public class Main {
 
     @EJB
     private static EmployeeSessionBeanRemote employeeSessionBeanRemote;
-
     @EJB
     private static RoomTypeSessionBeanRemote roomTypeSessionBeanRemote;
-
     @EJB
     private static RoomSessionBeanRemote roomSessionBeanRemote;
-
     @EJB
     private static RoomRateSessionBeanRemote roomRateSessionBeanRemote;
-
     @EJB
     private static ReservationSessionBeanRemote reservationSessionBeanRemote;
-
     @EJB
     private static PartnerSessionBeanRemote partnerSessionBeanRemote;
-
     @EJB
     private static GuestSessionBeanRemote guestSessionBeanRemote;
-
-    @EJB
-    private static BookingSessionBeanRemote bookingSessionBean;
-
-    
+   
     
     public static void main(String[] args) {
-        MainApp mainApp = new MainApp(employeeSessionBeanRemote, roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, reservationSessionBeanRemote, partnerSessionBeanRemote, guestSessionBeanRemote, bookingSessionBean);
+        MainApp mainApp = new MainApp(employeeSessionBeanRemote, roomTypeSessionBeanRemote, roomSessionBeanRemote, roomRateSessionBeanRemote, reservationSessionBeanRemote, partnerSessionBeanRemote, guestSessionBeanRemote);
         mainApp.run();
     }
     
