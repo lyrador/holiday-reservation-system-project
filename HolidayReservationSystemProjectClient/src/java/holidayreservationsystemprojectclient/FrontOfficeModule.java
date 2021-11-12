@@ -127,7 +127,8 @@ public class FrontOfficeModule {
 
             System.out.println("Enter the respective number from 1 to " + roomTypes.size() + " to reserve that room");
 
-            System.out.printf("%8s%22s%30s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+            System.out.printf("%30s%16s%32s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+            System.out.println("-------------------------------------------------------------------------------------");
 
             String[] roomNames = new String[roomTypes.size()];
             int[] roomTypePricesForDuration = new int[roomTypes.size()];
@@ -145,10 +146,11 @@ public class FrontOfficeModule {
                     System.out.println(ex.getMessage());
                 }
                 
-                System.out.printf("%20s%22s%10d\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                System.out.printf("%27s%16s%32s\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
                 seq++;
             }
 
+            System.out.println("-------------------------------------------------------------------------------------");
             System.out.println((roomTypes.size() + 1) + ": Back\n");
 
             response = scanner.nextInt();
@@ -279,9 +281,7 @@ public class FrontOfficeModule {
                     } else {
                         System.out.println("No room allocated! View exception report for more details");
                     }
-                   
-                }
-                
+                }               
             } else {
                 System.out.println("Invalid input!");
             }
@@ -290,11 +290,7 @@ public class FrontOfficeModule {
             ex.printStackTrace();
         } catch(RoomNotFoundException ex) {
             ex.printStackTrace();
-        }
-    
-        
-    
-        
+        }      
     }
 
     private void checkOutGuest() {

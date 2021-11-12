@@ -52,7 +52,7 @@ public class SystemAdministrationModule {
             System.out.println("2: View All Employees");
             System.out.println("-----------------------");
             System.out.println("3: Create New Partner");
-            System.out.println("4: View All Partner");
+            System.out.println("4: View All Partners");
             System.out.println("-----------------------");
             System.out.println("5: Back\n");
             response = 0;
@@ -142,11 +142,13 @@ public class SystemAdministrationModule {
         
         System.out.println("*** POS System :: System Administration :: View All Employees ***\n");
         List<Employee> employees = employeeSessionBeanRemote.viewAllEmployees();
-        System.out.printf("%8s%20s%20s%15s%20s%20s\n", "Employee ID", "First Name", "Last Name", "Access Right", "Username", "Password");
+        System.out.printf("%11s%20s%20s%30s%20s%20s\n", "Employee ID", "First Name", "Last Name", "Access Right", "Username", "Password");
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------");
 
         for(Employee employee:employees) {
-            System.out.printf("%8s%20s%20s%15s%20s%20s\n", employee.getEmployeeId().toString(), employee.getFirstName(), employee.getLastName(), employee.getAccessRightEnum().toString(), employee.getUsername(), employee.getPassword());
+            System.out.printf("%11s%20s%20s%30s%20s%20s\n", employee.getEmployeeId().toString(), employee.getFirstName(), employee.getLastName(), employee.getAccessRightEnum().toString(), employee.getUsername(), employee.getPassword());
         }
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------");
         
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();
@@ -182,11 +184,13 @@ public class SystemAdministrationModule {
         
         System.out.println("*** POS System :: System Administration :: View All Partners ***\n");
         List<Partner> partners = partnerSessionBeanRemote.viewAllPartners();
-        System.out.printf("%8s%20s%20s%20s\n", "Partner ID", "Partner Name", "Username", "Password");
+        System.out.printf("%10s%22s%20s%20s\n", "Partner ID", "Partner Name", "Username", "Password");
+        System.out.println("--------------------------------------------------------------------------------------");
 
         for(Partner partner:partners) {
-            System.out.printf("%8s%20s%20s%20s\n", partner.getPartnerId().toString(), partner.getPartnerName(), partner.getUsername(), partner.getPassword());
+            System.out.printf("%10s%22s%20s%20s\n", partner.getPartnerId().toString(), partner.getPartnerName(), partner.getUsername(), partner.getPassword());
         }
+        System.out.println("--------------------------------------------------------------------------------------");
         
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();

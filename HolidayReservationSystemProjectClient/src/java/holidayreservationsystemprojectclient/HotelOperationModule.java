@@ -325,12 +325,14 @@ public class HotelOperationModule {
         Scanner scanner = new Scanner(System.in);
         
         System.out.println("*** HoRS :: Hotel Operations :: View All Room Types ***\n");
-        System.out.printf("%12s%20s%70s%6s%50s%10s%60s\n", "Room Type Id", "Name", "Description", "Size", "Bed", "Capacity", "Amenities");
+        System.out.printf("%11s%30s%30s%10s%25s%10s%30s\n", "RoomType Id", "Name", "Description", "Size", "Bed", "Capacity", "Amenities");
         List<RoomType> allRoomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
         
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
         for (RoomType roomType : allRoomTypes) {
-            System.out.printf("%12s%20s%70s%6s%50s%10s%60s\n", roomType.getRoomTypeId().toString(), roomType.getRoomName(), roomType.getRoomDescription(), roomType.getRoomSize().toString(), roomType.getRoomBed(), roomType.getRoomCapacity().toString(), roomType.getRoomAmenities());    
+            System.out.printf("%11s%30s%30s%10s%25s%10s%30s\n", roomType.getRoomTypeId().toString(), roomType.getRoomName(), roomType.getRoomDescription(), roomType.getRoomSize().toString(), roomType.getRoomBed(), roomType.getRoomCapacity().toString(), roomType.getRoomAmenities());    
         }
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------------------");
         
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();
@@ -448,11 +450,13 @@ public class HotelOperationModule {
         System.out.println("*** HoRS :: Hotel Operations :: View All Rooms ***\n");
         
         List<Room> rooms = roomSessionBeanRemote.viewAllRooms();
-        System.out.printf("%12s%12s%20s%20s\n", "Room ID", "Room Number", "Room Status", "Room Type");
+        System.out.printf("%10s%14s%20s%30s\n", "Room ID", "Room Number", "Room Status", "Room Type");
+        System.out.println("--------------------------------------------------------------------------------------");
         
         for (Room room : rooms) { 
-             System.out.printf("%12s%12s%20s%20s\n", room.getRoomId().toString(), room.getRoomNumber().toString(), room.getRoomAvailability().toString(),room.getRoomType().getRoomName());
+             System.out.printf("%10s%14s%20s%30s\n", room.getRoomId().toString(), room.getRoomNumber().toString(), room.getRoomAvailability().toString(),room.getRoomType().getRoomName());
         }
+        System.out.println("--------------------------------------------------------------------------------------");
 
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();
@@ -466,11 +470,13 @@ public class HotelOperationModule {
         
         List<ExceptionReport> exReports = roomSessionBeanRemote.generateRoomAllocationExceptionReport();
         System.out.printf("%20s%100s\n", "Exception Report Id", "Description");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
 
         for(ExceptionReport exReport:exReports)
         {
             System.out.printf("%20s%150s\n", exReport.getExceptionReportId().toString(), exReport.getDescription());
         }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------");
         
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();
@@ -740,19 +746,32 @@ public class HotelOperationModule {
         System.out.println("*** HoRS :: Hotel Operations :: View All Room Rates ***\n");
         
         List<RoomRate> roomRates = roomRateSessionBeanRemote.viewAllRoomRates();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         
-        for (RoomRate roomRate : roomRates) {
-            System.out.printf("%12s%40s%20s%23s%16s%12s%12s\n", "Room Rate Id", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
-            
+        System.out.printf("%12s%30s%30s%18s%20s%18s%18s\n", "RoomRate Id", "Name", "Room Type", "Rate Type", "Rate Per Night", "Start Date", "End Date");
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------");
+        
+        for (RoomRate roomRate : roomRates) {         
             if (roomRate.getRateType().equals(RateTypeEnum.PEAK) || roomRate.getRateType().equals(RateTypeEnum.PROMOTION)) {
-                System.out.printf("%12s%40s%20s%23s%16s%12s%12s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getRoomName(), roomRate.getRateType().toString(), 
-                    roomRate.getRatePerNight().toString(), roomRate.getValidityStartDate().toString(), roomRate.getValidityEndDate().toString());
+                System.out.printf("%12s%30s%30s%18s%20s%18s%18s\n", 
+                        roomRate.getRoomRateId().toString(), 
+                        roomRate.getName(), 
+                        roomRate.getRoomType().getRoomName(), 
+                        roomRate.getRateType().toString(), 
+                        roomRate.getRatePerNight().toString(), 
+                        formatter.format(roomRate.getValidityStartDate()), 
+                        formatter.format(roomRate.getValidityEndDate()));
             } else {
-                System.out.printf("%12s%40s%20s%23s%16s%12s%12s\n", roomRate.getRoomRateId().toString(), roomRate.getName(), roomRate.getRoomType().getRoomName(), roomRate.getRateType().toString(), 
-                    roomRate.getRatePerNight().toString(), "NIL", "NIL");
+                System.out.printf("%12s%30s%30s%18s%20s%18s%18s\n", 
+                        roomRate.getRoomRateId().toString(), 
+                        roomRate.getName(), 
+                        roomRate.getRoomType().getRoomName(), 
+                        roomRate.getRateType().toString(), 
+                        roomRate.getRatePerNight().toString(), 
+                        "NIL", "NIL");
             }
-
         }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------------------------------------");
         
         System.out.print("Press any key to continue...> ");
         scanner.nextLine();

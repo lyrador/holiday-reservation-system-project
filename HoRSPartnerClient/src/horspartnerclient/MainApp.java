@@ -189,7 +189,7 @@ public class MainApp {
             List<RoomType> roomTypes = service.getHolidayReservationWebServicePort().viewAllRoomTypes();
             
             if(isLoggedIn == false) {
-                System.out.printf("\n%18s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+                System.out.printf("\n%30s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
                 System.out.println("----------------------------------------------------------------------------");
 
                 String[] roomNames = new String[roomTypes.size()];
@@ -206,17 +206,17 @@ public class MainApp {
                         System.out.println(ex.getMessage());
                     }
 
-                    System.out.printf("%18s%12s%29d\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                    System.out.printf("%30s%12s%29s\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
                     seq++;
                 }
-                System.out.println("------------------------------------------------------------------------");
+                System.out.println("----------------------------------------------------------------------------");
                 System.out.println("Enter any key to return> ");
                 scanner.nextLine();
                 return;
             }
             else {
                 System.out.println("Enter the respective number from 1 to " + roomTypes.size() + " to reserve that room");
-                System.out.printf("\n%19s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+                System.out.printf("\n%30s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
                 System.out.println("------------------------------------------------------------------------");
                 
                 String[] roomNames = new String[roomTypes.size()];
@@ -235,7 +235,7 @@ public class MainApp {
                         System.out.println(ex.getMessage());
                     }
 
-                    System.out.printf("%16s%12s%29s\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                    System.out.printf("%27s%12s%29s\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
                     seq++;
                 }
             

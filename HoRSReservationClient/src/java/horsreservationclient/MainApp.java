@@ -67,11 +67,13 @@ public class MainApp {
             if (currentGuest != null) {
                 System.out.println("You are login as " + currentGuest.getFirstName() + "\n");
                 responseFromLoggedInMenu = loggedInDisplayMenu();
+                currentGuest = null;
+                System.out.println("You have successfully logged out!***\n");
             } else {
                 responseFromNotLoggedInMenu = notLoggedInDisplayMenu();
             }
 
-            if (responseFromLoggedInMenu == 3 || responseFromNotLoggedInMenu == 4) {
+            if (responseFromNotLoggedInMenu == 4) {
                 break;
             }
         }
@@ -133,7 +135,7 @@ public class MainApp {
             System.out.println("*** HoRS For Guest :: Homepage ***\n");
             System.out.println("1: Search Hotel Room");
             System.out.println("2: View All My Reservations with Details");
-            System.out.println("3: Exit\n");
+            System.out.println("3: Logout\n");
             response = 0;
 
             while (response < 1 || response > 3) {
@@ -226,7 +228,7 @@ public class MainApp {
             List<RoomType> roomTypes = roomTypeSessionBeanRemote.viewAllRoomTypes();
             
             if(isLoggedIn == false) {
-                System.out.printf("\n%18s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+                System.out.printf("\n%30s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
                 System.out.println("----------------------------------------------------------------------------");
 
                 String[] roomNames = new String[roomTypes.size()];
@@ -243,7 +245,7 @@ public class MainApp {
                         System.out.println(ex.getMessage());
                     }
 
-                    System.out.printf("%18s%12s%29d\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                    System.out.printf("%30s%12s%29d\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
                     seq++;
                 }
                 System.out.println("------------------------------------------------------------------------");
@@ -253,7 +255,7 @@ public class MainApp {
             } else {
                 System.out.println("Enter the respective number from 1 to " + roomTypes.size() + " to reserve that room");
 
-                System.out.printf("\n%19s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
+                System.out.printf("\n%30s%12s%29s\n", "Type of Room", "Price($)", "Number of Rooms Available");
                 System.out.println("------------------------------------------------------------------------");
 
                 String[] roomNames = new String[roomTypes.size()];
@@ -272,7 +274,7 @@ public class MainApp {
                         System.out.println(ex.getMessage());
                     }
 
-                    System.out.printf("%16s%12s%29s\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                    System.out.printf("%27s%12s%29s\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
                     seq++;
                 }
                 System.out.println("------------------------------------------------------------------------");
@@ -315,7 +317,7 @@ public class MainApp {
 
         List<Reservation> reservations = reservationSessionBeanRemote.viewAllMyReservations(currentGuest.getGuestId());
 
-        System.out.printf("%18s%20s%14s%20s%20s%20s\n", "Reservation ID", "Type of Room", "Quantity", "Check-In Date", "Check-Out Date", "Total Amount($)");
+        System.out.printf("%18s%30s%14s%20s%20s%20s\n", "Reservation ID", "Type of Room", "Quantity", "Check-In Date", "Check-Out Date", "Total Amount($)");
         System.out.println("--------------------------------------------------------------------------------------------------------------------------------------");
 
         List<Reservation> reservationList = new ArrayList<Reservation>();
@@ -326,7 +328,7 @@ public class MainApp {
         for (Reservation reservation : reservations) {
             reservationList.add(reservation);
             System.out.print(seq++ + ": ");
-            System.out.printf("%15s%20s%14s%20s%20s%20s\n", reservation.getReservationId().toString(), 
+            System.out.printf("%15s%30s%14s%20s%20s%20s\n", reservation.getReservationId().toString(), 
                     reservation.getRoomType().getRoomName(), 
                     reservation.getNumOfRooms(),
                     formatter.format(reservation.getCheckInDateTime()), 
