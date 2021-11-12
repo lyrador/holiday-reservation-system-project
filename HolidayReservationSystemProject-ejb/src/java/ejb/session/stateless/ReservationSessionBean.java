@@ -255,9 +255,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
     
 //    @Schedule(hour="2")
     @Override
-    public List<Room> allocateRoomToCurrentDayReservations() {
+    public List<Room> allocateRoomToCurrentDayReservations(Date today) {
         
-        Date today = new Date();
         List<Reservation> reservationsOnCheckInDate = retrieveReservationsByCheckInDate(today);
         List<Reservation> reservationsOnCheckOutDate = retrieveReservationsByCheckOutDate(today);
         
@@ -266,7 +265,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         
         
         for (Reservation reservationToday : reservationsOnCheckInDate) {
-            ExceptionReport report = new ExceptionReport();
+            
             if (!reservationToday.getIsAllocated()) {
                 List<Room> allAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
                 RoomType reservationRoomType = reservationToday.getRoomType();
@@ -325,7 +324,9 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                     List<Room> allUpdatedAvailableRooms = roomSessionBeanLocal.retrieveAvailableRooms();
 
                     for (Room updatedAvailableRoom : allUpdatedAvailableRooms) {
-
+                        
+                        ExceptionReport report = new ExceptionReport();
+                        
                         if (updatedAvailableRoom.getRoomType().getRoomRank() > reservationRoomType.getRoomRank()) {
                             updatedAvailableRoom.setRoomAvailability(RoomStatusEnum.RESERVED);
                             roomsReserved.add(updatedAvailableRoom);
@@ -333,7 +334,8 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
                             updatedAvailableRoom.setReservation(reservationToday);
                             roomsToAllocate--;
 
-                            report.setDescription("No available room for reserved room type, upgrade to next higher room type available. Room " + updatedAvailableRoom.getRoomNumber() + " allocated.");
+                            report.setDescription("No available room for reserved room type, but upgrade to next higher room type "
+                                    + "available. Room " + updatedAvailableRoom.getRoomNumber() + " of Room Type " + updatedAvailableRoom.getRoomType().getRoomName() + " allocated.");
                             allocationStatus = true;
                             createExceptionReport(report);
 
@@ -350,6 +352,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
 
                 //no more rooms to upgrade to
                 if (roomsToAllocate > 0) {
+                    ExceptionReport report = new ExceptionReport();
                     report.setDescription("No available room for reserved room type, no upgrade to next higher room type available. No room allocated.");
                     createExceptionReport(report);
                 }
@@ -423,18 +426,24 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         return reservations;
     }
     
-//    @Override
-//    public Reservation retrieveReservationById(Long reservationId, Boolean loadRoomType, Boolean loadOccupant) throws ReservationNotFoundException {
-//        Reservation reservation = retrieveReservationById(reservationId);
-//        
-//        if(reservation != null) {
-//            if (loadRoomType) {
-//                reservation.getRoomType();
-//            } if (loadOccupant) {
-//                reservation.getOccupant();
-//            }
-//        }
-//        
-//        return reservation;
-//    }
+    
+    @Override
+    public List<Reservation> retrieveReservationByPartnerId(Long partnerId) throws ReservationNotFoundException {
+        
+        Date today = new Date();
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.partner.partnerId = :inPartnerId AND r.checkInDateTime = :today");
+        query.setParameter("inOccupantId", partnerId);
+        query.setParameter("today", today);
+        List<Reservation> reservations = new ArrayList<>();
+        
+        if (query.getResultList() != null) {
+            reservations = query.getResultList();
+        } 
+        
+        for (Reservation reservation : reservations) {
+            reservation.getRooms().size();
+        }
+        
+        return reservations;
+    }
 }

@@ -24,7 +24,7 @@ public interface ReservationSessionBeanLocal {
 
     public List<Reservation> retrieveReservationsByCheckInDate(Date checkInDate);
 
-    public List<Room> allocateRoomToCurrentDayReservations();
+    public List<Room> allocateRoomToCurrentDayReservations(Date today);
 
     public ExceptionReport createExceptionReport(ExceptionReport exceptionReport);
    
@@ -39,5 +39,7 @@ public interface ReservationSessionBeanLocal {
     public Long createPartnerReservation(Reservation reservation, Long partnerId, Long roomTypeId);
 
     public List<Reservation> viewAllPartnerReservationsFor(Long partnerId);
+
+    public List<Reservation> retrieveReservationByPartnerId(Long partnerId) throws ReservationNotFoundException;
     
 }

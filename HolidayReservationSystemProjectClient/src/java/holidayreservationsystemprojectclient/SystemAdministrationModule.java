@@ -108,10 +108,10 @@ public class SystemAdministrationModule {
         newEmployee.setLastName(scanner.nextLine().trim());
         
         while(true) {
-            System.out.print("Select Access Right (1: Employee, 2: Manager, 3: System Administrator, 4: Operations Manager, 5: Sales Manager, 6: Guest Relations Officer)> ");
+            System.out.print("Select Access Right (1: Employee, 2: System Administrator, 3: Operations Manager, 4: Sales Manager, 5: Guest Relations Officer)> ");
             Integer accessRightInt = scanner.nextInt();
             
-            if(accessRightInt >= 1 && accessRightInt <= 6) {
+            if(accessRightInt >= 1 && accessRightInt <= 5) {
                 newEmployee.setAccessRightEnum(AccessRightEnum.values()[accessRightInt-1]);
                 break;
             } else {

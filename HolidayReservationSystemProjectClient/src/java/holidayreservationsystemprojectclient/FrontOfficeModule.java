@@ -118,21 +118,6 @@ public class FrontOfficeModule {
         System.out.println("*** HoRS :: Front Office :: Walk In Search/Reserve Room ***\n");
 
         try {
-            Occupant occupant = new Occupant();
-            System.out.print("Enter Occupant First Name> ");
-            input = scanner.nextLine().trim();
-            occupant.setFirstName(input);
-            
-            System.out.print("Enter Occupant Last Name> ");
-            input = scanner.nextLine().trim();
-            occupant.setLastName(input);
-            
-            System.out.print("Enter Occupant Email Address> ");
-            input = scanner.nextLine().trim();
-            occupant.setOccupantEmail(input);
-            
-            Long occupantId = guestSessionBeanRemoteRemote.createNewOccupant(occupant);
-            
             System.out.print("Enter Check In Date (dd/mm/yyyy)> ");
             checkInDate = inputDateFormat.parse(scanner.nextLine().trim());
             System.out.print("Enter Check Out Date (dd/mm/yyyy)> ");
@@ -168,15 +153,29 @@ public class FrontOfficeModule {
 
             response = scanner.nextInt();
             scanner.nextLine();
-
+            
             if (response == roomTypes.size() + 1) {
                 return;
             } else {
-                System.out.print("Enter number of rooms> ");
+                System.out.print("Enter number of rooms to reserve> ");
                 numOfRoomsRequested = scanner.nextInt();
                 scanner.nextLine();
             }
 
+            Occupant occupant = new Occupant();
+            System.out.print("Enter Occupant First Name> ");
+            input = scanner.nextLine().trim();
+            occupant.setFirstName(input);
+            
+            System.out.print("Enter Occupant Last Name> ");
+            input = scanner.nextLine().trim();
+            occupant.setLastName(input);
+            
+            System.out.print("Enter Occupant Email Address> ");
+            input = scanner.nextLine().trim();
+            occupant.setOccupantEmail(input);
+            
+            Long occupantId = guestSessionBeanRemoteRemote.createNewOccupant(occupant);
             int totalAmount = roomTypePricesForDuration[response - 1] * numOfRoomsRequested;
             System.out.printf("Confirm Reservation for %d of %s at $%d? (Enter 'Y' to complete checkout)> ", numOfRoomsRequested, roomNames[response - 1], totalAmount);
 
@@ -202,13 +201,15 @@ public class FrontOfficeModule {
         
         try {
             Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter 'Y' if guest has made an online reservation (blank if walk-in)> ");
+            System.out.print("Enter the following to check-in (1. Guest - online reservation 2. Guest - walk-in reservation 3. Partner reservation)> ");
             String input = scanner.nextLine().trim();
             
-            if (input.equals("Y")) {
+            if (input.equals("1")) {
                 System.out.print("Enter Guest ID> ");
                 String id = scanner.nextLine().trim();
                 Long guestId = Long.parseLong(id);
+                
+                reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(new Date());
                 
                 List<Reservation> guestReservationsToday = reservationSessionBeanRemote.retrieveReservationByGuestId(guestId);
                 
@@ -216,19 +217,25 @@ public class FrontOfficeModule {
                 for (Reservation reservation : guestReservationsToday) {
                     List<Room> rooms = reservation.getRooms();
                     
-                    for (Room room : rooms) {
-                        System.out.println("Room Number: " + room.getRoomNumber());
-                        room.setRoomAvailability(RoomStatusEnum.NOT_AVAILABLE);
-                        roomSessionBeanRemote.updateRoom(room);
+                    if (!rooms.isEmpty()) {
+                        for (Room room : rooms) {
+                            System.out.println("Room Number: " + room.getRoomNumber());
+                            room.setRoomAvailability(RoomStatusEnum.NOT_AVAILABLE);
+                            roomSessionBeanRemote.updateRoom(room);
+                        }
+                    } else {
+                        System.out.println("No room allocated! View exception report for more details");
                     }
+
                 }
                 
-                System.out.println("Guest " + id + " checked in successfully!");
                 
-            } else {
+            } else if(input.equals("2")) {
                 System.out.print("Enter Walk-in Guest ID> ");
                 String id = scanner.nextLine().trim();
                 Long occupantId = Long.parseLong(id);
+                
+                reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(new Date());
                 
                 List<Reservation> guestReservationsToday = reservationSessionBeanRemote.retrieveReservationByOccupantId(occupantId);
                 
@@ -236,14 +243,47 @@ public class FrontOfficeModule {
                 for (Reservation reservation : guestReservationsToday) {
                     List<Room> rooms = reservation.getRooms();
                     
-                    for (Room room : rooms) {
-                        System.out.println("Room Number: " + room.getRoomNumber());
-                        room.setRoomAvailability(RoomStatusEnum.NOT_AVAILABLE);
-                        roomSessionBeanRemote.updateRoom(room);
+                    if (!rooms.isEmpty()) {
+                        
+                        for (Room room : rooms) {
+                            System.out.println("Room Number: " + room.getRoomNumber());
+                            room.setRoomAvailability(RoomStatusEnum.NOT_AVAILABLE);
+                            roomSessionBeanRemote.updateRoom(room);
+                        }
+                    } else {
+                        System.out.println("No room allocated! View exception report for more details");
                     }
+                   
                 }
                 
-                System.out.println("Walk-in Guest " + id + " checked in successfully!");
+            } else if (input.equals("3")) {
+                
+                System.out.print("Enter Partner ID> ");
+                String id = scanner.nextLine().trim();
+                Long partnerId = Long.parseLong(id);
+                
+                reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(new Date());
+                
+                List<Reservation> guestReservationsToday = reservationSessionBeanRemote.retrieveReservationByPartnerId(partnerId);
+                
+                System.out.println("Partner " + id + " checked in successfully to the following rooms: ");
+                for (Reservation reservation : guestReservationsToday) {
+                    List<Room> rooms = reservation.getRooms();
+                    
+                    if (!rooms.isEmpty()) {
+                        for (Room room : rooms) {
+                            System.out.println("Room Number: " + room.getRoomNumber());
+                            room.setRoomAvailability(RoomStatusEnum.NOT_AVAILABLE);
+                            roomSessionBeanRemote.updateRoom(room);
+                        }
+                    } else {
+                        System.out.println("No room allocated! View exception report for more details");
+                    }
+                   
+                }
+                
+            } else {
+                System.out.println("Invalid input!");
             }
             
         } catch(ReservationNotFoundException ex) {
@@ -261,10 +301,10 @@ public class FrontOfficeModule {
         
         try {
             Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter 'Y' if guest has made an online reservation previously (blank if walk-in)> ");
+            System.out.print("Enter the following to check-out (1. Guest - online reservation 2. Guest - walk-in reservation 3. Partner reservation)> ");
             String input = scanner.nextLine().trim();
             
-            if (input.equals("Y")) {
+            if (input.equals("1")) {
                 System.out.print("Enter Guest ID> ");
                 String id = scanner.nextLine().trim();
                 Long guestId = Long.parseLong(id);
@@ -284,14 +324,14 @@ public class FrontOfficeModule {
                 
                 System.out.println("Guest " + id + " checked out successfully!");
                 
-            } else {
-                System.out.print("Enter Guest ID> ");
+            } else if (input.equals("2")) {
+                System.out.print("Enter Walk-in Guest ID> ");
                 String id = scanner.nextLine().trim();
                 Long occupantId = Long.parseLong(id);
                 
                 List<Reservation> guestReservationsToday = reservationSessionBeanRemote.retrieveReservationByOccupantId(occupantId);
                 
-                System.out.println("Guest " + id + " checked out successfully out of the following rooms: ");
+                System.out.println("Walk-in Guest " + id + " checked out successfully out of the following rooms: ");
                 for (Reservation reservation : guestReservationsToday) {
                     List<Room> rooms = reservation.getRooms();
                     
@@ -302,7 +342,28 @@ public class FrontOfficeModule {
                     }
                 }
                 
-                System.out.println("Guest " + id + " checked out successfully!");
+                System.out.println("Walk-in Guest " + id + " checked out successfully!");
+            } else if (input.equals("3")) {
+                System.out.print("Enter Partner ID> ");
+                String id = scanner.nextLine().trim();
+                Long partnerId = Long.parseLong(id);
+                
+                List<Reservation> guestReservationsToday = reservationSessionBeanRemote.retrieveReservationByPartnerId(partnerId);
+                
+                System.out.println("Partner " + id + " checked out successfully out of the following rooms: ");
+                for (Reservation reservation : guestReservationsToday) {
+                    List<Room> rooms = reservation.getRooms();
+                    
+                    for (Room room : rooms) {
+                        System.out.println("Room Number: " + room.getRoomNumber());
+                        room.setRoomAvailability(RoomStatusEnum.AVAILABLE);
+                        roomSessionBeanRemote.updateRoom(room);
+                    }
+                }
+                
+                System.out.println("Partner " + id + " checked out successfully!");
+            } else {
+                System.out.println("Invalid input!");
             }
             
         } catch(ReservationNotFoundException ex) {

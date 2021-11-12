@@ -346,11 +346,13 @@ public class HotelOperationModule {
             
             System.out.print("Enter Room Type Id> ");
             Long roomTypeId = scanner.nextLong();
+            scanner.nextLine();
             RoomType roomType = roomTypeSessionBeanRemote.retrieveRoomTypeByRoomId(roomTypeId);
             newRoom.setRoomType(roomType);
             
             System.out.print("Enter Room Number (Eg.2015)> ");
             newRoom.setRoomNumber(scanner.nextLine().trim());
+            
             
             newRoom.setRoomAvailability(RoomStatusEnum.AVAILABLE);
             
@@ -382,10 +384,12 @@ public class HotelOperationModule {
                 counter++;
             }
             
-            Integer option = scanner.nextInt();
-            scanner.nextLine();
-            room.setRoomType(roomTypeSessionBeanRemote.viewAllRoomTypes().get(option-1));
-            System.out.println("Room Type updated successfully!\n");
+            String s = scanner.nextLine().trim();
+            int option = 0;
+            if (s.length() > 0) {
+                option = Integer.parseInt(s);
+                room.setRoomType(roomTypeSessionBeanRemote.viewAllRoomTypes().get(option-1));
+            }
             
             while(true) {
                 System.out.print("Choose Room Status (1. Available, 2. Not available)> ");
@@ -423,7 +427,7 @@ public class HotelOperationModule {
             
             Room room = roomSessionBeanRemote.retrieveRoomByRoomNumber(roomNumber);
             
-            System.out.printf("Confirm Delete Room Number %d (Enter 'Y' to Delete)> ", room.getRoomNumber());
+            System.out.printf("Confirm Delete Room Number %s (Enter 'Y' to Delete)> ", room.getRoomNumber());
             input = scanner.nextLine().trim();
             
             if(input.equals("Y")) {
@@ -576,7 +580,7 @@ public class HotelOperationModule {
 
             System.out.println("Room rate + " + newRoomRate.getName() + " for Room Type: " + roomType.getRoomName() + "created! \n");
 
-            newRoomRate = roomRateSessionBeanRemote.createRoomRate(newRoomRate,roomType);
+            newRoomRate = roomRateSessionBeanRemote.createRoomRate(newRoomRate,roomType.getRoomTypeId());
             System.out.println("New room rate created successfully!: " + newRoomRate.getRoomRateId()+ "\n");
         } catch (RoomTypeNotFoundException ex) {
             System.out.println(ex.getMessage() + "!\n");
@@ -757,18 +761,55 @@ public class HotelOperationModule {
     private void allocateRoom() {
         
         Scanner scanner = new Scanner(System.in);
-        System.out.println("*** HoRS :: Hotel Operations :: Allocate Room To Current Day Reservations ***\n");
+        System.out.println("*** HoRS :: Hotel Operations :: Allocate Room ***\n");
         
-        List<Room> roomsReserved = reservationSessionBeanRemote.allocateRoomToCurrentDayReservations();
-        if(!roomsReserved.isEmpty()){
-            System.out.println("The following rooms have been allocated: ");
-            for(Room room : roomsReserved){
-                System.out.println("Room Number: " + room.getRoomNumber()); 
+        System.out.print("Allocate rooms to current day reservations? (Enter 'Y' to confirm, 'N' to allocate for a specific date)> \n");
+        String input = scanner.nextLine().trim();
+        Date date = new Date();
+        
+        while (true) {
+            if (input.equals("Y")) {
+                List<Room> roomsReserved = reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(date);
+                if(!roomsReserved.isEmpty()){
+                    System.out.println("The following rooms have been allocated: ");
+                    for(Room room : roomsReserved){
+                        System.out.println("Room Number: " + room.getRoomNumber()); 
+                    }
+                }
+                else {
+                    System.out.println("No rooms available for allocation, refer to exception reports for more information.");
+                }
+                break;
+            } else if (input.equals("N")) {
+                
+                try {
+                    System.out.print("Enter a specific future date (DD/MM/YYY)> \n");
+
+                    String dateInput = scanner.nextLine().trim();
+                    Date futureDate = new SimpleDateFormat("dd/MM/yyyy").parse(dateInput); 
+                    
+                    List<Room> roomsReserved = reservationSessionBeanRemote.allocateRoomToCurrentDayReservations(futureDate);
+                    if(!roomsReserved.isEmpty()){
+                        System.out.println("The following rooms have been allocated: ");
+                        for(Room room : roomsReserved){
+                            System.out.println("Room Number: " + room.getRoomNumber()); 
+                        }
+                    }
+                    else {
+                        System.out.println("No rooms available for allocation, refer to exception reports for more information.");
+                    }
+                    break;
+                    
+                    
+                } catch (ParseException ex) {
+                    ex.printStackTrace();
+                }
+                
             }
-        }
-        else {
-            System.out.println("No rooms available for allocation, refer to exception reports for more information.");
-        }
+        } 
+        
+        
+        
        
         
     }

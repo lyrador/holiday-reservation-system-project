@@ -26,7 +26,7 @@ public interface ReservationSessionBeanRemote {
 
     public List<Reservation> retrieveReservationsByCheckInDate(Date checkInDate);
 
-    public List<Room> allocateRoomToCurrentDayReservations();
+    public List<Room> allocateRoomToCurrentDayReservations(Date today);
 
     public ExceptionReport createExceptionReport(ExceptionReport exceptionReport);
     
@@ -35,5 +35,7 @@ public interface ReservationSessionBeanRemote {
     public List<Reservation> retrieveReservationByGuestId(Long guestId) throws ReservationNotFoundException;
     
     public Long createReservationForOccupant(Reservation reservation, Long occupantId, Long roomTypeId);
+    
+    public List<Reservation> retrieveReservationByPartnerId(Long partnerId) throws ReservationNotFoundException;
    
 }

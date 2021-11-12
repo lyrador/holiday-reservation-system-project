@@ -124,22 +124,32 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
                     }
                 }  
             } else {
+                boolean addedRoomRate = false;
                 for (RoomRate roomRate: roomType.getRoomRates()) {
                     if (roomRate.getRateType() == RateTypeEnum.PROMOTION) {
                         if (roomRate.getValidityStartDate().compareTo(date) <= 0 && roomRate.getValidityEndDate().compareTo(date) >= 0) {
                             totalPrice += roomRate.getRatePerNight();
+                            addedRoomRate = true;
                             break;
                         }
                     } else if (roomRate.getRateType() == RateTypeEnum.PEAK) {
                         if (roomRate.getValidityStartDate().compareTo(date) <= 0 && roomRate.getValidityEndDate().compareTo(date) >= 0) {
                             totalPrice += roomRate.getRatePerNight();
+                            addedRoomRate = true;
                             break;
                         }
-                    } else if (roomRate.getRateType() == RateTypeEnum.NORMAL) {
-                        totalPrice += roomRate.getRatePerNight();
-                        break;
+                    } 
+                }
+                
+                if (!addedRoomRate) {
+                    for (RoomRate roomRate : roomType.getRoomRates()) {
+                        if (roomRate.getRateType() == RateTypeEnum.NORMAL) {
+                            totalPrice += roomRate.getRatePerNight();
+                            break;
+                        }
                     }
                 }
+                
             }
         }
         return totalPrice;
@@ -158,7 +168,7 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         int numOfRoomsAvailable = 0;
         
         for (Room room : roomList) {
-            if ((room.getDateOccupiedOn() == null || room.getDateOccupiedOn().before(checkInDate)) && room.getRoomAvailability().equals(RoomStatusEnum.AVAILABLE)) {
+            if ((room.getDateOccupiedOn() == null || room.getDateOccupiedOn().before(checkInDate))) {
                 numOfRoomsAvailable++;
             }
         }
