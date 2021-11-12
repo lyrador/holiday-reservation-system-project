@@ -8,6 +8,7 @@ package ejb.session.singleton;
 import ejb.session.stateless.RoomRateSessionBeanLocal;
 import entity.Employee;
 import entity.Guest;
+import entity.Partner;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
@@ -244,9 +245,17 @@ public class DataInitSessionBean {
             
         }
         
+        //Delete this before the demo cos its our own data
         if (em.find(Guest.class, 1l) == null) {
             Guest guest1 = new Guest("guest", "one", "guest1@gmail.com", "password");
             em.persist(guest1);
+            em.flush();
+            
+        }
+        
+        if (em.find(Partner.class, 1l) == null) {
+            Partner partner1 = new Partner("partner1", "partner1", "password");
+            em.persist(partner1);
             em.flush();
             
         }

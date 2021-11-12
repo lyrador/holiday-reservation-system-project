@@ -51,10 +51,10 @@ public class PartnerSessionBean implements PartnerSessionBeanRemote, PartnerSess
         }
     }
     
-    public Partner partnerLogin(String email, String password) throws InvalidLoginCredentialException {
+    public Partner partnerLogin(String username, String password) throws InvalidLoginCredentialException {
         try {
-            Query query = em.createQuery("SELECT c FROM Partner c WHERE c.email = :inEmail");
-            query.setParameter("inEmail", email);
+            Query query = em.createQuery("SELECT c FROM Partner c WHERE c.username = :inUsername");
+            query.setParameter("inUsername", username);
             Partner partner = (Partner)query.getSingleResult();
             
             if(partner.getPassword().equals(password)) {

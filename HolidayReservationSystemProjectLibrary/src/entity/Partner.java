@@ -17,8 +17,8 @@ public class Partner implements Serializable, ICopyable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long partnerId;
+    
     private String partnerName;
     private String username;
     private String password;
@@ -29,8 +29,10 @@ public class Partner implements Serializable, ICopyable {
     public Partner() {
     }
 
-    public Partner(String partnerName) {
+    public Partner(String partnerName, String username, String password) {
         this.partnerName = partnerName;
+        this.username = username;
+        this.password = password;
     }
     
     @Override

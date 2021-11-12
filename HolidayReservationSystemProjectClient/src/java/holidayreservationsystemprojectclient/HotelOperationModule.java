@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import javax.ejb.Schedule;
 import util.enumeration.AccessRightEnum;
 import util.enumeration.RateTypeEnum;
 import util.enumeration.RoomStatusEnum;
@@ -464,7 +465,7 @@ public class HotelOperationModule {
 
         for(ExceptionReport exReport:exReports)
         {
-            System.out.printf("%20s%100s\n", exReport.getExceptionReportId().toString(), exReport.getDescription());
+            System.out.printf("%20s%150s\n", exReport.getExceptionReportId().toString(), exReport.getDescription());
         }
         
         System.out.print("Press any key to continue...> ");

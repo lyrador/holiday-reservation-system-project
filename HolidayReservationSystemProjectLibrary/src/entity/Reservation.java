@@ -27,8 +27,8 @@ public class Reservation implements Serializable, ICopyable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long reservationId;   
+    
     private int totalAmount;
     @Temporal(TemporalType.DATE)
     private Date checkInDateTime;

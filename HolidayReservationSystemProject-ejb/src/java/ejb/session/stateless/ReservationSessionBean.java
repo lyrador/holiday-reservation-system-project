@@ -252,7 +252,7 @@ public class ReservationSessionBean implements ReservationSessionBeanRemote, Res
         return reservations;
     }
     
-    @Schedule(hour="2")
+//    @Schedule(hour="2")
     @Override
     public List<Room> allocateRoomToCurrentDayReservations() {
         
