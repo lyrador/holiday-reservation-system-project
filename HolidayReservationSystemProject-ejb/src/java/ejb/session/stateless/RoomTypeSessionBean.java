@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
 import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
@@ -165,11 +166,25 @@ public class RoomTypeSessionBean implements RoomTypeSessionBeanRemote, RoomTypeS
         query.setParameter("inRoomTypeId", roomTypeId);
         List<Room> roomList = query.getResultList();
         
+        Query query2 = em.createQuery("SELECT r FROM Reservation r WHERE r.roomType.roomTypeId = :inRoomTypeId");
+        query2.setParameter("inRoomTypeId", roomTypeId);
+        List<Reservation> reservations = query2.getResultList();
+        
         int numOfRoomsAvailable = 0;
         
         for (Room room : roomList) {
             if ((room.getDateOccupiedOn() == null || room.getDateOccupiedOn().before(checkInDate))) {
                 numOfRoomsAvailable++;
+            }
+        }
+        
+        // reservations for a room type
+        for (Reservation reservation : reservations) {
+            if (!reservation.getIsAllocated()) {
+                    if (reservation.getCheckInDateTime().compareTo(checkInDate) <= 0 && reservation.getCheckOutDateTime().compareTo(checkOutDate) >=0) {
+                    int numOfRooms = reservation.getNumOfRooms();
+                    numOfRoomsAvailable -= numOfRooms;
+                }
             }
         }
         
