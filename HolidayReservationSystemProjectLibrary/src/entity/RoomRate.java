@@ -18,11 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlTransient;
 import util.enumeration.RateTypeEnum;
 
@@ -47,18 +42,22 @@ public class RoomRate implements Serializable {
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date validityEndDate; 
+    @Column(nullable = false)
+    private Boolean isEnabled;
     
     @ManyToOne(optional = false) // owning side
     @JoinColumn(nullable = false)
     private RoomType roomType;
 
     public RoomRate() {
+        this.isEnabled = true;
     }
     
     public RoomRate(String name, RateTypeEnum rateType, Integer ratePerNight) {
         this.name = name;
         this.rateType = rateType;
         this.ratePerNight = ratePerNight;
+        this.isEnabled = true;
     }
 
     public RoomRate(String name, RateTypeEnum rateType, Integer ratePerNight, Date validityStartDate, Date validityEndDate) {
@@ -67,6 +66,7 @@ public class RoomRate implements Serializable {
         this.ratePerNight = ratePerNight;
         this.validityStartDate = validityStartDate;
         this.validityEndDate = validityEndDate;
+        this.isEnabled = true;
     }
 
     public Long getRoomRateId() {
@@ -124,6 +124,14 @@ public class RoomRate implements Serializable {
 
     public void setRoomType(RoomType roomType) {
         this.roomType = roomType;
+    }
+
+    public Boolean getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(Boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     @Override

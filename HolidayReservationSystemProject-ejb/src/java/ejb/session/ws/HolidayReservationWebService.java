@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.xml.datatype.XMLGregorianCalendar;
 import util.exception.InvalidLoginCredentialException;
+import util.exception.NoMoreRoomsException;
 import util.exception.RoomTypeNotFoundException;
 
 /**
@@ -103,7 +104,7 @@ public class HolidayReservationWebService {
     }
     
     @WebMethod(operationName = "createPartnerReservation")
-    public Long createPartnerReservation(@WebParam(name = "newPartnerReservation") Reservation newPartnerReservation, @WebParam(name = "partnerId") Long partnerId, @WebParam(name = "roomTypeId") Long roomTypeId) {
+    public Long createPartnerReservation(@WebParam(name = "newPartnerReservation") Reservation newPartnerReservation, @WebParam(name = "partnerId") Long partnerId, @WebParam(name = "roomTypeId") Long roomTypeId) throws RoomTypeNotFoundException, NoMoreRoomsException {
         return reservationSessionBeanLocal.createPartnerReservation(newPartnerReservation, partnerId, roomTypeId);
     }
     
@@ -111,41 +112,6 @@ public class HolidayReservationWebService {
     public List<Reservation> viewAllPartnerReservationsFor(@WebParam(name = "partnerId") Long partnerId) {
         
         List<Reservation> partnerReservations = reservationSessionBeanLocal.viewAllPartnerReservationsFor(partnerId);
-        //Partner p = new Partner();
-        //List<Reservation> reservationsToRemove1 = new ArrayList<>();
-        //List<Reservation> reservationsToRemove2 = new ArrayList<>();
-        
-//        for(Reservation partnerReservation : partnerReservations) {
-//            em.detach(partnerReservation);
-//            
-//            Partner p = partnerReservation.getPartner();
-//            em.detach(p);
-//            //p.setReservations(null);
-//            //partnerReservation.setPartner(null);
-//            p.getReservations().clear();
-//            //p.setReservations(null);
-////            
-//            RoomType rt = partnerReservation.getRoomType();
-//            em.detach(rt);
-//            //rt.setReservations(null);
-//            rt.getReservations().clear();
-//            
-////            if (partnerReservation.getGuest() != null)
-////            Guest g = partnerReservation.getGuest();
-////            em.detach(g);
-////            //g.setReservations(null);
-////            g.getReservations().clear();
-//            
-////            Occupant o = partnerReservation.getOccupant();
-////            em.detach(o);
-////            //o.setReservations(null);   
-////            o.getReservations().clear();
-//           
-//            for (Room room : partnerReservation.getRooms()) {
-//                em.detach(room);
-//                room.setReservation(null);
-//            }
-//        }
           
         return partnerReservations;
     }

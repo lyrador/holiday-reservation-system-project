@@ -10,6 +10,7 @@ import entity.RoomType;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exception.DeleteRoomRateException;
 import util.exception.RoomRateNotFoundException;
 import util.exception.RoomTypeNotFoundException;
 
@@ -26,7 +27,7 @@ public interface RoomRateSessionBeanRemote {
 
     public void updateRoomRate(RoomRate roomRate) throws RoomRateNotFoundException;
 
-    public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException;
+    public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException, DeleteRoomRateException;
 
     public List<RoomRate> viewAllRoomRates();
     

@@ -15,6 +15,7 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import util.enumeration.RoomStatusEnum;
+import util.exception.CreateRoomException;
 import util.exception.DeleteRoomException;
 import util.exception.RoomNotFoundException;
 
@@ -25,11 +26,17 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     private EntityManager em;
     
     @Override
-    public Room createRoom(Room newRoom) {
-        em.persist(newRoom);
-        em.flush();
+    public Room createRoom(Room newRoom) throws CreateRoomException {
         
-        return newRoom;
+        if (!newRoom.getRoomType().isIsEnabled()) {
+            throw new CreateRoomException("Room cannot be created because RoomType of " + newRoom.getRoomType() + " is disabled!");
+        } else {
+            em.persist(newRoom);
+            em.flush();
+
+            return newRoom;
+        }
+ 
     }
     
     @Override
@@ -75,14 +82,15 @@ public class RoomSessionBean implements RoomSessionBeanRemote, RoomSessionBeanLo
     
     
     @Override
-    public void deleteRoom(Long roomId) throws RoomNotFoundException, DeleteRoomException { //not complete
+    public void deleteRoom(Long roomId) throws RoomNotFoundException, DeleteRoomException { 
         Room roomToRemove = retrieveRoomByRoomId(roomId);
         
-        if (roomToRemove.getRoomAvailability().equals(RoomStatusEnum.AVAILABLE)) {
+        if (roomToRemove.getRoomAvailability().equals(RoomStatusEnum.AVAILABLE) && roomToRemove.getIsEnabled()) {
             roomToRemove.getRoomType().getRooms().remove(roomToRemove);
             em.remove(roomToRemove);
         } else {
-            throw new DeleteRoomException("Room ID " + roomId + " is currently in use and cannot be deleted!");
+            roomToRemove.setIsEnabled(false);
+            throw new DeleteRoomException("Room ID " + roomId + " is currently in use and cannot be deleted. It has been set to disabled!");
         }
 
   

@@ -38,6 +38,8 @@ public class RoomType implements Serializable {
     private String roomAmenities;
     @Column(nullable = false)
     private Integer roomRank;
+    @Column(nullable = false)
+    private Boolean isEnabled;
     
     @OneToMany(mappedBy = "roomType", orphanRemoval = false, cascade = {}, fetch = FetchType.LAZY) // owned side
     private List<Room> rooms;
@@ -52,6 +54,7 @@ public class RoomType implements Serializable {
         this.rooms = new ArrayList<>();
         this.reservations = new ArrayList<>();
         this.roomRates = new ArrayList<>();
+        this.isEnabled = true;
     }
 
     public RoomType(String roomName, String roomDescription, Integer roomSize, String roomBed, Integer roomCapacity, String roomAmenities, Integer roomRank) {
@@ -62,6 +65,7 @@ public class RoomType implements Serializable {
         this.roomCapacity = roomCapacity;
         this.roomAmenities = roomAmenities;
         this.roomRank = roomRank;
+        this.isEnabled = true;
     } 
     
     public Long getRoomTypeId() {
@@ -151,6 +155,14 @@ public class RoomType implements Serializable {
 
     public void setRoomRank(Integer roomRank) {
         this.roomRank = roomRank;
+    }
+
+    public boolean isIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     @Override

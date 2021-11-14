@@ -5,6 +5,8 @@
  */
 package ejb.session.stateless;
 
+import entity.Reservation;
+import entity.Room;
 import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
@@ -14,6 +16,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import util.enumeration.RoomStatusEnum;
 import util.exception.DeleteRoomRateException;
 import util.exception.RoomTypeNotFoundException;
 
@@ -74,11 +77,32 @@ public class RoomRateSessionBean implements RoomRateSessionBeanRemote, RoomRateS
     }
     
     @Override
-    public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException { //not complete
+    public void deleteRoomRate(Long roomRateId) throws RoomRateNotFoundException, DeleteRoomRateException { //not complete
         RoomRate roomRateToRemove = retrieveRoomRateById(roomRateId);
         
-        roomRateToRemove.getRoomType().getRoomRates().remove(roomRateToRemove);
-        em.remove(roomRateToRemove);
+        //check rooms with this room rate before deleting
+        Query query = em.createQuery("SELECT r FROM Reservation r");
+        List<Reservation> reservations = query.getResultList();
+        
+        //check if current reservations use the room rate and is already allocated -> set to disabled
+        for (Reservation reservation : reservations) {
+            if (reservation.getRoomType().getRoomRates().contains(roomRateToRemove) && reservation.getIsAllocated()) {
+                Integer rate = reservation.getTotalAmount() / reservation.getNumOfRooms();
+                if (rate.equals(roomRateToRemove.getRatePerNight())) {
+                    roomRateToRemove.setIsEnabled(false);                    
+                }
+            }
+        }
+        
+        //if room rate is not in use, can delete
+        if(roomRateToRemove.getIsEnabled()) {
+            roomRateToRemove.getRoomType().getRoomRates().remove(roomRateToRemove);
+            em.remove(roomRateToRemove);
+        } else {
+            throw new DeleteRoomRateException("RoomRate ID " + roomRateId + " is currently in use and cannot be deleted. It has been set to disabled!");
+        }
+        
+        
     }
     
     @Override

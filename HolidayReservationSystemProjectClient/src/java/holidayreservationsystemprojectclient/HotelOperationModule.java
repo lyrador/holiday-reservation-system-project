@@ -24,7 +24,9 @@ import javax.ejb.Schedule;
 import util.enumeration.AccessRightEnum;
 import util.enumeration.RateTypeEnum;
 import util.enumeration.RoomStatusEnum;
+import util.exception.CreateRoomException;
 import util.exception.DeleteRoomException;
+import util.exception.DeleteRoomRateException;
 import util.exception.DeleteRoomTypeException;
 import util.exception.InvalidAccessRightException;
 import util.exception.RoomNotFoundException;
@@ -183,9 +185,10 @@ public class HotelOperationModule {
         newRoomType.setRoomRank(scanner.nextInt());
         scanner.nextLine();
         
+        newRoomType.setIsEnabled(true);
+        
         newRoomType = roomTypeSessionBeanRemote.createRoomType(newRoomType);
         System.out.println("New room type created successfully!: " + newRoomType.getRoomTypeId()+ "\n");
-        System.out.print("Press any key to continue...> ");
     }
 
     private void viewRoomTypeDetails() {
@@ -289,6 +292,13 @@ public class HotelOperationModule {
         if (input.length() > 0) {
             roomType.setRoomAmenities(input);
         }
+        
+        System.out.print("Enter Room Type Rank (blank if no change)> ");
+        input = scanner.nextLine().trim();
+        
+        if (input.length() > 0) {
+            roomType.setRoomRank(Integer.parseInt(input));
+        }
       
         try {
             roomTypeSessionBeanRemote.updateRoomType(roomType);
@@ -355,7 +365,7 @@ public class HotelOperationModule {
             System.out.print("Enter Room Number (Eg.2015)> ");
             newRoom.setRoomNumber(scanner.nextLine().trim());
             
-            
+            newRoom.setIsEnabled(true);
             newRoom.setRoomAvailability(RoomStatusEnum.AVAILABLE);
             
             newRoom = roomSessionBeanRemote.createRoom(newRoom);
@@ -363,11 +373,13 @@ public class HotelOperationModule {
             
         }  catch (RoomTypeNotFoundException ex) {
             System.out.println(ex.getMessage() + "!\n");
-        } 
+        } catch (CreateRoomException ex) {
+            System.out.println(ex.getMessage() +"!\n");
+        }
         
     }
 
-    private void updateRoom() { //might have issue
+    private void updateRoom() { 
         
         try {
             Scanner scanner = new Scanner(System.in);
@@ -584,8 +596,9 @@ public class HotelOperationModule {
                 
             }
 
-            System.out.println("Room rate + " + newRoomRate.getName() + " for Room Type: " + roomType.getRoomName() + "created! \n");
+            System.out.println("Room rate " + newRoomRate.getName() + " for Room Type: " + roomType.getRoomName() + " created! \n");
 
+            newRoomRate.setIsEnabled(true);
             newRoomRate = roomRateSessionBeanRemote.createRoomRate(newRoomRate,roomType.getRoomTypeId());
             System.out.println("New room rate created successfully!: " + newRoomRate.getRoomRateId()+ "\n");
         } catch (RoomTypeNotFoundException ex) {
@@ -610,8 +623,10 @@ public class HotelOperationModule {
             System.out.println("Room Rate - Room Type: " + roomRate.getRoomType().getRoomName());
             System.out.println("Room Rate - Rate Type: " + roomRate.getRateType().toString());
             System.out.println("Room Rate - Rate Per Night: " + roomRate.getRatePerNight());
-            System.out.println("Room Rate Validity Start Date: " + roomRate.getValidityStartDate().toString());
-            System.out.println("Room Rate Validity End Date: " + roomRate.getValidityEndDate().toString());
+            if (roomRate.getValidityStartDate() != null && roomRate.getValidityEndDate() != null) {
+                System.out.println("Room Rate Validity Start Date: " + roomRate.getValidityStartDate().toString());
+                System.out.println("Room Rate Validity End Date: " + roomRate.getValidityEndDate().toString());
+            }
             System.out.println("------------------------");
             System.out.println("1: Update Room Rate");
             System.out.println("2: Delete Room Rate");
@@ -733,7 +748,9 @@ public class HotelOperationModule {
                 System.out.println("Room Rate deleted successfully!\n");
             } catch (RoomRateNotFoundException ex) {
                 System.out.println("An error has occurred while deleting Room Rate: " + ex.getMessage() + "\n");
-            } 
+            } catch (DeleteRoomRateException ex) {
+                System.out.println(ex.getMessage()+ "\n");
+            }
         }
         else {
             System.out.println("Room Rate not deleted!\n");

@@ -24,6 +24,7 @@ import util.enumeration.AccessRightEnum;
 import util.enumeration.RoomStatusEnum;
 import util.exception.GuestNotFoundException;
 import util.exception.InvalidAccessRightException;
+import util.exception.NoMoreRoomsException;
 import util.exception.ReservationNotFoundException;
 import util.exception.RoomNotFoundException;
 import util.exception.RoomTypeNotFoundException;
@@ -185,7 +186,7 @@ public class FrontOfficeModule {
 
             if (confirmCheckout.equals("Y")) {
                 Reservation newReservation = new Reservation(totalAmount, checkInDate, checkOutDate, numOfRoomsRequested, false);
-                Long reservationId = reservationSessionBeanRemote.createReservationForOccupant(newReservation, occupantId, roomTypes.get(response - 1).getRoomTypeId());
+                reservationSessionBeanRemote.createReservationForOccupant(newReservation, occupantId, roomTypes.get(response - 1).getRoomTypeId());
                 System.out.println("Reservation successful!\n");
             } else {
                 System.out.println("Reservation cancelled!\n");
@@ -194,6 +195,10 @@ public class FrontOfficeModule {
             return;
         } catch (ParseException ex) {
             System.out.println("Invalid date input!\n");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Rooom type not found!\n");
+        } catch (NoMoreRoomsException ex) {
+            System.out.println("No more rooms available!\n");
         }
     }
 

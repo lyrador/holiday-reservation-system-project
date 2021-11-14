@@ -36,4 +36,8 @@ public interface RoomTypeSessionBeanRemote {
     
     public int calculateNumOfRoomsAvailable(Long roomTypeId, Date checkInDate, Date checkOutDate) throws RoomTypeNotFoundException;
     
+    public int calculateTotalNumOfRoomsAvailable(Date checkInDate, Date checkOutDate) throws RoomTypeNotFoundException;
+    
+    public int calculateTotalNumOfRooms(Date checkInDate, Date checkOutDate);
+    
 }

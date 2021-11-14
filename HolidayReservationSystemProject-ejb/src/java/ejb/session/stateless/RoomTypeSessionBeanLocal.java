@@ -34,5 +34,9 @@ public interface RoomTypeSessionBeanLocal {
     public int calculatePrice(Long roomTypeId, Date checkInDate, Date checkOutDate, Boolean isWalkIn) throws RoomTypeNotFoundException;
     
     public int calculateNumOfRoomsAvailable(Long roomTypeId, Date checkInDate, Date checkOutDate) throws RoomTypeNotFoundException;
+
+    public int calculateTotalNumOfRoomsAvailable(Date checkInDate, Date checkOutDate) throws RoomTypeNotFoundException;
+
+    public int calculateTotalNumOfRooms(Date checkInDate, Date checkOutDate);
     
 }

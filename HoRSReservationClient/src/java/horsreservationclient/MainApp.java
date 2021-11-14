@@ -23,6 +23,7 @@ import java.util.List;
 import util.exception.InvalidLoginCredentialException;
 import javax.persistence.NoResultException;
 import util.exception.GuestEmailExistException;
+import util.exception.NoMoreRoomsException;
 import util.exception.RoomTypeNotFoundException;
 import util.exception.UnknownPersistenceException;
 
@@ -223,15 +224,19 @@ public class MainApp {
 
                 int seq = 1;
                 for (RoomType roomType : roomTypes) {
-                    roomNames[seq - 1] = roomType.getRoomName();
-                    try {
-                        roomTypePricesForDuration[seq - 1] = roomTypeSessionBeanRemote.calculatePrice(roomType.getRoomTypeId(), checkInDate, checkOutDate, isWalkIn);
-                        numOfRoomsAvailable[seq - 1] = roomTypeSessionBeanRemote.calculateNumOfRoomsAvailable(roomType.getRoomTypeId(), checkInDate, checkOutDate);
-                    } catch (RoomTypeNotFoundException ex) {
-                        System.out.println(ex.getMessage());
+                    
+                    if (roomType.isIsEnabled()) {
+                        roomNames[seq - 1] = roomType.getRoomName();
+                        try {
+                            roomTypePricesForDuration[seq - 1] = roomTypeSessionBeanRemote.calculatePrice(roomType.getRoomTypeId(), checkInDate, checkOutDate, isWalkIn);
+                            numOfRoomsAvailable[seq - 1] = roomTypeSessionBeanRemote.calculateNumOfRoomsAvailable(roomType.getRoomTypeId(), checkInDate, checkOutDate);
+                        } catch (RoomTypeNotFoundException ex) {
+                            System.out.println(ex.getMessage());
                     }
 
                     System.out.printf("%30s%12s%29d\n", roomNames[seq - 1], roomTypePricesForDuration[seq - 1], numOfRoomsAvailable[seq - 1]);
+                    }
+                    
                     seq++;
                 }
                 System.out.println("------------------------------------------------------------------------");
@@ -296,6 +301,10 @@ public class MainApp {
             }  
         } catch (ParseException ex) {
             System.out.println("Invalid date input!\n");
+        } catch (RoomTypeNotFoundException ex) {
+            System.out.println("Rooom type not found!\n");
+        } catch (NoMoreRoomsException ex) {
+            System.out.println("No more rooms available!\n");
         }
     }
 

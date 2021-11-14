@@ -33,27 +33,38 @@ public class MainApp {
         this.service = service;
     }
     
-    public void run() throws InvalidLoginCredentialException_Exception {
-        while (true) {
-            System.out.println("*** HoRS :: Welcome to Holiday Reservation System For Partner! ***");
-            int response;
+    public void run() {
+        
+        while(true) {
+            try {
+                while (true) {
+                    System.out.println("*** HoRS :: Welcome to Holiday Reservation System For Partner! ***");
+                    int response;
 
-            if (currentPartner != null) {
-                System.out.println("You are login as " + currentPartner.getPartnerName() + "\n");
-                response = loggedInDisplayMenu();
-            } else {
-                response = notLoggedInDisplayMenu();
+                    if (currentPartner != null) {
+                        System.out.println("You are login as " + currentPartner.getPartnerName() + "\n");
+                        response = loggedInDisplayMenu();
+                    } else {
+                        response = notLoggedInDisplayMenu();
+                    }
+
+                    if (response == 3) {
+                        break;
+                    }
+
+                } 
+            } catch (InvalidLoginCredentialException_Exception ex) {
+                System.out.println(ex.getMessage() +"\n");
+            } catch (NoMoreRoomsException_Exception ex) {
+                System.out.println(ex.getMessage() +"\n");
+            } catch (RoomTypeNotFoundException_Exception ex) {
+                System.out.println(ex.getMessage() +"\n");
             }
-
-            if (response == 3) {
-                break;
-            }
-
         }
-        System.out.println("You have succesfully exited the system!***\n");
+        
     }
     
-    public int notLoggedInDisplayMenu() throws InvalidLoginCredentialException_Exception {
+    public int notLoggedInDisplayMenu() throws InvalidLoginCredentialException_Exception, NoMoreRoomsException_Exception, RoomTypeNotFoundException_Exception {
 
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
@@ -92,7 +103,7 @@ public class MainApp {
         return response;
     }
     
-    public int loggedInDisplayMenu() {
+    public int loggedInDisplayMenu() throws RoomTypeNotFoundException_Exception, NoMoreRoomsException_Exception {
 
         Scanner scanner = new Scanner(System.in);
         Integer response = 0;
@@ -147,7 +158,7 @@ public class MainApp {
         }
     }
     
-    public void searchHotelRoom(Boolean isWalkIn, Boolean isLoggedIn) {
+    public void searchHotelRoom(Boolean isWalkIn, Boolean isLoggedIn) throws RoomTypeNotFoundException_Exception, NoMoreRoomsException_Exception {
         Integer response = 0;
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Scanner scanner = new Scanner(System.in);
@@ -279,7 +290,7 @@ public class MainApp {
         } 
         catch (ParseException ex) {
             System.out.println("Invalid date input!\n");
-        }
+        } 
     }
     
     public void viewAllMyReservations() {

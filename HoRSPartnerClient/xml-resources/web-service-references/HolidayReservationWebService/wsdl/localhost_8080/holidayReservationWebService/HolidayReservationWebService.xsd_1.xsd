@@ -2,6 +2,8 @@
 
 <xs:element name="InvalidLoginCredentialException" type="tns:InvalidLoginCredentialException"/>
 
+<xs:element name="NoMoreRoomsException" type="tns:NoMoreRoomsException"/>
+
 <xs:element name="RoomTypeNotFoundException" type="tns:RoomTypeNotFoundException"/>
 
 <xs:element name="calculateNumOfRoomsAvailable" type="tns:calculateNumOfRoomsAvailable"/>
@@ -68,6 +70,7 @@
 
 <xs:complexType name="roomType">
 <xs:sequence>
+<xs:element name="isEnabled" type="xs:boolean"/>
 <xs:element name="roomAmenities" type="xs:string" minOccurs="0"/>
 <xs:element name="roomBed" type="xs:string" minOccurs="0"/>
 <xs:element name="roomCapacity" type="xs:int" minOccurs="0"/>
@@ -83,6 +86,7 @@
 
 <xs:complexType name="roomRate">
 <xs:sequence>
+<xs:element name="isEnabled" type="xs:boolean" minOccurs="0"/>
 <xs:element name="name" type="xs:string" minOccurs="0"/>
 <xs:element name="ratePerNight" type="xs:int" minOccurs="0"/>
 <xs:element name="rateType" type="tns:rateTypeEnum" minOccurs="0"/>
@@ -95,6 +99,7 @@
 <xs:complexType name="room">
 <xs:sequence>
 <xs:element name="dateOccupiedOn" type="xs:dateTime" minOccurs="0"/>
+<xs:element name="isEnabled" type="xs:boolean" minOccurs="0"/>
 <xs:element name="roomAvailability" type="tns:roomStatusEnum" minOccurs="0"/>
 <xs:element name="roomId" type="xs:long" minOccurs="0"/>
 <xs:element name="roomNumber" type="xs:string" minOccurs="0"/>
@@ -165,6 +170,18 @@
 </xs:sequence>
 </xs:complexType>
 
+<xs:complexType name="RoomTypeNotFoundException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="NoMoreRoomsException">
+<xs:sequence>
+<xs:element name="message" type="xs:string" minOccurs="0"/>
+</xs:sequence>
+</xs:complexType>
+
 <xs:complexType name="calculatePrice">
 <xs:sequence>
 <xs:element name="roomTypeId" type="xs:long" minOccurs="0"/>
@@ -176,12 +193,6 @@
 <xs:complexType name="calculatePriceResponse">
 <xs:sequence>
 <xs:element name="return" type="xs:int"/>
-</xs:sequence>
-</xs:complexType>
-
-<xs:complexType name="RoomTypeNotFoundException">
-<xs:sequence>
-<xs:element name="message" type="xs:string" minOccurs="0"/>
 </xs:sequence>
 </xs:complexType>
 

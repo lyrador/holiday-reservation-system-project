@@ -11,6 +11,7 @@ import entity.RoomRate;
 import entity.RoomType;
 import java.util.List;
 import javax.ejb.Remote;
+import util.exception.CreateRoomException;
 import util.exception.DeleteRoomException;
 import util.exception.RoomNotFoundException;
 
@@ -21,7 +22,7 @@ import util.exception.RoomNotFoundException;
 @Remote
 public interface RoomSessionBeanRemote {
     
-    public Room createRoom(Room newRoom);
+    public Room createRoom(Room newRoom) throws CreateRoomException;
 
     public void updateRoom(Room room) throws RoomNotFoundException;
 

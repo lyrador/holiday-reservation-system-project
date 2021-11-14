@@ -10,6 +10,7 @@ import entity.Room;
 import entity.RoomType;
 import java.util.List;
 import javax.ejb.Local;
+import util.exception.CreateRoomException;
 import util.exception.DeleteRoomException;
 import util.exception.RoomNotFoundException;
 
@@ -20,7 +21,7 @@ import util.exception.RoomNotFoundException;
 @Local
 public interface RoomSessionBeanLocal {
 
-    public Room createRoom(Room newRoom);
+    public Room createRoom(Room newRoom) throws CreateRoomException;
 
     public void updateRoom(Room room) throws RoomNotFoundException;
 

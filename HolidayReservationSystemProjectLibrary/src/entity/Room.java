@@ -39,7 +39,9 @@ public class Room implements Serializable {
     private RoomStatusEnum roomAvailability;   
     @Temporal(javax.persistence.TemporalType.DATE)
     @Column(nullable = true)
-    private Date dateOccupiedOn;  
+    private Date dateOccupiedOn;
+    @Column(nullable = false)
+    private Boolean isEnabled;
     
     @ManyToOne(optional = false) // owning side
     @JoinColumn(nullable = false)
@@ -49,6 +51,7 @@ public class Room implements Serializable {
     private Reservation reservation;
 
     public Room() {
+        this.isEnabled = true;
     }
 
     public Room(String roomNumber, RoomStatusEnum roomAvailability, Date dateOccupiedOn, RoomType roomType) {
@@ -56,6 +59,7 @@ public class Room implements Serializable {
         this.roomAvailability = roomAvailability;
         this.dateOccupiedOn = dateOccupiedOn;
         this.roomType = roomType;
+        this.isEnabled = true;
     }
 
     public Long getRoomId() {
@@ -106,6 +110,14 @@ public class Room implements Serializable {
 
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
+    }
+
+    public Boolean getIsEnabled() {
+        return isEnabled;
+    }
+
+    public void setIsEnabled(Boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     @Override
