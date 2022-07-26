@@ -1,5 +1,7 @@
 # holiday-reservation-system-project
 
+![pexels-pixabay-164595](https://user-images.githubusercontent.com/65401176/181074521-1ac60f57-654a-4c17-9e5a-1b24cbee2a28.jpg)
+
 This Hotel Booking System project is a distributed enterprise-scale software system, which provides features for reserving hotel rooms, checking-in, pricing calculation, exception report handling etc.
 
 It comprises of a management client to manage the employees and rooms, a reservation client to be used by guests, as well as an externally-linked external partner reservation system, which is utilised by companies like travel agencies and price comparison websites.
